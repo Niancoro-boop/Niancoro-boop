@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Cuánto conoces a mi amigo?</title>
+    <style>
+        :root {
+            --fondo: #0a0a0c;
+            --tarjeta: #16161a;
+            --blanco: #ffffff;
+            --negro: #000000;
+            --amarillo: #ffde4d;
+            --rojo: #e62432;
+            --verde: #2ecc71;
+            --gris-borde: #2a2a30;
+            --gris-texto: #a0a0a5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial Black', Impact, sans-serif;
+        }
+
+        body {
+            background-color: var(--fondo);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: var(--blanco);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 50px;
+        }
+
+        /* Barra Superior */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--tarjeta);
+            padding: 15px 20px;
+            border-bottom: 4px solid var(--negro);
+        }
+
+        .top-title {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: var(--gris-texto);
+        }
+
+        .top-title span {
+            color: var(--amarillo);
+        }
+
+        .progress-info {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Contenedor Principal */
+        .main {
+            max-width: 650px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        /* Tarjetas Oscuras Brutalistas */
+        .card {
+            background: var(--tarjeta);
+            border: 4px solid var(--negro);
+            padding: 40px 30px;
+            box-shadow: 10px 10px 0px var(--negro);
+            display: none;
+            /* Controlado por JS */
+            position: relative;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        .p-titulo {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+        }
+
+        /* Inputs Brutalistas */
+        .brutal-input {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            background: var(--fondo);
+            color: var(--blanco);
+            border: 3px solid var(--negro);
+            box-shadow: 4px 4px 0px var(--negro);
+            outline: none;
+            margin-bottom: 30px;
+        }
+
+        .brutal-input:focus {
+            border-color: var(--amarillo);
+        }
+
+        /* Grid de Opciones (Copiado de tu diseño de juego) */
+        .opciones-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        @media (max-width: 480px) {
+            .opciones-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .opcion-btn {
+            background: #1e1e24;
+            border: 3px solid var(--gris-borde);
+            color: var(--gris-texto);
+            padding: 20px 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .opcion-btn:hover {
+            border-color: var(--gris-texto);
+            color: var(--blanco);
+        }
+
+        .opcion-btn.selected {
+            border: 3px solid var(--amarillo);
+            color: var(--amarillo);
+            background: #25251a;
+        }
+
+        /* Botón de acción Siguiente / Iniciar */
+        .btn-brutal {
+            width: 100%;
+            background: var(--rojo);
+            color: var(--blanco);
+            border: none;
+            padding: 18px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 4px 4px 0px var(--negro);
+        }
+
+        .btn-brutal:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--negro);
+        }
+
+        .btn-brutal.verde {
+            background: var(--verde);
+        }
+
+        /* Barra de navegación inferior */
+        .bottom-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .progress-bar-wrap {
+            flex-grow: 1;
+            height: 8px;
+            background: #2a2a30;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--rojo);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Pantalla Resultados */
+        .score-display {
+            font-size: 4rem;
+            margin: 25px 0;
+            color: var(--negro);
+            background: var(--amarillo);
+            display: inline-block;
+            padding: 15px 40px;
+            border: 4px solid var(--negro);
+            box-shadow: 6px 6px 0px #000;
+        }
+
+        /* Animación de error */
+        @keyframes sacudir {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-6px);
+            }
+
+            75% {
+                transform: translateX(6px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <div class="top-title">FORMULARIO DE: <span id="creador-display">...</span></div>
+        <div class="progress-info" id="info-progreso-pantalla" style="display:none;">PREGUNTA <span
+                id="prog-actual">1</span> DE <span id="prog-total">?</span></div>
+    </div>
+
+    <div class="main">
+
+        <div class="card active" id="pantalla-inicio">
+            <h2 class="p-titulo">¿QUÉ TANTO CONOCES A <span id="creador-bienvenida"
+                    style="color:var(--amarillo)">...</span>?</h2>
+            <p style="margin-bottom: 25px; font-family:sans-serif; font-size: 0.95rem; color:var(--gris-texto);">Escribe
+                tu nombre o apodo para empezar el desafío y registrar tu puntuación.</p>
+            <input type="text" class="brutal-input" id="nombre-jugador" placeholder="Tu nombre aquí..." maxlength="20"
+                autocomplete="off">
+            <button class="btn-brutal" onclick="empezarJuego()">¡EMPEZAR JUEGO! →</button>
+        </div>
+
+        <div class="card" id="pantalla-juego">
+            <div class="p-titulo" id="pregunta-texto">¿Cargando pregunta?</div>
+            <div class="opciones-grid" id="opciones-grid"></div>
+
+            <div class="bottom-bar">
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <button class="btn-brutal" id="nav-btn" onclick="avanzarPregunta()"
+                    style="width: auto; padding: 12px 30px; font-size: 1.1rem;">SIGUIENTE →</button>
+            </div>
+        </div>
+
+        <div class="card" id="pantalla-resultados" style="text-align: center;">
+            <span style="font-size: 3.5rem;">🎉</span>
+            <h2 class="p-titulo" style="margin-top:15px;">¡JUEGO TERMINADO, <span id="jugador-final-display"
+                    style="color:var(--amarillo)">...</span>!</h2>
+            <p style="font-family:sans-serif; color:var(--gris-texto);">Tu puntuación final es de:</p>
+
+            <div class="score-display" id="puntaje-final">0 / 0</div>
+
+            <p id="mensaje-feedback" style="margin-top:20px; font-size:1.2rem; letter-spacing: 0.5px;"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. DESEMPAQUETAR DATOS DE LA URL RELATIVA
+        let gameData = { nombre: "TÚ", preguntas: [], respuestas: [] };
+        let nombreJugador = "";
+        let actual = 0;
+        let respuestasJugador = [];
+
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const payload = params.get('data');
+            if (payload) {
+                gameData = JSON.parse(decodeURIComponent(payload));
+            } else {
+                document.getElementById('pantalla-inicio').innerHTML = `<h2 class='p-titulo' style='color:var(--rojo)'>⚠️ LINK INVÁLIDO</h2><p style="font-family:sans-serif; color:var(--gris-texto);">El enlace no contiene datos de juego. Pídele a tu amigo que genere el link de nuevo.</p>`;
+            }
+        } catch (e) {
+            console.error("Error cargando el JSON de la URL", e);
+        }
+
+        // Seteo inicial de nombres en la UI
+        document.getElementById('creador-display').textContent = gameData.nombre.toUpperCase();
+        document.getElementById('creador-bienvenida').textContent = gameData.nombre.toUpperCase();
+
+        // 2. CONTROLADORES DE FLUJO DEL JUEGO
+        function empezarJuego() {
+            const input = document.getElementById('nombre-jugador');
+            nombreJugador = input.value.trim();
+
+            if (!nombreJugador) {
+                input.style.animation = 'none';
+                void input.offsetWidth;
+                input.style.animation = 'sacudir 0.3s ease';
+                return;
+            }
+
+            document.getElementById('pantalla-inicio').classList.remove('active');
+            document.getElementById('pantalla-juego').classList.add('active');
+            document.getElementById('info-progreso-pantalla').style.display = 'block';
+
+            respuestasJugador = gameData.preguntas.map(() => []);
+            renderPreguntaJuego();
+        }
+
+        function renderPreguntaJuego() {
+            const totalPreguntas = gameData.preguntas.length;
+            document.getElementById('prog-total').textContent = totalPreguntas;
+            document.getElementById('prog-actual').textContent = actual + 1;
+            document.getElementById('progress-fill').style.width = ((actual) / totalPreguntas * 100) + '%';
+
+            const item = gameData.preguntas[actual];
+            document.getElementById('pregunta-texto').textContent = item.texto;
+
+            const grid = document.getElementById('opciones-grid');
+            grid.innerHTML = '';
+
+            item.opciones.forEach((opcion, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'opcion-btn';
+                btn.textContent = opcion;
+
+                if (respuestasJugador[actual].includes(i)) btn.classList.add('selected');
+
+                btn.onclick = () => toggleOpcionJugador(i, btn);
+                grid.appendChild(btn);
+            });
+
+            const navBtn = document.getElementById('nav-btn');
+            if (actual === totalPreguntas - 1) {
+                navBtn.textContent = 'FINALIZAR 🏁';
+                navBtn.classList.add('verde');
+            } else {
+                navBtn.textContent = 'SIGUIENTE →';
+                navBtn.classList.remove('verde');
+            }
+        }
+
+        function toggleOpcionJugador(opIdx, btn) {
+            const seleccionadas = respuestasJugador[actual];
+            if (seleccionadas.includes(opIdx)) {
+                respuestasJugador[actual] = seleccionadas.filter(x => x !== opIdx);
+                btn.classList.remove('selected');
+            } else {
+                // Controlar máximo 2 respuestas por consistencia con tu creador
+                if (seleccionadas.length >= 2) return;
+                disabledSelectionFlash(btn);
+                respuestasJugador[actual].push(opIdx);
+                btn.classList.add('selected');
+            }
+        }
+
+        function disabledSelectionFlash(btn) {
+            // Pequeño feedback visual opcional
+        }
+
+        function avanzarPregunta() {
+            if (respuestasJugador[actual].length === 0) {
+                const card = document.getElementById('pantalla-juego');
+                card.style.animation = 'none';
+                void card.offsetWidth;
+                card.style.animation = 'sacudir 0.3s ease';
+                return;
+            }
+
+            if (actual < gameData.preguntas.length - 1) {
+                actual++;
+                renderPreguntaJuego();
+            } else {
+                calcularYMostrarResultados();
+            }
+        }
+
+        // 3. PROCESAMIENTO MATEMÁTICO DE ACURACIDAD
+        function calcularYMostrarResultados() {
+            let aciertos = 0;
+
+            gameData.respuestas.forEach((respuestasCorrectasCreador, i) => {
+                const respuestasAmigo = respuestasJugador[i];
+
+                respuestasCorrectasCreador.sort();
+                respuestasAmigo.sort();
+
+                const esCorrecta = respuestasCorrectasCreador.length === respuestasAmigo.length &&
+                    respuestasCorrectasCreador.every((val, index) => val === respuestasAmigo[index]);
+
+                if (esCorrecta) aciertos++;
+            });
+
+            document.getElementById('info-progreso-pantalla').style.display = 'none';
+            document.getElementById('pantalla-juego').classList.remove('active');
+            document.getElementById('pantalla-resultados').classList.add('active');
+
+            document.getElementById('jugador-final-display').textContent = nombreJugador.toUpperCase();
+            document.getElementById('puntaje-final').textContent = `${aciertos} / ${gameData.preguntas.length}`;
+
+            const porcentaje = (aciertos / gameData.preguntas.length) * 100;
+            const feedback = document.getElementById('mensaje-feedback');
+            if (porcentaje === 100) {
+                feedback.innerHTML = "¡Eres su clon! Lo conoces de una forma casi mística. 🔥";
+            } else if (porcentaje >= 60) {
+                feedback.innerHTML = "¡Muy buen puntaje! Son panas firmes. 👌";
+            } else {
+                feedback.innerHTML = "Uf... parece que les falta salir por salchipapas y charlar más. 💀";
+            }
+
+            // =================================================================
+            // 🛑 ZONA DE RELEVO PARA CLAUDE (DATABASE & AUTH INJECTION)
+            // =================================================================
+            // Carga tus consultas fetch o métodos de Supabase usando estas variables:
+            // - `nombreJugador` (String)
+            // - `aciertos` (Int)
+            // - `gameData.preguntas.length` (Int)
+            // =================================================================
+            console.log("Relevo listo para Claude:", {
+                jugador: nombreJugador,
+                puntaje: aciertos,
+                total: gameData.preguntas.length
+            });
+        }
+
+        function copiarLink() {
+            // Obtiene los datos del formulario encriptados en base64 o URI component
+            const data = encodeURIComponent(JSON.stringify(tuObjetoDeDatos));
+
+            // Captura la ruta de la carpeta actual (ej: /QuienConoceMas)
+            const rutaActual = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+
+            // Une el origen, la carpeta, el archivo y los datos
+            const linkCompleto = `${window.location.origin}${rutaActual}/responder.html?data=${data}`;
+
+            // Lógica para copiar al portapapeles...
+            navigator.clipboard.writeText(linkCompleto);
+            alert("¡Enlace copiado con éxito!");
+        }
+    </script>
+</body>
+
+</html>
