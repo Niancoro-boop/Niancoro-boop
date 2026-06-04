@@ -384,10 +384,9 @@
             text-align: center;
         }
 
-        /* BOTÓN CREAR PREGUNTA */
+        /* Botón agregar pregunta */
         .add-question-btn {
             display: none;
-            /* Se maneja dinámicamente desde JS */
             width: 100%;
             margin: 0 auto 22px auto;
             background: var(--amarillo);
@@ -413,7 +412,7 @@
             box-shadow: 2px 2px 0px var(--amarillo-dark);
         }
 
-        /* BARRA INFERIOR DE NAVEGACIÓN */
+        /* Bottom bar */
         .bottom-bar {
             display: flex;
             align-items: center;
@@ -566,6 +565,12 @@
             box-shadow: 5px 5px 0px var(--amarillo-dark);
         }
 
+        .btn-amarillo:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-gris {
             background: #1e1e1e;
             color: #666;
@@ -592,6 +597,40 @@
         .row-btns button {
             flex: 1;
             padding: 12px;
+        }
+
+        /* Link display en el modal */
+        .link-display {
+            background: #0e0e0e;
+            border: 1.5px solid #333;
+            border-radius: 3px;
+            padding: 12px 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            color: var(--amarillo);
+            word-break: break-all;
+            text-align: left;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-top-color: var(--negro);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -633,19 +672,25 @@
         </div>
     </div>
 
+    <!-- Modal éxito / link -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <span class="modal-emoji" id="main-modal-emoji">🎉</span>
             <h2 id="main-modal-titulo">¡FORMULARIO<br>LISTO!</h2>
-            <p id="main-modal-mensaje">Tu formulario está creado. Comparte el link con tus amigos y descubre quién te
-                conoce mejor.</p>
+            <p id="main-modal-mensaje">Guardando tu formulario...</p>
+            <div id="link-display-wrap" style="display:none;">
+                <div class="link-display" id="link-display"></div>
+            </div>
             <div class="modal-btns" id="main-modal-container-btns">
-                <button class="btn-amarillo" id="copy-btn" onclick="copiarLink()">📋 COPIAR LINK</button>
+                <button class="btn-amarillo" id="copy-btn" onclick="copiarLink()" disabled>
+                    <span class="spinner" id="spinner"></span>GUARDANDO...
+                </button>
                 <button class="btn-gris" onclick="cerrarModal()">CERRAR</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal confirmación -->
     <div class="modal-overlay" id="confirmOverlay">
         <div class="modal">
             <span class="modal-emoji" id="confirm-emoji">⚠️</span>
@@ -658,6 +703,7 @@
         </div>
     </div>
 
+    <!-- Modal tipo pregunta -->
     <div class="modal-overlay" id="tipoPreguntaOverlay">
         <div class="modal">
             <span class="modal-emoji">✨</span>
@@ -674,11 +720,33 @@
         </div>
     </div>
 
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
     <script>
+        // ── FIREBASE ─────────────────────────────────────────────────────
+        const firebaseConfig = {
+            apiKey: "AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+            authDomain: "gamecorofriends.firebaseapp.com",
+            projectId: "gamecorofriends",
+            storageBucket: "gamecorofriends.firebasestorage.app",
+            messagingSenderId: "373275888982",
+            appId: "1:373275888982:web:94ddf75182aa8a461ddaf7",
+            measurementId: "G-XL7L54CM75"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ── PARAMS ───────────────────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
         const nombre = params.get('nombre') || 'TÚ';
         document.getElementById('nombre-display').textContent = nombre.toUpperCase();
 
+        // ── DATOS DEL JUEGO ──────────────────────────────────────────────
         let preguntas = [
             { texto: '¿Cuál es mi color favorito?', opciones: ['Rojo', 'Azul', 'Negro', 'Amarillo'] },
             { texto: '¿Cuál es mi comida favorita?', opciones: ['Pizza', 'Sushi', 'Hamburguesa', 'Pasta'] },
@@ -699,7 +767,41 @@
         let editando = false;
         let omitidas = new Set();
         let respuestas = preguntas.map(() => []);
+        let linkGenerado = '';
 
+        // ── HELPERS ──────────────────────────────────────────────────────
+        function generarId(largo = 8) {
+            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+            let id = '';
+            for (let i = 0; i < largo; i++) id += chars[Math.floor(Math.random() * chars.length)];
+            return id;
+        }
+
+        // ── GUARDAR EN FIRESTORE ─────────────────────────────────────────
+        async function guardarFormularioEnFirestore() {
+            const user = auth.currentUser;
+
+            const preguntasActivas = preguntas.filter((_, i) => !omitidas.has(i));
+            const respuestasActivas = respuestas.filter((_, i) => !omitidas.has(i));
+
+            const formId = generarId(8);
+
+            const doc = {
+                id: formId,
+                nombre: nombre,
+                creadorUid: user ? user.uid : null,
+                creadorNombre: user ? (user.displayName || user.email) : nombre,
+                preguntas: preguntasActivas,
+                respuestas: respuestasActivas,
+                creadoEn: firebase.firestore.FieldValue.serverTimestamp(),
+                respuestasCount: 0
+            };
+
+            await db.collection('formularios').doc(formId).set(doc);
+            return formId;
+        }
+
+        // ── MODAL CONFIRMACION ───────────────────────────────────────────
         function mostrarConfirmacionCustom(titulo, mensaje, emoji, alAceptar, alCancelar) {
             document.getElementById('confirm-titulo').innerHTML = titulo;
             document.getElementById('confirm-mensaje').textContent = mensaje;
@@ -711,17 +813,11 @@
             const btnAceptar = document.getElementById('confirm-accept-btn');
             const btnCancelar = document.getElementById('confirm-cancel-btn');
 
-            btnAceptar.onclick = () => {
-                overlay.classList.remove('show');
-                if (alAceptar) alAceptar();
-            };
-
-            btnCancelar.onclick = () => {
-                overlay.classList.remove('show');
-                if (alCancelar) alCancelar();
-            };
+            btnAceptar.onclick = () => { overlay.classList.remove('show'); if (alAceptar) alAceptar(); };
+            btnCancelar.onclick = () => { overlay.classList.remove('show'); if (alCancelar) alCancelar(); };
         }
 
+        // ── UI ───────────────────────────────────────────────────────────
         function updateUI() {
             document.getElementById('prog-total').textContent = preguntas.length;
             document.getElementById('prog-actual').textContent = actual + 1;
@@ -738,13 +834,8 @@
             navBtn.textContent = esUltima ? 'GUARDAR ✓' : 'SIGUIENTE →';
             navBtn.className = esUltima ? 'nav-btn verde' : 'nav-btn';
 
-            // El botón se muestra incondicionalmente si es la última pregunta del arreglo
             const btnAdd = document.getElementById('btn-add-externo');
-            if (actual === preguntas.length - 1) {
-                btnAdd.style.display = 'block';
-            } else {
-                btnAdd.style.display = 'none';
-            }
+            btnAdd.style.display = (actual === preguntas.length - 1) ? 'block' : 'none';
 
             document.getElementById('p-hint').textContent =
                 omitidas.has(actual) ? 'Pregunta omitida — no se incluirá' : 'Elige 1 o 2 respuestas correctas';
@@ -829,11 +920,7 @@
         }
 
         function toggleOmitir() {
-            if (omitidas.has(actual)) {
-                omitidas.delete(actual);
-            } else {
-                omitidas.add(actual);
-            }
+            if (omitidas.has(actual)) { omitidas.delete(actual); } else { omitidas.add(actual); }
             respuestas[actual] = [];
             updateUI();
             renderOpciones(actual, false);
@@ -861,46 +948,31 @@
             });
         }
 
-        // =====================================
-        // FLUJO UNIFICADO DE NAVEGACIÓN Y OMISIÓN
-        // =====================================
+        // ── FLUJO ────────────────────────────────────────────────────────
         function avanzar() {
             if (editando) { guardarEdicion(); return; }
 
-            // Si está vacía y no omitida, confirmamos
             if (!omitidas.has(actual) && respuestas[actual].length === 0) {
                 mostrarConfirmacionCustom(
                     "¿OMITIR PREGUNTA?",
                     "No has seleccionado ninguna respuesta. ¿Seguro de omitir esta pregunta?",
                     "⚠️",
                     function () {
-                        // Solo la añadimos a omitidas, sin destruir arreglos
                         omitidas.add(actual);
-
-                        if (actual < preguntas.length - 1) {
-                            actual++;
-                            renderPregunta(actual, 'adelante');
-                        } else {
-                            procesarGuardadoFinal();
-                        }
+                        if (actual < preguntas.length - 1) { actual++; renderPregunta(actual, 'adelante'); }
+                        else { procesarGuardadoFinal(); }
                     },
                     function () {
                         const card = document.getElementById('pregunta-card');
-                        card.style.animation = 'none';
-                        void card.offsetWidth;
+                        card.style.animation = 'none'; void card.offsetWidth;
                         card.style.animation = 'sacudir 0.3s ease';
                     }
                 );
                 return;
             }
 
-            // Flujo normal
-            if (actual < preguntas.length - 1) {
-                actual++;
-                renderPregunta(actual, 'adelante');
-            } else {
-                procesarGuardadoFinal();
-            }
+            if (actual < preguntas.length - 1) { actual++; renderPregunta(actual, 'adelante'); }
+            else { procesarGuardadoFinal(); }
         }
 
         function retroceder() {
@@ -909,103 +981,93 @@
         }
 
         function procesarGuardadoFinal() {
-            // Filtramos para ver cuántas preguntas reales quedaron activas
             const preguntasActivas = preguntas.filter((_, i) => !omitidas.has(i));
 
-            // SI OMITIÓ TODAS: Frenamos el flujo de inmediato
             if (preguntasActivas.length === 0) {
                 mostrarConfirmacionCustom(
                     "¡FORMULARIO VACÍO!",
-                    "No puedes finalizar el juego si omites todas las preguntas.Debe existir al menos una para poder generar tu link.",
+                    "No puedes finalizar el juego si omites todas las preguntas. Debe existir al menos una para generar el link.",
                     "🚫",
-                    function () {
-                        // Acción al presionar Aceptar: se cierra el modal para que corrija
-                    },
-                    function () {
-                        // Acción al presionar Cancelar: igual se cierra
-                    }
+                    function () { }, function () { }
                 );
-
-                // Le metemos la animación de sacudida a la tarjeta para que se note el bloqueo
                 const card = document.getElementById('pregunta-card');
-                card.style.animation = 'none';
-                void card.offsetWidth;
+                card.style.animation = 'none'; void card.offsetWidth;
                 card.style.animation = 'sacudir 0.3s ease';
                 return;
             }
 
-            // SI TODO ESTÁ BIEN: Muestra el modal de éxito original
+            // Abre el modal y lanza el guardado en Firestore
             document.getElementById('progress-fill').style.width = '100%';
             document.getElementById('modalOverlay').classList.add('show');
-        }
+            document.getElementById('main-modal-mensaje').textContent = 'Guardando tu formulario en la nube...';
+            document.getElementById('link-display-wrap').style.display = 'none';
 
-        // =====================================
-        // GENERACIÓN Y FILTRADO FINAL DE LINK
-        // =====================================
-        function copiarLink() {
-            // Filtrado automático de preguntas omitidas justo antes de generar
-            const preguntasActivas = preguntas.filter((_, i) => !omitidas.has(i));
-            const respuestasActivas = respuestas.filter((_, i) => !omitidas.has(i));
+            const copyBtn = document.getElementById('copy-btn');
+            copyBtn.disabled = true;
+            copyBtn.innerHTML = '<span class="spinner"></span>GUARDANDO...';
 
-            if (preguntasActivas.length === 0) {
-                alert("Debes dejar al menos una pregunta activa con respuesta.");
-                return;
-            }
+            guardarFormularioEnFirestore().then(formId => {
+                const baseUrl = window.location.origin + window.location.pathname.replace('formulario.html', '') + 'responder.html';
+                linkGenerado = `${baseUrl}?id=${formId}`;
 
-            const data = encodeURIComponent(JSON.stringify({
-                nombre,
-                preguntas: preguntasActivas,
-                respuestas: respuestasActivas
-            }));
+                document.getElementById('main-modal-mensaje').textContent = '¡Formulario guardado! Comparte el link con tus amigos.';
+                document.getElementById('link-display').textContent = linkGenerado;
+                document.getElementById('link-display-wrap').style.display = 'block';
 
-            const link = `${window.location.origin}/responder.html?data=${data}`;
-
-            navigator.clipboard.writeText(link).then(() => {
-                const btn = document.getElementById('copy-btn');
-                btn.textContent = '✓ COPIADO!';
-                setTimeout(() => btn.textContent = '📋 COPIAR LINK', 2000);
+                copyBtn.disabled = false;
+                copyBtn.innerHTML = '📋 COPIAR LINK';
             }).catch(err => {
-                console.error("Error copiando al portapapeles:", err);
+                console.error("Error guardando:", err);
+                document.getElementById('main-modal-mensaje').textContent = '⚠️ Error al guardar. Revisa tu conexión.';
+                copyBtn.innerHTML = '⚠️ ERROR — REINTENTAR';
+                copyBtn.disabled = false;
+                copyBtn.onclick = () => procesarGuardadoFinal();
             });
         }
 
-        function cerrarModal() {
-            document.getElementById('modalOverlay').classList.remove('show');
+        // ── COPIAR LINK ──────────────────────────────────────────────────
+        function copiarLink() {
+            if (!linkGenerado) return;
+            navigator.clipboard.writeText(linkGenerado).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = '✓ ¡COPIADO!';
+                setTimeout(() => btn.textContent = '📋 COPIAR LINK', 2500);
+            }).catch(() => {
+                // Fallback para móviles
+                const ta = document.createElement('textarea');
+                ta.value = linkGenerado;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = '✓ ¡COPIADO!';
+                setTimeout(() => btn.textContent = '📋 COPIAR LINK', 2500);
+            });
         }
 
-        // =====================================
-        // LÓGICA MODAL PREGUNTAS (REPARADA)
-        // =====================================
-        function abrirModalTipoPregunta() {
-            document.getElementById('tipoPreguntaOverlay').classList.add('show');
-        }
+        function cerrarModal() { document.getElementById('modalOverlay').classList.remove('show'); }
 
-        function cerrarModalTipoPregunta() {
-            document.getElementById('tipoPreguntaOverlay').classList.remove('show');
-        }
+        // ── MODAL TIPO PREGUNTA ──────────────────────────────────────────
+        function abrirModalTipoPregunta() { document.getElementById('tipoPreguntaOverlay').classList.add('show'); }
+        function cerrarModalTipoPregunta() { document.getElementById('tipoPreguntaOverlay').classList.remove('show'); }
 
         function agregarPreguntaEstrategia(tipo) {
-            // Si la actual está vacía y no omitida, prevenimos crear una nueva dejando la anterior colgada
             if (!omitidas.has(actual) && respuestas[actual].length === 0) {
                 cerrarModalTipoPregunta();
                 mostrarConfirmacionCustom(
                     "¿OMITIR PREGUNTA ACTUAL?",
                     "No has seleccionado respuesta en la pregunta actual. ¿Deseas omitirla y crear la nueva?",
                     "⚠️",
-                    function () {
-                        omitidas.add(actual);
-                        ejecutarAgregarPregunta(tipo);
-                    },
+                    function () { omitidas.add(actual); ejecutarAgregarPregunta(tipo); },
                     function () {
                         const card = document.getElementById('pregunta-card');
-                        card.style.animation = 'none';
-                        void card.offsetWidth;
+                        card.style.animation = 'none'; void card.offsetWidth;
                         card.style.animation = 'sacudir 0.3s ease';
                     }
                 );
                 return;
             }
-
             cerrarModalTipoPregunta();
             ejecutarAgregarPregunta(tipo);
         }
@@ -1018,20 +1080,14 @@
             } else {
                 nuevaPregunta = { texto: 'Nueva Pregunta', opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4'] };
             }
-
-            // Agregamos la pregunta de forma natural
             preguntas.push(nuevaPregunta);
             respuestas.push([]);
-
             actual = preguntas.length - 1;
             renderPregunta(actual, 'adelante');
-
-            if (tipo === 'personalizada') {
-                setTimeout(toggleEdicion, 400); // Abre edición automáticamente para la personalizada
-            }
+            if (tipo === 'personalizada') { setTimeout(toggleEdicion, 400); }
         }
 
-        // Inicialización
+        // ── INIT ─────────────────────────────────────────────────────────
         renderPregunta(actual);
     </script>
 </body>
