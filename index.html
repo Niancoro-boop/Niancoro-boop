@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GameCoroFriends</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --negro: #080808;
+            --rojo: #e8192c;
+            --rojo-dark: #8b0f1a;
+            --amarillo: #ffd60a;
+            --amarillo-dark: #b89b00;
+            --blanco: #f0f0f0;
+            --gris: #141414;
+            --gris2: #1e1e1e;
+        }
+
+        body {
+            background: var(--negro);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, #222 1px, transparent 1px);
+            background-size: 26px 26px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.12;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--rojo);
+            top: -150px;
+            left: -150px;
+            animation: flotar 10s ease-in-out infinite;
+        }
+
+        .blob-2 {
+            width: 350px;
+            height: 350px;
+            background: var(--amarillo);
+            bottom: -100px;
+            right: -100px;
+            animation: flotar 12s ease-in-out infinite reverse;
+        }
+
+        .blob-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--rojo);
+            top: 50%;
+            right: -80px;
+            animation: flotar 9s ease-in-out infinite 2s;
+        }
+
+        @keyframes flotar {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(25px, 20px)
+            }
+        }
+
+        header {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 56px;
+            animation: entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .header-tag {
+            display: inline-block;
+            background: var(--amarillo);
+            color: var(--negro);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            padding: 3px 14px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+        }
+
+        header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 8vw, 80px);
+            line-height: 0.95;
+            color: var(--blanco);
+            letter-spacing: 2px;
+        }
+
+        header h1 em {
+            font-style: normal;
+            color: var(--rojo);
+        }
+
+        header p {
+            margin-top: 12px;
+            color: #555;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .games-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1.15fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 960px;
+            padding: 0 24px;
+            align-items: center;
+        }
+
+        .game-card {
+            background: var(--gris);
+            border: 1.5px solid #242424;
+            border-radius: 4px;
+            padding: 36px 28px 28px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .game-card:nth-child(1) {
+            animation-delay: 0.1s;
+            box-shadow: 6px 6px 0px var(--rojo-dark);
+        }
+
+        .game-card:nth-child(2) {
+            animation-delay: 0.2s;
+            box-shadow: 8px 8px 0px var(--rojo);
+            padding: 44px 32px 36px;
+        }
+
+        .game-card:nth-child(3) {
+            animation-delay: 0.3s;
+            box-shadow: 6px 6px 0px var(--amarillo-dark);
+        }
+
+        .game-card:hover {
+            transform: translate(-3px, -3px);
+        }
+
+        .game-card:nth-child(1):hover {
+            box-shadow: 9px 9px 0px var(--rojo-dark);
+        }
+
+        .game-card:nth-child(2):hover {
+            box-shadow: 11px 11px 0px var(--rojo);
+        }
+
+        .game-card:nth-child(3):hover {
+            box-shadow: 9px 9px 0px var(--amarillo-dark);
+        }
+
+        .game-card:active {
+            transform: translate(2px, 2px);
+        }
+
+        .game-card:nth-child(1):active {
+            box-shadow: 3px 3px 0px var(--rojo-dark);
+        }
+
+        .game-card:nth-child(2):active {
+            box-shadow: 3px 3px 0px var(--rojo);
+        }
+
+        .game-card:nth-child(3):active {
+            box-shadow: 3px 3px 0px var(--amarillo-dark);
+        }
+
+        .game-card.featured {
+            border-color: #333;
+            background: #191919;
+        }
+
+        .game-emoji {
+            font-size: 36px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .game-card.featured .game-emoji {
+            font-size: 44px;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: -1px;
+            right: 20px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            padding: 3px 10px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .badge-pronto {
+            background: #333;
+            color: #666;
+        }
+
+        .badge-nuevo {
+            background: var(--amarillo);
+            color: var(--negro);
+        }
+
+        .game-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+            color: var(--blanco);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .game-card.featured .game-title {
+            font-size: 34px;
+        }
+
+        .game-title span {
+            color: var(--amarillo);
+        }
+
+        .game-title em {
+            font-style: normal;
+            color: var(--rojo);
+        }
+
+        .game-desc {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .game-card.featured .game-desc {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .game-btn {
+            width: 100%;
+            border: none;
+            border-radius: 3px;
+            padding: 13px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-pronto {
+            background: #1e1e1e;
+            color: #444;
+            border: 1.5px solid #2a2a2a;
+            cursor: not-allowed;
+        }
+
+        .btn-jugar-rojo {
+            background: var(--rojo);
+            color: var(--blanco);
+            box-shadow: 3px 3px 0px var(--rojo-dark);
+        }
+
+        .btn-jugar-rojo:hover {
+            opacity: 0.9;
+        }
+
+        .card-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .line-rojo {
+            background: var(--rojo);
+        }
+
+        .line-amarillo {
+            background: var(--amarillo);
+        }
+
+        .line-gris {
+            background: #2a2a2a;
+        }
+
+        footer {
+            position: relative;
+            z-index: 2;
+            margin-top: 48px;
+            text-align: center;
+            font-size: 11px;
+            color: #2e2e2e;
+            letter-spacing: 1px;
+            animation: entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+        }
+
+        footer span {
+            color: var(--rojo);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        footer span:hover {
+            color: var(--amarillo);
+        }
+
+        @keyframes entrar {
+            from {
+                opacity: 0;
+                transform: translateY(24px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--gris);
+            border: 2px solid #2a2a2a;
+            border-radius: 4px;
+            padding: 48px 36px 36px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            position: relative;
+            animation: entrar 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .modal-emoji {
+            font-size: 52px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .modal h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            color: var(--blanco);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .modal p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .modal-close {
+            width: 100%;
+            background: var(--rojo);
+            color: var(--blanco);
+            border: none;
+            border-radius: 3px;
+            padding: 14px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--rojo-dark);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .modal-close:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--rojo-dark);
+        }
+
+        .modal-close:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--rojo-dark);
+        }
+
+        @media (max-width: 680px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                max-width: 380px;
+            }
+
+            .game-card.featured {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <header>
+        <div class="header-tag">GAMECORO FRIENDS</div>
+        <h1>JUEGOS PARA<br><em>AMIGOS</em></h1>
+        <p>Elige un juego y a divertirse 🎮</p>
+    </header>
+
+    <div class="games-grid">
+
+        <!-- Impostor -->
+        <div class="game-card" onclick="mostrarModal('impostor')">
+            <div class="game-badge badge-pronto">PRÓXIMAMENTE</div>
+            <span class="game-emoji">🕵️</span>
+            <div class="game-title"><em>IMPOSTOR</em></div>
+            <p class="game-desc">Descubre quién entre tus amigos es el impostor.</p>
+            <button class="game-btn btn-pronto" disabled>PRÓXIMAMENTE</button>
+            <div class="card-line line-gris"></div>
+        </div>
+
+        <!-- ¿Cuánto me conoces? -->
+        <div class="game-card featured" onclick="window.location.href='conoces.html'">
+            <div class="game-badge badge-nuevo">NUEVO</div>
+            <span class="game-emoji">🧠</span>
+            <div class="game-title">¿CUÁNTO ME <span>CONOCES?</span></div>
+            <p class="game-desc">Crea tu formulario personal, compártelo con tus amigos y descubre quién te conoce
+                mejor.</p>
+            <button class="game-btn btn-jugar-rojo">JUGAR</button>
+            <div class="card-line line-rojo"></div>
+        </div>
+
+        <!-- Verdad o Reto -->
+        <div class="game-card" onclick="mostrarModal('verdad')">
+            <div class="game-badge badge-pronto">PRÓXIMAMENTE</div>
+            <span class="game-emoji">🎲</span>
+            <div class="game-title">VERDAD O <span>RETO</span></div>
+            <p class="game-desc">El clásico de toda reunión.</p>
+            <button class="game-btn btn-pronto" disabled>PRÓXIMAMENTE</button>
+            <div class="card-line line-amarillo"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        by <span id="niancoro-link">Niancoro</span>
+    </footer>
+
+    <!-- Modal próximamente -->
+    <div class="modal-overlay" id="modalOverlay" onclick="cerrarModal(event)">
+        <div class="modal">
+            <span class="modal-emoji" id="modal-emoji">🚧</span>
+            <h2 id="modal-titulo">PRÓXIMAMENTE</h2>
+            <p id="modal-desc">Este juego está en construcción. ¡Vuelve pronto!</p>
+            <button class="modal-close" onclick="cerrarModal()">CERRAR</button>
+        </div>
+    </div>
+
+    <script>
+        const juegos = {
+            impostor: {
+                emoji: '🕵️',
+                titulo: 'PRÓXIMAMENTE',
+                desc: 'Impostor está en construcción. Pronto podrás jugar con tus amigos a descubrir al infiltrado.'
+            },
+            verdad: {
+                emoji: '🎲',
+                titulo: 'PRÓXIMAMENTE',
+                desc: 'Verdad o Reto llegará muy pronto. Prepárate para los momentos más incómodos y divertidos.'
+            }
+        };
+
+        function mostrarModal(juego) {
+            const data = juegos[juego];
+            document.getElementById('modal-emoji').textContent = data.emoji;
+            document.getElementById('modal-titulo').textContent = data.titulo;
+            document.getElementById('modal-desc').textContent = data.desc;
+            document.getElementById('modalOverlay').classList.add('show');
+        }
+
+        function cerrarModal(e) {
+            if (!e || e.target === document.getElementById('modalOverlay') || e.currentTarget.classList.contains('modal-close')) {
+                document.getElementById('modalOverlay').classList.remove('show');
+            }
+        }
+
+        document.getElementById('niancoro-link').addEventListener('click', () => {
+            window.location.href = 'mailto:Niancoroestudiantil@gmail.com?subject=Contacto%20GameCoroFriends';
+        });
+    </script>
+</body>
+
+</html>
