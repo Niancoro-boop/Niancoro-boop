@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GameCoroFriends</title>
+    <title>GameCoroFriends - Juegos para Amigos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet" />
@@ -38,6 +40,7 @@
             justify-content: center;
             overflow-x: hidden;
             position: relative;
+            padding: 40px 0;
         }
 
         body::before {
@@ -48,6 +51,7 @@
             background-size: 26px 26px;
             opacity: 0.5;
             z-index: 0;
+            pointer-events: none;
         }
 
         .blob {
@@ -90,11 +94,11 @@
 
             0%,
             100% {
-                transform: translate(0, 0)
+                transform: translate(0, 0);
             }
 
             50% {
-                transform: translate(25px, 20px)
+                transform: translate(25px, 20px);
             }
         }
 
@@ -133,7 +137,7 @@
 
         header p {
             margin-top: 12px;
-            color: #555;
+            color: #666;
             font-size: 14px;
             letter-spacing: 0.5px;
         }
@@ -142,10 +146,10 @@
             position: relative;
             z-index: 2;
             display: grid;
-            grid-template-columns: 1fr 1.15fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             width: 100%;
-            max-width: 960px;
+            max-width: 1000px;
             padding: 0 24px;
             align-items: center;
         }
@@ -160,6 +164,9 @@
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.2s;
             animation: entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .game-card:nth-child(1) {
@@ -238,7 +245,7 @@
 
         .badge-pronto {
             background: #333;
-            color: #666;
+            color: #777;
         }
 
         .badge-nuevo {
@@ -269,15 +276,16 @@
         }
 
         .game-desc {
-            font-size: 12px;
-            color: #555;
+            font-size: 13px;
+            color: #777;
             line-height: 1.6;
             margin-bottom: 24px;
+            flex-grow: 1;
+            /* Empuja el botón al final de la tarjeta */
         }
 
         .game-card.featured .game-desc {
-            color: #666;
-            font-size: 13px;
+            color: #888;
         }
 
         .game-btn {
@@ -335,7 +343,7 @@
             margin-top: 48px;
             text-align: center;
             font-size: 11px;
-            color: #2e2e2e;
+            color: #444;
             letter-spacing: 1px;
             animation: entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
         }
@@ -344,6 +352,7 @@
             color: var(--rojo);
             cursor: pointer;
             transition: color 0.2s;
+            font-weight: 600;
         }
 
         footer span:hover {
@@ -353,12 +362,12 @@
         @keyframes entrar {
             from {
                 opacity: 0;
-                transform: translateY(24px)
+                transform: translateY(24px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0)
+                transform: translateY(0);
             }
         }
 
@@ -404,8 +413,8 @@
         }
 
         .modal p {
-            font-size: 13px;
-            color: #555;
+            font-size: 14px;
+            color: #888;
             line-height: 1.7;
             margin-bottom: 28px;
         }
@@ -435,14 +444,15 @@
             box-shadow: 2px 2px 0px var(--rojo-dark);
         }
 
-        @media (max-width: 680px) {
+        @media (max-width: 890px) {
             .games-grid {
                 grid-template-columns: 1fr;
-                max-width: 380px;
+                max-width: 400px;
             }
 
             .game-card.featured {
                 order: -1;
+                /* Mantiene el juego destacado arriba en móviles */
             }
         }
     </style>
@@ -460,48 +470,45 @@
         <p>Elige un juego y a divertirse 🎮</p>
     </header>
 
-    <div class="games-grid">
+    <main class="games-grid">
 
-        <!-- Impostor -->
-        <div class="game-card" onclick="mostrarModal('impostor')">
+        <article class="game-card" onclick="mostrarModal('impostor')">
             <div class="game-badge badge-pronto">PRÓXIMAMENTE</div>
             <span class="game-emoji">🕵️</span>
-            <div class="game-title"><em>IMPOSTOR</em></div>
+            <h2 class="game-title"><em>IMPOSTOR</em></h2>
             <p class="game-desc">Descubre quién entre tus amigos es el impostor.</p>
-            <button class="game-btn btn-pronto" disabled>PRÓXIMAMENTE</button>
+            <button class="game-btn btn-pronto" disabled aria-label="Juego Impostor próximamente">PRÓXIMAMENTE</button>
             <div class="card-line line-gris"></div>
-        </div>
+        </article>
 
-        <!-- ¿Cuánto me conoces? -->
-        <div class="game-card featured" onclick="window.location.href='conoces.html'">
+        <article class="game-card featured" onclick="window.location.href='QuienConoceMas/conoces.html'">
             <div class="game-badge badge-nuevo">NUEVO</div>
             <span class="game-emoji">🧠</span>
-            <div class="game-title">¿CUÁNTO ME <span>CONOCES?</span></div>
+            <h2 class="game-title">¿CUÁNTO ME <span>CONOCES?</span></h2>
             <p class="game-desc">Crea tu formulario personal, compártelo con tus amigos y descubre quién te conoce
                 mejor.</p>
             <button class="game-btn btn-jugar-rojo">JUGAR</button>
             <div class="card-line line-rojo"></div>
-        </div>
+        </article>
 
-        <!-- Verdad o Reto -->
-        <div class="game-card" onclick="mostrarModal('verdad')">
+        <article class="game-card" onclick="mostrarModal('verdad')">
             <div class="game-badge badge-pronto">PRÓXIMAMENTE</div>
             <span class="game-emoji">🎲</span>
-            <div class="game-title">VERDAD O <span>RETO</span></div>
+            <h2 class="game-title">VERDAD O <span>RETO</span></h2>
             <p class="game-desc">El clásico de toda reunión.</p>
-            <button class="game-btn btn-pronto" disabled>PRÓXIMAMENTE</button>
+            <button class="game-btn btn-pronto" disabled
+                aria-label="Juego Verdad o Reto próximamente">PRÓXIMAMENTE</button>
             <div class="card-line line-amarillo"></div>
-        </div>
+        </article>
 
-    </div>
+    </main>
 
     <footer>
         by <span id="niancoro-link">Niancoro</span>
     </footer>
 
-    <!-- Modal próximamente -->
     <div class="modal-overlay" id="modalOverlay" onclick="cerrarModal(event)">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
             <span class="modal-emoji" id="modal-emoji">🚧</span>
             <h2 id="modal-titulo">PRÓXIMAMENTE</h2>
             <p id="modal-desc">Este juego está en construcción. ¡Vuelve pronto!</p>
@@ -525,6 +532,8 @@
 
         function mostrarModal(juego) {
             const data = juegos[juego];
+            if (!data) return;
+
             document.getElementById('modal-emoji').textContent = data.emoji;
             document.getElementById('modal-titulo').textContent = data.titulo;
             document.getElementById('modal-desc').textContent = data.desc;
@@ -532,7 +541,8 @@
         }
 
         function cerrarModal(e) {
-            if (!e || e.target === document.getElementById('modalOverlay') || e.currentTarget.classList.contains('modal-close')) {
+            // Permite cerrar si se hace clic afuera del modal o en el botón de cerrar
+            if (!e || e.target === document.getElementById('modalOverlay') || e.target.classList.contains('modal-close')) {
                 document.getElementById('modalOverlay').classList.remove('show');
             }
         }

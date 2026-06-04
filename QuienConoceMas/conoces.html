@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Cuánto me conoces? — GameCoroFriends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --negro: #080808;
+            --rojo: #e8192c;
+            --rojo-dark: #8b0f1a;
+            --amarillo: #ffd60a;
+            --blanco: #f0f0f0;
+            --gris: #141414;
+        }
+
+        body {
+            background: var(--negro);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, #222 1px, transparent 1px);
+            background-size: 26px 26px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.12;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blob-1 {
+            width: 450px;
+            height: 450px;
+            background: var(--rojo);
+            top: -130px;
+            left: -130px;
+            animation: flotar 10s ease-in-out infinite;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--amarillo);
+            bottom: -80px;
+            right: -80px;
+            animation: flotar 12s ease-in-out infinite reverse;
+        }
+
+        @keyframes flotar {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(25px, 20px)
+            }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+            background: #1a1a1a;
+            border: 1.5px solid #2a2a2a;
+            color: #666;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: var(--amarillo);
+            border-color: var(--amarillo);
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--gris);
+            border: 2px solid #242424;
+            border-radius: 4px;
+            padding: 56px 48px 48px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 8px 8px 0px var(--rojo);
+            animation: entrar 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes entrar {
+            from {
+                opacity: 0;
+                transform: translateY(28px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .tag {
+            position: absolute;
+            top: -14px;
+            left: 32px;
+            background: var(--amarillo);
+            color: var(--negro);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            padding: 3px 14px;
+            border-radius: 2px;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 50px;
+            line-height: 1;
+            color: var(--blanco);
+            margin-bottom: 6px;
+        }
+
+        h1 span {
+            color: var(--amarillo);
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 36px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: #0e0e0e;
+            border: 1.5px solid #2a2a2a;
+            border-radius: 3px;
+            padding: 16px 18px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            color: var(--blanco);
+            outline: none;
+            margin-bottom: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]::placeholder {
+            color: #383838;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--amarillo);
+            box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.08);
+        }
+
+        .error-msg {
+            font-size: 12px;
+            color: var(--rojo);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @keyframes sacudir {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(-6px)
+            }
+
+            75% {
+                transform: translateX(6px)
+            }
+        }
+
+        button.main-btn {
+            width: 100%;
+            background: var(--rojo);
+            color: var(--blanco);
+            border: none;
+            border-radius: 3px;
+            padding: 17px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--rojo-dark);
+            transition: transform 0.15s, box-shadow 0.15s;
+            margin-top: 8px;
+        }
+
+        button.main-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--rojo-dark);
+        }
+
+        button.main-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--rojo-dark);
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #3a3a3a;
+            letter-spacing: 1px;
+        }
+
+        #niancoro-link {
+            color: var(--rojo);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        #niancoro-link:hover {
+            color: var(--amarillo);
+        }
+
+        /* Modal Niancoro */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--gris);
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 40px 30px 30px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 6px 6px 0px var(--amarillo);
+            animation: entrar 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .modal h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            letter-spacing: 1px;
+            color: var(--blanco);
+            margin-bottom: 12px;
+        }
+
+        .modal p {
+            color: #aaa;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--rojo);
+        }
+
+        .contact-btn {
+            display: block;
+            width: 100%;
+            background: var(--amarillo);
+            color: var(--negro);
+            border: none;
+            border-radius: 3px;
+            padding: 17px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            box-shadow: 4px 4px 0px #b89b00;
+            transition: transform 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+
+        .contact-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #b89b00;
+        }
+
+        .contact-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #b89b00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <a class="back-btn" href="../index.html">← VOLVER</a>
+
+    <div class="card">
+        <div class="tag">¿CUÁNTO ME CONOCES?</div>
+
+        <h1>CREA TU<br><span>FORMULARIO</span></h1>
+        <p class="subtitle">Escribe tu nombre o apodo para empezar a crear tu cuestionario personal.</p>
+
+        <label for="nombre">Tu nombre / apodo</label>
+        <input type="text" id="nombre" placeholder="Ej: Juancho, La Nena, Coro..." autocomplete="off" />
+        <p class="error-msg" id="error">⚠ Escribe tu nombre para continuar</p>
+
+        <button class="main-btn" onclick="continuar()">CREAR FORMULARIO</button>
+
+        <p class="footer-note">by <span id="niancoro-link">Niancoro</span></p>
+    </div>
+
+    <!-- Modal Niancoro -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="close-btn" onclick="cerrarModal()">&times;</button>
+            <h2>Contacta al creador</h2>
+            <p>¿Tienes alguna duda, sugerencia o quieres reportar un problema?</p>
+            <a href="mailto:Niancoroestudiantil@gmail.com?subject=Contacto%20desde%20GameCoroFriends"
+                class="contact-btn">
+                ENVIAR MENSAJE
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function continuar() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const error = document.getElementById('error');
+            if (!nombre) {
+                error.style.display = 'block';
+                error.style.animation = 'none';
+                void error.offsetWidth;
+                error.style.animation = 'sacudir 0.3s ease';
+                document.getElementById('nombre').focus();
+                return;
+            }
+            error.style.display = 'none';
+            window.location.href = `formulario.html?nombre=${encodeURIComponent(nombre)}`;
+        }
+
+        document.getElementById('nombre').addEventListener('keydown', e => {
+            if (e.key === 'Enter') continuar();
+        });
+
+        const overlay = document.getElementById('modalOverlay');
+        document.getElementById('niancoro-link').addEventListener('click', () => {
+            overlay.classList.add('show');
+        });
+
+        function cerrarModal() { overlay.classList.remove('show'); }
+
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) cerrarModal();
+        });
+    </script>
+</body>
+
+</html>
