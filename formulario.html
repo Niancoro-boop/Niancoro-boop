@@ -301,8 +301,7 @@
             cb.disabled=true;cb.innerHTML='<span class="spinner"></span>GUARDANDO...';
 
             guardarEnFirestore().then(id=>{
-                const carpeta=window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/')+1);
-                const base=window.location.origin+carpeta+'responder.html';
+                const base='https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html';
                 linkGenerado=`${base}?id=${id}`;
                 document.getElementById('modal-msg').textContent='¡Listo! Comparte este link con tus amigos:';
                 document.getElementById('link-display').textContent=linkGenerado;
