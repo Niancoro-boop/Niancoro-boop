@@ -13,7 +13,7 @@
         *::after {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
 
         :root {
@@ -25,7 +25,7 @@
             --blanco: #f0f0f0;
             --gris: #141414;
             --gris2: #1c1c1c;
-            --borde: #2a2a2a;
+            --borde: #2a2a2a
         }
 
         body {
@@ -35,7 +35,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            position: relative;
+            position: relative
         }
 
         body::before {
@@ -44,18 +44,18 @@
             inset: 0;
             background-image: radial-gradient(circle, #222 1px, transparent 1px);
             background-size: 26px 26px;
-            opacity: 0.4;
+            opacity: .4;
             z-index: 0;
-            pointer-events: none;
+            pointer-events: none
         }
 
         .blob {
             position: fixed;
             border-radius: 50%;
             filter: blur(100px);
-            opacity: 0.08;
+            opacity: .08;
             pointer-events: none;
-            z-index: 0;
+            z-index: 0
         }
 
         .blob-1 {
@@ -64,7 +64,7 @@
             background: var(--rojo);
             top: -100px;
             left: -100px;
-            animation: flotar 10s ease-in-out infinite;
+            animation: flotar 10s ease-in-out infinite
         }
 
         .blob-2 {
@@ -73,22 +73,21 @@
             background: var(--amarillo);
             bottom: -80px;
             right: -80px;
-            animation: flotar 12s ease-in-out infinite reverse;
+            animation: flotar 12s ease-in-out infinite reverse
         }
 
         @keyframes flotar {
 
             0%,
             100% {
-                transform: translate(0, 0);
+                transform: translate(0, 0)
             }
 
             50% {
-                transform: translate(20px, 18px);
+                transform: translate(20px, 18px)
             }
         }
 
-        /* TOP BAR */
         .top-bar {
             position: relative;
             z-index: 10;
@@ -97,9 +96,9 @@
             justify-content: space-between;
             padding: 16px 28px;
             border-bottom: 1px solid var(--borde);
-            background: rgba(8, 8, 8, 0.97);
+            background: rgba(8, 8, 8, .97);
             backdrop-filter: blur(8px);
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .back-btn {
@@ -113,37 +112,36 @@
             border-radius: 3px;
             cursor: pointer;
             text-decoration: none;
-            transition: color 0.2s, border-color 0.2s;
+            transition: color .2s, border-color .2s
         }
 
         .back-btn:hover {
             color: var(--amarillo);
-            border-color: var(--amarillo);
+            border-color: var(--amarillo)
         }
 
         .top-title {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 18px;
             letter-spacing: 2px;
-            color: #444;
+            color: #444
         }
 
         .top-title span {
-            color: var(--amarillo);
+            color: var(--amarillo)
         }
 
         .progress-info {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 14px;
             letter-spacing: 2px;
-            color: #444;
+            color: #444
         }
 
         .progress-info span {
-            color: var(--blanco);
+            color: var(--blanco)
         }
 
-        /* MAIN */
         .main {
             position: relative;
             z-index: 1;
@@ -152,36 +150,36 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 20px
         }
 
         .pregunta-card {
             width: 100%;
             max-width: 580px;
-            animation: entrar 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: entrar .4s cubic-bezier(.22, 1, .36, 1) both
         }
 
         @keyframes entrar {
             from {
                 opacity: 0;
-                transform: translateX(40px);
+                transform: translateX(40px)
             }
 
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0)
             }
         }
 
         @keyframes entrarAtras {
             from {
                 opacity: 0;
-                transform: translateX(-40px);
+                transform: translateX(-40px)
             }
 
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0)
             }
         }
 
@@ -189,25 +187,24 @@
 
             0%,
             100% {
-                transform: translateX(0);
+                transform: translateX(0)
             }
 
             25% {
-                transform: translateX(-8px);
+                transform: translateX(-8px)
             }
 
             75% {
-                transform: translateX(8px);
+                transform: translateX(8px)
             }
         }
 
-        /* META ROW */
         .p-meta {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
-            flex-wrap: wrap;
+            flex-wrap: wrap
         }
 
         .p-num {
@@ -217,7 +214,7 @@
             font-size: 13px;
             letter-spacing: 1px;
             padding: 4px 12px;
-            border-radius: 2px;
+            border-radius: 2px
         }
 
         .icon-btn {
@@ -231,33 +228,23 @@
             font-size: 15px;
             border: 1.5px solid var(--borde);
             background: #1a1a1a;
-            transition: border-color 0.2s, background 0.2s;
-            flex-shrink: 0;
+            transition: border-color .2s, background .2s;
+            flex-shrink: 0
         }
 
         .edit-btn {
-            filter: grayscale(1);
+            filter: grayscale(1)
         }
 
         .edit-btn:hover {
             border-color: #555;
-            background: #222;
+            background: #222
         }
 
         .edit-btn.saving {
             border-color: var(--amarillo);
             background: #1a1500;
-            filter: grayscale(0);
-        }
-
-        .del-btn {
-            filter: grayscale(1);
-        }
-
-        .del-btn:hover {
-            border-color: var(--rojo);
-            background: #1a0505;
-            filter: grayscale(0);
+            filter: grayscale(0)
         }
 
         .skip-badge {
@@ -271,33 +258,34 @@
             border-radius: 2px;
             cursor: pointer;
             font-family: 'Bebas Neue', sans-serif;
-            transition: color 0.2s, border-color 0.2s;
+            transition: color .2s, border-color .2s
         }
 
         .skip-badge:hover {
             color: #888;
-            border-color: #444;
+            border-color: #444
         }
 
         .skip-badge.skipped {
             color: var(--amarillo);
             border-color: var(--amarillo);
-            background: #1a1500;
+            background: #1a1500
         }
 
         .p-hint {
             font-size: 10px;
             color: #3a3a3a;
             letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block
         }
 
-        /* Título */
         .p-titulo {
             font-family: 'Bebas Neue', sans-serif;
             font-size: clamp(22px, 4.5vw, 34px);
             color: var(--blanco);
             line-height: 1.1;
-            margin-bottom: 20px;
+            margin-bottom: 20px
         }
 
         .p-titulo-input {
@@ -310,16 +298,14 @@
             font-size: clamp(18px, 3.5vw, 26px);
             color: var(--blanco);
             outline: none;
-            margin-bottom: 20px;
-            box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.07);
+            margin-bottom: 20px
         }
 
-        /* Opciones */
         .opciones-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 22px
         }
 
         .opcion-btn {
@@ -332,29 +318,29 @@
             font-weight: 600;
             color: #888;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all .15s ease;
             text-align: center;
             position: relative;
             overflow: hidden;
-            user-select: none;
+            user-select: none
         }
 
         .opcion-btn:hover:not(.disabled) {
             border-color: #444;
             color: var(--blanco);
-            background: #222;
+            background: #222
         }
 
         .opcion-btn.selected {
             background: #1a1500;
             border-color: var(--amarillo);
             color: var(--amarillo);
-            box-shadow: 0 0 0 1px var(--amarillo) inset, 3px 3px 0px var(--amarillo-dark);
+            box-shadow: 0 0 0 1px var(--amarillo) inset, 3px 3px 0px var(--amarillo-dark)
         }
 
         .opcion-btn.disabled:not(.selected) {
-            opacity: 0.3;
-            cursor: not-allowed;
+            opacity: .3;
+            cursor: not-allowed
         }
 
         .check-icon {
@@ -363,11 +349,11 @@
             top: 5px;
             right: 7px;
             font-size: 10px;
-            color: var(--amarillo);
+            color: var(--amarillo)
         }
 
         .opcion-btn.selected .check-icon {
-            display: block;
+            display: block
         }
 
         .opcion-edit-input {
@@ -381,42 +367,13 @@
             font-weight: 600;
             color: var(--blanco);
             outline: none;
-            text-align: center;
+            text-align: center
         }
 
-        /* Botón agregar pregunta */
-        .add-question-btn {
-            display: none;
-            width: 100%;
-            margin: 0 auto 22px auto;
-            background: var(--amarillo);
-            color: var(--negro);
-            border: none;
-            border-radius: 3px;
-            padding: 12px 22px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 15px;
-            letter-spacing: 2px;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--amarillo-dark);
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-
-        .add-question-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--amarillo-dark);
-        }
-
-        .add-question-btn:active {
-            transform: translate(1px, 1px);
-            box-shadow: 2px 2px 0px var(--amarillo-dark);
-        }
-
-        /* Bottom bar */
         .bottom-bar {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px
         }
 
         .nav-btn-back {
@@ -429,18 +386,18 @@
             padding: 12px 18px;
             border-radius: 3px;
             cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
-            flex-shrink: 0;
+            transition: color .2s, border-color .2s;
+            flex-shrink: 0
         }
 
         .nav-btn-back:hover:not(:disabled) {
             color: var(--blanco);
-            border-color: #555;
+            border-color: #555
         }
 
         .nav-btn-back:disabled {
-            opacity: 0.2;
-            cursor: not-allowed;
+            opacity: .2;
+            cursor: not-allowed
         }
 
         .progress-bar-wrap {
@@ -448,14 +405,14 @@
             height: 4px;
             background: #1e1e1e;
             border-radius: 2px;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .progress-bar-fill {
             height: 100%;
             background: var(--rojo);
             border-radius: 2px;
-            transition: width 0.4s ease;
+            transition: width .4s ease
         }
 
         .nav-btn {
@@ -469,43 +426,42 @@
             letter-spacing: 3px;
             cursor: pointer;
             box-shadow: 4px 4px 0px var(--rojo-dark);
-            transition: transform 0.15s, box-shadow 0.15s;
-            flex-shrink: 0;
+            transition: transform .15s, box-shadow .15s;
+            flex-shrink: 0
         }
 
         .nav-btn:hover {
             transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--rojo-dark);
+            box-shadow: 6px 6px 0px var(--rojo-dark)
         }
 
         .nav-btn:active {
             transform: translate(1px, 1px);
-            box-shadow: 2px 2px 0px var(--rojo-dark);
+            box-shadow: 2px 2px 0px var(--rojo-dark)
         }
 
         .nav-btn.verde {
             background: #1a7a1a;
-            box-shadow: 4px 4px 0px #0d4a0d;
+            box-shadow: 4px 4px 0px #0d4a0d
         }
 
         .nav-btn.verde:hover {
-            box-shadow: 6px 6px 0px #0d4a0d;
+            box-shadow: 6px 6px 0px #0d4a0d
         }
 
-        /* Modales */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, .9);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 999;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px)
         }
 
         .modal-overlay.show {
-            display: flex;
+            display: flex
         }
 
         .modal {
@@ -517,33 +473,33 @@
             max-width: 400px;
             text-align: center;
             box-shadow: 8px 8px 0px var(--amarillo);
-            animation: entrar 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: entrar .35s cubic-bezier(.22, 1, .36, 1) both
         }
 
         .modal-emoji {
             font-size: 48px;
             display: block;
-            margin-bottom: 14px;
+            margin-bottom: 14px
         }
 
         .modal h2 {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 32px;
             color: var(--blanco);
-            margin-bottom: 8px;
+            margin-bottom: 8px
         }
 
         .modal p {
             font-size: 13px;
             color: #666;
             margin-bottom: 22px;
-            line-height: 1.6;
+            line-height: 1.6
         }
 
         .modal-btns {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 10px
         }
 
         .btn-amarillo {
@@ -557,18 +513,18 @@
             letter-spacing: 3px;
             cursor: pointer;
             box-shadow: 3px 3px 0px var(--amarillo-dark);
-            transition: transform 0.15s, box-shadow 0.15s;
+            transition: transform .15s, box-shadow .15s
         }
 
         .btn-amarillo:hover {
             transform: translate(-2px, -2px);
-            box-shadow: 5px 5px 0px var(--amarillo-dark);
+            box-shadow: 5px 5px 0px var(--amarillo-dark)
         }
 
         .btn-amarillo:disabled {
-            opacity: 0.5;
+            opacity: .5;
             cursor: not-allowed;
-            transform: none;
+            transform: none
         }
 
         .btn-gris {
@@ -581,25 +537,13 @@
             font-size: 14px;
             letter-spacing: 2px;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: color .2s
         }
 
         .btn-gris:hover {
-            color: var(--blanco);
+            color: var(--blanco)
         }
 
-        .row-btns {
-            flex-direction: row !important;
-            justify-content: center;
-            gap: 14px;
-        }
-
-        .row-btns button {
-            flex: 1;
-            padding: 12px;
-        }
-
-        /* Link display en el modal */
         .link-display {
             background: #0e0e0e;
             border: 1.5px solid #333;
@@ -611,41 +555,37 @@
             word-break: break-all;
             text-align: left;
             margin-bottom: 14px;
-            letter-spacing: 0.5px;
+            letter-spacing: .5px
         }
 
-        /* Spinner */
         .spinner {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(0, 0, 0, 0.3);
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(0, 0, 0, .3);
             border-top-color: var(--negro);
             border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+            animation: spin .7s linear infinite;
             vertical-align: middle;
-            margin-right: 6px;
+            margin-right: 6px
         }
 
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg)
             }
         }
     </style>
 </head>
 
 <body>
-
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
-
     <div class="top-bar">
         <a class="back-btn" href="conoces.html">← VOLVER</a>
         <div class="top-title">FORMULARIO: <span id="nombre-display">...</span></div>
         <div class="progress-info">PREGUNTA <span id="prog-actual">1</span> DE <span id="prog-total">?</span></div>
     </div>
-
     <div class="main">
         <div class="pregunta-card" id="pregunta-card">
             <div class="p-meta">
@@ -654,14 +594,8 @@
                 <button class="skip-badge" id="skip-btn" onclick="toggleOmitir()">OMITIR</button>
             </div>
             <span class="p-hint" id="p-hint">Elige 1 o 2 respuestas correctas</span>
-
             <div id="titulo-container"></div>
             <div class="opciones-grid" id="opciones-grid"></div>
-
-            <button class="add-question-btn" id="btn-add-externo" onclick="abrirModalTipoPregunta()">
-                ➕ AÑADIR PREGUNTA
-            </button>
-
             <div class="bottom-bar">
                 <button class="nav-btn-back" id="btn-atras" onclick="retroceder()">← ATRÁS</button>
                 <div class="progress-bar-wrap">
@@ -672,19 +606,18 @@
         </div>
     </div>
 
-    <!-- Modal éxito / link -->
+    <!-- Modal éxito/link -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <span class="modal-emoji" id="main-modal-emoji">🎉</span>
-            <h2 id="main-modal-titulo">¡FORMULARIO<br>LISTO!</h2>
-            <p id="main-modal-mensaje">Guardando tu formulario...</p>
-            <div id="link-display-wrap" style="display:none;">
+            <span class="modal-emoji">🎉</span>
+            <h2>¡FORMULARIO<br>LISTO!</h2>
+            <p id="modal-msg">Guardando tu formulario...</p>
+            <div id="link-wrap" style="display:none">
                 <div class="link-display" id="link-display"></div>
             </div>
-            <div class="modal-btns" id="main-modal-container-btns">
-                <button class="btn-amarillo" id="copy-btn" onclick="copiarLink()" disabled>
-                    <span class="spinner" id="spinner"></span>GUARDANDO...
-                </button>
+            <div class="modal-btns">
+                <button class="btn-amarillo" id="copy-btn" onclick="copiarLink()" disabled><span class="spinner"
+                        id="spinner"></span>GUARDANDO...</button>
                 <button class="btn-gris" onclick="cerrarModal()">CERRAR</button>
             </div>
         </div>
@@ -693,60 +626,35 @@
     <!-- Modal confirmación -->
     <div class="modal-overlay" id="confirmOverlay">
         <div class="modal">
-            <span class="modal-emoji" id="confirm-emoji">⚠️</span>
-            <h2 id="confirm-titulo">¿OMITIR PREGUNTA?</h2>
-            <p id="confirm-mensaje">No has seleccionado ninguna respuesta. ¿Seguro de omitir esta pregunta?</p>
-            <div class="modal-btns row-btns">
-                <button class="btn-amarillo" id="confirm-accept-btn">ACEPTAR</button>
-                <button class="btn-gris" id="confirm-cancel-btn">CANCELAR</button>
+            <span class="modal-emoji" id="c-emoji">⚠️</span>
+            <h2 id="c-titulo">¿SEGURO?</h2>
+            <p id="c-msg">¿Deseas continuar?</p>
+            <div class="modal-btns" style="flex-direction:row;justify-content:center;gap:14px">
+                <button class="btn-amarillo" id="c-ok" style="flex:1;padding:12px">ACEPTAR</button>
+                <button class="btn-gris" id="c-cancel" style="flex:1;padding:12px">CANCELAR</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal tipo pregunta -->
-    <div class="modal-overlay" id="tipoPreguntaOverlay">
-        <div class="modal">
-            <span class="modal-emoji">✨</span>
-            <h2>¿QUÉ PREGUNTA<br>QUIERES AÑADIR?</h2>
-            <p>Elige si prefieres redactarla tú mismo o traer una pregunta aleatoria de nuestro banco de juego.</p>
-            <div class="modal-btns">
-                <button class="btn-amarillo" onclick="agregarPreguntaEstrategia('personalizada')">✍️
-                    PERSONALIZADA</button>
-                <button class="btn-amarillo"
-                    style="background:var(--rojo); color:var(--blanco); box-shadow: 3px 3px 0px var(--rojo-dark);"
-                    onclick="agregarPreguntaEstrategia('aleatoria')">🎲 ALEATORIA</button>
-                <button class="btn-gris" onclick="cerrarModalTipoPregunta()">CANCELAR</button>
-            </div>
-        </div>
-    </div>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-    <!-- Firebase SDK (compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
-    <script>
-        // ── FIREBASE ─────────────────────────────────────────────────────
-        const firebaseConfig = {
+        const app = initializeApp({
             apiKey: "AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
             authDomain: "gamecorofriends.firebaseapp.com",
             projectId: "gamecorofriends",
             storageBucket: "gamecorofriends.firebasestorage.app",
             messagingSenderId: "373275888982",
-            appId: "1:373275888982:web:94ddf75182aa8a461ddaf7",
-            measurementId: "G-XL7L54CM75"
-        };
+            appId: "1:373275888982:web:94ddf75182aa8a461ddaf7"
+        });
+        const db = getFirestore(app);
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // ── PARAMS ───────────────────────────────────────────────────────
+        // ── ESTADO ──────────────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
-        const nombre = params.get('nombre') || 'TÚ';
+        const nombre = params.get('nombre') || 'TU';
         document.getElementById('nombre-display').textContent = nombre.toUpperCase();
 
-        // ── DATOS DEL JUEGO ──────────────────────────────────────────────
         let preguntas = [
             { texto: '¿Cuál es mi color favorito?', opciones: ['Rojo', 'Azul', 'Negro', 'Amarillo'] },
             { texto: '¿Cuál es mi comida favorita?', opciones: ['Pizza', 'Sushi', 'Hamburguesa', 'Pasta'] },
@@ -754,341 +662,193 @@
             { texto: '¿Cuál es mi serie favorita?', opciones: ['Breaking Bad', 'Stranger Things', 'The Office', 'Game of Thrones'] },
             { texto: '¿Cuál es mi marca de ropa favorita?', opciones: ['Nike', 'Adidas', 'Zara', 'Gucci'] }
         ];
-
-        const bancoAleatorias = [
-            { texto: '¿Cuál es mi película favorita?', opciones: ['Titanic', 'Avengers', 'El Padrino', 'El Rey León'] },
-            { texto: '¿Cuál es mi marca de maquillaje favorita?', opciones: ['MAC', 'NYX', 'Fenty Beauty', 'Charlotte Tilbury'] },
-            { texto: '¿Qué superpoder elegiría tener?', opciones: ['Volar', 'Invisibilidad', 'Telepatía', 'Superfuerza'] },
-            { texto: '¿Cuál es mi estación del año preferida?', opciones: ['Primavera', 'Verano', 'Otoño', 'Invierno'] },
-            { texto: '¿Qué tipo de música escucho más?', opciones: ['Rock/Metal', 'Pop/Reggaetón', 'Electrónica', 'Rap/Hip-Hop'] }
-        ];
-
-        let actual = 0;
-        let editando = false;
+        let actual = 0, editando = false;
         let omitidas = new Set();
         let respuestas = preguntas.map(() => []);
         let linkGenerado = '';
 
-        // ── HELPERS ──────────────────────────────────────────────────────
-        function generarId(largo = 8) {
-            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-            let id = '';
-            for (let i = 0; i < largo; i++) id += chars[Math.floor(Math.random() * chars.length)];
+        function genId(n = 8) { const c = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; let s = ''; for (let i = 0; i < n; i++)s += c[Math.floor(Math.random() * c.length)]; return s }
+
+        // ── GUARDAR EN FIRESTORE ─────────────────────────────────────
+        // KEY: convertir arrays anidados a strings porque Firestore no los acepta
+        async function guardarEnFirestore() {
+            const pregActivas = preguntas.filter((_, i) => !omitidas.has(i));
+            const respActivas = respuestas.filter((_, i) => !omitidas.has(i));
+
+            // Serializar: [[0,1],[2]] -> ["0,1","2"]
+            const respSer = respActivas.map(arr => arr.join(','));
+            // Serializar preguntas: {texto,opciones[]} -> {texto,op0,op1,op2,op3}
+            const pregSer = pregActivas.map(p => ({
+                texto: p.texto,
+                op0: p.opciones[0] || '',
+                op1: p.opciones[1] || '',
+                op2: p.opciones[2] || '',
+                op3: p.opciones[3] || ''
+            }));
+
+            const id = genId();
+            await setDoc(doc(db, 'formularios', id), {
+                id, nombre,
+                preguntas: pregSer,
+                respuestas: respSer,
+                creadoEn: serverTimestamp(),
+                respuestasCount: 0
+            });
             return id;
         }
 
-        // ── GUARDAR EN FIRESTORE ─────────────────────────────────────────
-        async function guardarFormularioEnFirestore() {
-            const user = auth.currentUser;
-
-            const preguntasActivas = preguntas.filter((_, i) => !omitidas.has(i));
-            const respuestasActivas = respuestas.filter((_, i) => !omitidas.has(i));
-
-            const formId = generarId(8);
-
-            const doc = {
-                id: formId,
-                nombre: nombre,
-                creadorUid: user ? user.uid : null,
-                creadorNombre: user ? (user.displayName || user.email) : nombre,
-                preguntas: preguntasActivas,
-                respuestas: respuestasActivas,
-                creadoEn: firebase.firestore.FieldValue.serverTimestamp(),
-                respuestasCount: 0
-            };
-
-            await db.collection('formularios').doc(formId).set(doc);
-            return formId;
+        // ── CONFIRM MODAL ────────────────────────────────────────────
+        function confirmar(titulo, msg, emoji, ok, cancel) {
+            document.getElementById('c-titulo').textContent = titulo;
+            document.getElementById('c-msg').textContent = msg;
+            document.getElementById('c-emoji').textContent = emoji || '⚠️';
+            document.getElementById('confirmOverlay').classList.add('show');
+            document.getElementById('c-ok').onclick = () => { document.getElementById('confirmOverlay').classList.remove('show'); ok && ok() };
+            document.getElementById('c-cancel').onclick = () => { document.getElementById('confirmOverlay').classList.remove('show'); cancel && cancel() };
         }
 
-        // ── MODAL CONFIRMACION ───────────────────────────────────────────
-        function mostrarConfirmacionCustom(titulo, mensaje, emoji, alAceptar, alCancelar) {
-            document.getElementById('confirm-titulo').innerHTML = titulo;
-            document.getElementById('confirm-mensaje').textContent = mensaje;
-            document.getElementById('confirm-emoji').textContent = emoji || '⚠️';
-
-            const overlay = document.getElementById('confirmOverlay');
-            overlay.classList.add('show');
-
-            const btnAceptar = document.getElementById('confirm-accept-btn');
-            const btnCancelar = document.getElementById('confirm-cancel-btn');
-
-            btnAceptar.onclick = () => { overlay.classList.remove('show'); if (alAceptar) alAceptar(); };
-            btnCancelar.onclick = () => { overlay.classList.remove('show'); if (alCancelar) alCancelar(); };
-        }
-
-        // ── UI ───────────────────────────────────────────────────────────
+        // ── UI ───────────────────────────────────────────────────────
         function updateUI() {
             document.getElementById('prog-total').textContent = preguntas.length;
             document.getElementById('prog-actual').textContent = actual + 1;
             document.getElementById('p-num').textContent = `P${actual + 1}`;
             document.getElementById('btn-atras').disabled = actual === 0;
-            document.getElementById('progress-fill').style.width = ((actual) / preguntas.length * 100) + '%';
-
-            const skipBtn = document.getElementById('skip-btn');
-            skipBtn.textContent = omitidas.has(actual) ? 'OMITIDA ✓' : 'OMITIR';
-            skipBtn.className = omitidas.has(actual) ? 'skip-badge skipped' : 'skip-badge';
-
-            const esUltima = actual === preguntas.length - 1;
-            const navBtn = document.getElementById('nav-btn');
-            navBtn.textContent = esUltima ? 'GUARDAR ✓' : 'SIGUIENTE →';
-            navBtn.className = esUltima ? 'nav-btn verde' : 'nav-btn';
-
-            const btnAdd = document.getElementById('btn-add-externo');
-            btnAdd.style.display = (actual === preguntas.length - 1) ? 'block' : 'none';
-
-            document.getElementById('p-hint').textContent =
-                omitidas.has(actual) ? 'Pregunta omitida — no se incluirá' : 'Elige 1 o 2 respuestas correctas';
+            document.getElementById('progress-fill').style.width = (actual / preguntas.length * 100) + '%';
+            const sb = document.getElementById('skip-btn');
+            sb.textContent = omitidas.has(actual) ? 'OMITIDA ✓' : 'OMITIR';
+            sb.className = omitidas.has(actual) ? 'skip-badge skipped' : 'skip-badge';
+            const esUlt = actual === preguntas.length - 1;
+            const nb = document.getElementById('nav-btn');
+            nb.textContent = esUlt ? 'GUARDAR ✓' : 'SIGUIENTE →';
+            nb.className = esUlt ? 'nav-btn verde' : 'nav-btn';
+            document.getElementById('p-hint').textContent = omitidas.has(actual) ? 'Pregunta omitida — no se incluirá' : 'Elige 1 o 2 respuestas correctas';
         }
 
         function renderPregunta(idx, dir = 'adelante') {
             editando = false;
             const card = document.getElementById('pregunta-card');
-            card.style.animation = 'none';
-            void card.offsetWidth;
-            card.style.animation = dir === 'adelante'
-                ? 'entrar 0.35s cubic-bezier(0.22,1,0.36,1) both'
-                : 'entrarAtras 0.35s cubic-bezier(0.22,1,0.36,1) both';
-
-            const editBtn = document.getElementById('edit-btn');
-            editBtn.textContent = '✏️';
-            editBtn.classList.remove('saving');
-
-            updateUI();
-            renderTitulo(idx, false);
-            renderOpciones(idx, false);
+            card.style.animation = 'none'; void card.offsetWidth;
+            card.style.animation = dir === 'adelante' ? 'entrar .35s cubic-bezier(.22,1,.36,1) both' : 'entrarAtras .35s cubic-bezier(.22,1,.36,1) both';
+            document.getElementById('edit-btn').textContent = '✏️';
+            document.getElementById('edit-btn').classList.remove('saving');
+            updateUI(); renderTitulo(idx, false); renderOpciones(idx, false);
         }
 
-        function renderTitulo(idx, modoEdit) {
-            const container = document.getElementById('titulo-container');
-            if (modoEdit) {
-                container.innerHTML = `<input class="p-titulo-input" id="titulo-input" type="text" value="${preguntas[idx].texto}" maxlength="80"/>`;
-                document.getElementById('titulo-input').focus();
-            } else {
-                container.innerHTML = `<div class="p-titulo">${preguntas[idx].texto}</div>`;
-            }
+        function renderTitulo(idx, modo) {
+            const c = document.getElementById('titulo-container');
+            if (modo) { c.innerHTML = `<input class="p-titulo-input" id="titulo-input" type="text" value="${preguntas[idx].texto}" maxlength="80"/>`; document.getElementById('titulo-input').focus(); }
+            else c.innerHTML = `<div class="p-titulo">${preguntas[idx].texto}</div>`;
         }
 
-        function renderOpciones(idx, modoEdit) {
-            const grid = document.getElementById('opciones-grid');
-            grid.innerHTML = '';
+        function renderOpciones(idx, modo) {
+            const grid = document.getElementById('opciones-grid'); grid.innerHTML = '';
             preguntas[idx].opciones.forEach((op, i) => {
-                if (modoEdit) {
-                    const inp = document.createElement('input');
-                    inp.className = 'opcion-edit-input';
-                    inp.type = 'text'; inp.value = op; inp.maxLength = 30;
-                    grid.appendChild(inp);
-                } else {
-                    const btn = document.createElement('button');
-                    btn.className = 'opcion-btn';
+                if (modo) { const inp = document.createElement('input'); inp.className = 'opcion-edit-input'; inp.type = 'text'; inp.value = op; inp.maxLength = 30; grid.appendChild(inp); }
+                else {
+                    const btn = document.createElement('button'); btn.className = 'opcion-btn';
                     if (omitidas.has(idx)) btn.classList.add('disabled');
                     btn.innerHTML = `<span class="check-icon">✓</span>${op}`;
                     if (respuestas[idx].includes(i)) btn.classList.add('selected');
-                    btn.addEventListener('click', () => { if (!omitidas.has(idx)) toggleOpcion(idx, i, btn); });
+                    btn.addEventListener('click', () => { if (!omitidas.has(idx)) toggleOpcion(idx, i, btn) });
                     grid.appendChild(btn);
                 }
             });
-            if (!modoEdit) actualizarDisabled(idx);
+            if (!modo) actualizarDisabled(idx);
         }
 
-        function toggleEdicion() {
-            const editBtn = document.getElementById('edit-btn');
-            if (!editando) {
-                editando = true;
-                editBtn.textContent = '💾';
-                editBtn.classList.add('saving');
-                renderTitulo(actual, true);
-                renderOpciones(actual, true);
-            } else {
-                guardarEdicion();
-            }
-        }
+        window.toggleEdicion = function () {
+            const eb = document.getElementById('edit-btn');
+            if (!editando) { editando = true; eb.textContent = '💾'; eb.classList.add('saving'); renderTitulo(actual, true); renderOpciones(actual, true); }
+            else guardarEdicion();
+        };
 
         function guardarEdicion() {
-            const editBtn = document.getElementById('edit-btn');
-            const tituloInput = document.getElementById('titulo-input');
-            if (tituloInput && tituloInput.value.trim()) preguntas[actual].texto = tituloInput.value.trim();
-            document.querySelectorAll('.opcion-edit-input').forEach((inp, i) => {
-                if (inp.value.trim()) preguntas[actual].opciones[i] = inp.value.trim();
-            });
-            respuestas[actual] = [];
-            editando = false;
-            editBtn.textContent = '✏️';
-            editBtn.classList.remove('saving');
-            renderTitulo(actual, false);
-            renderOpciones(actual, false);
+            const eb = document.getElementById('edit-btn');
+            const ti = document.getElementById('titulo-input');
+            if (ti && ti.value.trim()) preguntas[actual].texto = ti.value.trim();
+            document.querySelectorAll('.opcion-edit-input').forEach((inp, i) => { if (inp.value.trim()) preguntas[actual].opciones[i] = inp.value.trim() });
+            respuestas[actual] = []; editando = false; eb.textContent = '✏️'; eb.classList.remove('saving');
+            renderTitulo(actual, false); renderOpciones(actual, false);
         }
 
-        function toggleOmitir() {
-            if (omitidas.has(actual)) { omitidas.delete(actual); } else { omitidas.add(actual); }
-            respuestas[actual] = [];
-            updateUI();
-            renderOpciones(actual, false);
-        }
+        window.toggleOmitir = function () {
+            if (omitidas.has(actual)) omitidas.delete(actual); else omitidas.add(actual);
+            respuestas[actual] = []; updateUI(); renderOpciones(actual, false);
+        };
 
-        function toggleOpcion(pregIdx, opIdx, btn) {
+        function toggleOpcion(pi, oi, btn) {
             if (editando) return;
-            const sel = respuestas[pregIdx];
-            if (sel.includes(opIdx)) {
-                respuestas[pregIdx] = sel.filter(x => x !== opIdx);
-                btn.classList.remove('selected');
-            } else {
-                if (sel.length >= 2) return;
-                respuestas[pregIdx].push(opIdx);
-                btn.classList.add('selected');
-            }
-            actualizarDisabled(pregIdx);
+            const sel = respuestas[pi];
+            if (sel.includes(oi)) { respuestas[pi] = sel.filter(x => x !== oi); btn.classList.remove('selected'); }
+            else { if (sel.length >= 2) return; respuestas[pi].push(oi); btn.classList.add('selected'); }
+            actualizarDisabled(pi);
         }
 
-        function actualizarDisabled(pregIdx) {
-            const sel = respuestas[pregIdx];
+        function actualizarDisabled(pi) {
+            const sel = respuestas[pi];
             document.querySelectorAll('.opcion-btn').forEach((btn, i) => {
                 if (sel.length >= 2 && !sel.includes(i)) btn.classList.add('disabled');
                 else btn.classList.remove('disabled');
             });
         }
 
-        // ── FLUJO ────────────────────────────────────────────────────────
-        function avanzar() {
+        window.avanzar = function () {
             if (editando) { guardarEdicion(); return; }
-
             if (!omitidas.has(actual) && respuestas[actual].length === 0) {
-                mostrarConfirmacionCustom(
-                    "¿OMITIR PREGUNTA?",
-                    "No has seleccionado ninguna respuesta. ¿Seguro de omitir esta pregunta?",
-                    "⚠️",
-                    function () {
-                        omitidas.add(actual);
-                        if (actual < preguntas.length - 1) { actual++; renderPregunta(actual, 'adelante'); }
-                        else { procesarGuardadoFinal(); }
-                    },
-                    function () {
-                        const card = document.getElementById('pregunta-card');
-                        card.style.animation = 'none'; void card.offsetWidth;
-                        card.style.animation = 'sacudir 0.3s ease';
-                    }
-                );
-                return;
+                confirmar('¿OMITIR PREGUNTA?', 'No seleccionaste respuesta. ¿Omitir esta pregunta?', '⚠️',
+                    () => { omitidas.add(actual); if (actual < preguntas.length - 1) { actual++; renderPregunta(actual); } else procesarGuardado(); },
+                    () => { const c = document.getElementById('pregunta-card'); c.style.animation = 'none'; void c.offsetWidth; c.style.animation = 'sacudir .3s ease'; }
+                ); return;
             }
+            if (actual < preguntas.length - 1) { actual++; renderPregunta(actual); }
+            else procesarGuardado();
+        };
 
-            if (actual < preguntas.length - 1) { actual++; renderPregunta(actual, 'adelante'); }
-            else { procesarGuardadoFinal(); }
-        }
-
-        function retroceder() {
+        window.retroceder = function () {
             if (editando) { guardarEdicion(); return; }
             if (actual > 0) { actual--; renderPregunta(actual, 'atras'); }
-        }
+        };
 
-        function procesarGuardadoFinal() {
-            const preguntasActivas = preguntas.filter((_, i) => !omitidas.has(i));
-
-            if (preguntasActivas.length === 0) {
-                mostrarConfirmacionCustom(
-                    "¡FORMULARIO VACÍO!",
-                    "No puedes finalizar el juego si omites todas las preguntas. Debe existir al menos una para generar el link.",
-                    "🚫",
-                    function () { }, function () { }
-                );
-                const card = document.getElementById('pregunta-card');
-                card.style.animation = 'none'; void card.offsetWidth;
-                card.style.animation = 'sacudir 0.3s ease';
-                return;
-            }
-
-            // Abre el modal y lanza el guardado en Firestore
+        function procesarGuardado() {
+            const activas = preguntas.filter((_, i) => !omitidas.has(i));
+            if (activas.length === 0) { confirmar('FORMULARIO VACÍO', 'Debe haber al menos una pregunta.', '🚫', null, null); return; }
             document.getElementById('progress-fill').style.width = '100%';
             document.getElementById('modalOverlay').classList.add('show');
-            document.getElementById('main-modal-mensaje').textContent = 'Guardando tu formulario en la nube...';
-            document.getElementById('link-display-wrap').style.display = 'none';
+            document.getElementById('modal-msg').textContent = 'Guardando en la nube...';
+            document.getElementById('link-wrap').style.display = 'none';
+            const cb = document.getElementById('copy-btn');
+            cb.disabled = true; cb.innerHTML = '<span class="spinner"></span>GUARDANDO...';
 
-            const copyBtn = document.getElementById('copy-btn');
-            copyBtn.disabled = true;
-            copyBtn.innerHTML = '<span class="spinner"></span>GUARDANDO...';
-
-            guardarFormularioEnFirestore().then(formId => {
-                const baseUrl = window.location.origin + window.location.pathname.replace('formulario.html', '') + 'responder.html';
-                linkGenerado = `${baseUrl}?id=${formId}`;
-
-                document.getElementById('main-modal-mensaje').textContent = '¡Formulario guardado! Comparte el link con tus amigos.';
+            guardarEnFirestore().then(id => {
+                const base = window.location.href.replace('formulario.html', '') + 'responder.html';
+                linkGenerado = `${base}?id=${id}`;
+                document.getElementById('modal-msg').textContent = '¡Listo! Comparte este link con tus amigos:';
                 document.getElementById('link-display').textContent = linkGenerado;
-                document.getElementById('link-display-wrap').style.display = 'block';
-
-                copyBtn.disabled = false;
-                copyBtn.innerHTML = '📋 COPIAR LINK';
+                document.getElementById('link-wrap').style.display = 'block';
+                cb.disabled = false; cb.innerHTML = '📋 COPIAR LINK';
             }).catch(err => {
-                console.error("Error guardando:", err);
-                document.getElementById('main-modal-mensaje').textContent = '⚠️ Error al guardar. Revisa tu conexión.';
-                copyBtn.innerHTML = '⚠️ ERROR — REINTENTAR';
-                copyBtn.disabled = false;
-                copyBtn.onclick = () => procesarGuardadoFinal();
+                console.error('Error guardando:', err);
+                document.getElementById('modal-msg').textContent = '⚠️ Error al guardar: ' + err.message;
+                cb.innerHTML = '⚠️ REINTENTAR'; cb.disabled = false; cb.onclick = procesarGuardado;
             });
         }
 
-        // ── COPIAR LINK ──────────────────────────────────────────────────
-        function copiarLink() {
+        window.copiarLink = function () {
             if (!linkGenerado) return;
             navigator.clipboard.writeText(linkGenerado).then(() => {
-                const btn = document.getElementById('copy-btn');
-                btn.textContent = '✓ ¡COPIADO!';
-                setTimeout(() => btn.textContent = '📋 COPIAR LINK', 2500);
+                const cb = document.getElementById('copy-btn'); cb.textContent = '✓ ¡COPIADO!';
+                setTimeout(() => cb.textContent = '📋 COPIAR LINK', 2500);
             }).catch(() => {
-                // Fallback para móviles
-                const ta = document.createElement('textarea');
-                ta.value = linkGenerado;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                const btn = document.getElementById('copy-btn');
-                btn.textContent = '✓ ¡COPIADO!';
-                setTimeout(() => btn.textContent = '📋 COPIAR LINK', 2500);
+                const ta = document.createElement('textarea'); ta.value = linkGenerado;
+                document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+                const cb = document.getElementById('copy-btn'); cb.textContent = '✓ ¡COPIADO!';
+                setTimeout(() => cb.textContent = '📋 COPIAR LINK', 2500);
             });
-        }
+        };
 
-        function cerrarModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+        window.cerrarModal = function () { document.getElementById('modalOverlay').classList.remove('show') };
 
-        // ── MODAL TIPO PREGUNTA ──────────────────────────────────────────
-        function abrirModalTipoPregunta() { document.getElementById('tipoPreguntaOverlay').classList.add('show'); }
-        function cerrarModalTipoPregunta() { document.getElementById('tipoPreguntaOverlay').classList.remove('show'); }
-
-        function agregarPreguntaEstrategia(tipo) {
-            if (!omitidas.has(actual) && respuestas[actual].length === 0) {
-                cerrarModalTipoPregunta();
-                mostrarConfirmacionCustom(
-                    "¿OMITIR PREGUNTA ACTUAL?",
-                    "No has seleccionado respuesta en la pregunta actual. ¿Deseas omitirla y crear la nueva?",
-                    "⚠️",
-                    function () { omitidas.add(actual); ejecutarAgregarPregunta(tipo); },
-                    function () {
-                        const card = document.getElementById('pregunta-card');
-                        card.style.animation = 'none'; void card.offsetWidth;
-                        card.style.animation = 'sacudir 0.3s ease';
-                    }
-                );
-                return;
-            }
-            cerrarModalTipoPregunta();
-            ejecutarAgregarPregunta(tipo);
-        }
-
-        function ejecutarAgregarPregunta(tipo) {
-            let nuevaPregunta;
-            if (tipo === 'aleatoria' && bancoAleatorias.length > 0) {
-                const randomIndex = Math.floor(Math.random() * bancoAleatorias.length);
-                nuevaPregunta = bancoAleatorias.splice(randomIndex, 1)[0];
-            } else {
-                nuevaPregunta = { texto: 'Nueva Pregunta', opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4'] };
-            }
-            preguntas.push(nuevaPregunta);
-            respuestas.push([]);
-            actual = preguntas.length - 1;
-            renderPregunta(actual, 'adelante');
-            if (tipo === 'personalizada') { setTimeout(toggleEdicion, 400); }
-        }
-
-        // ── INIT ─────────────────────────────────────────────────────────
-        renderPregunta(actual);
+        renderPregunta(0);
     </script>
 </body>
 

@@ -18,16 +18,11 @@
             --gris-texto: #a0a0a5;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial Black', Impact, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial Black', Impact, sans-serif; }
 
         body {
             background-color: var(--fondo);
-            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
             background-size: 24px 24px;
             color: var(--blanco);
             min-height: 100vh;
@@ -36,269 +31,66 @@
         }
 
         /* Barra Superior */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--tarjeta);
-            padding: 15px 20px;
-            border-bottom: 4px solid var(--negro);
-        }
-
-        .top-title {
-            font-size: 1rem;
-            letter-spacing: 1px;
-            color: var(--gris-texto);
-        }
-
-        .top-title span {
-            color: var(--amarillo);
-        }
-
-        .progress-info {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--tarjeta); padding: 15px 20px; border-bottom: 4px solid var(--negro); }
+        .top-title { font-size: 1rem; letter-spacing: 1px; color: var(--gris-texto); }
+        .top-title span { color: var(--amarillo); }
+        .progress-info { font-size: 0.9rem; letter-spacing: 1px; }
 
         /* Contenedor Principal */
-        .main {
-            max-width: 650px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
+        .main { max-width: 650px; margin: 60px auto; padding: 0 20px; }
 
         /* Tarjetas Brutalistas */
-        .card {
-            background: var(--tarjeta);
-            border: 4px solid var(--negro);
-            padding: 40px 30px;
-            box-shadow: 10px 10px 0px var(--negro);
-            display: none;
-            position: relative;
-        }
+        .card { background: var(--tarjeta); border: 4px solid var(--negro); padding: 40px 30px; box-shadow: 10px 10px 0px var(--negro); display: none; position: relative; }
+        .card.active { display: block; }
 
-        .card.active {
-            display: block;
-        }
-
-        .p-titulo {
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            line-height: 1.2;
-            letter-spacing: 0.5px;
-        }
+        .p-titulo { font-size: 1.8rem; text-transform: uppercase; margin-bottom: 30px; line-height: 1.2; letter-spacing: 0.5px; }
 
         /* Inputs */
-        .brutal-input {
-            width: 100%;
-            padding: 18px;
-            font-size: 1.2rem;
-            background: var(--fondo);
-            color: var(--blanco);
-            border: 3px solid var(--negro);
-            box-shadow: 4px 4px 0px var(--negro);
-            outline: none;
-            margin-bottom: 30px;
-        }
-
-        .brutal-input:focus {
-            border-color: var(--amarillo);
-        }
+        .brutal-input { width: 100%; padding: 18px; font-size: 1.2rem; background: var(--fondo); color: var(--blanco); border: 3px solid var(--negro); box-shadow: 4px 4px 0px var(--negro); outline: none; margin-bottom: 30px; }
+        .brutal-input:focus { border-color: var(--amarillo); }
 
         /* Grid de Opciones */
-        .opciones-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 35px;
-        }
+        .opciones-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 35px; }
+        @media (max-width: 480px) { .opciones-grid { grid-template-columns: 1fr; } }
 
-        @media (max-width: 480px) {
-            .opciones-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .opcion-btn {
-            background: #1e1e24;
-            border: 3px solid var(--gris-borde);
-            color: var(--gris-texto);
-            padding: 20px 15px;
-            text-align: center;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        .opcion-btn:hover {
-            border-color: var(--gris-texto);
-            color: var(--blanco);
-        }
-
-        .opcion-btn.selected {
-            border: 3px solid var(--amarillo);
-            color: var(--amarillo);
-            background: #25251a;
-        }
+        .opcion-btn { background: #1e1e24; border: 3px solid var(--gris-borde); color: var(--gris-texto); padding: 20px 15px; text-align: center; font-size: 1.1rem; cursor: pointer; transition: transform 0.1s ease; }
+        .opcion-btn:hover { border-color: var(--gris-texto); color: var(--blanco); }
+        .opcion-btn.selected { border: 3px solid var(--amarillo); color: var(--amarillo); background: #25251a; }
 
         /* Botón siguiente / iniciar */
-        .btn-brutal {
-            width: 100%;
-            background: var(--rojo);
-            color: var(--blanco);
-            border: none;
-            padding: 18px;
-            font-size: 1.3rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 4px 4px 0px var(--negro);
-        }
-
-        .btn-brutal:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--negro);
-        }
-
-        .btn-brutal.verde {
-            background: var(--verde);
-        }
+        .btn-brutal { width: 100%; background: var(--rojo); color: var(--blanco); border: none; padding: 18px; font-size: 1.3rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 4px 4px 0px var(--negro); }
+        .btn-brutal:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--negro); }
+        .btn-brutal.verde { background: var(--verde); }
 
         /* Barra inferior */
-        .bottom-bar {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .progress-bar-wrap {
-            flex-grow: 1;
-            height: 8px;
-            background: #2a2a30;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--rojo);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
+        .bottom-bar { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
+        .progress-bar-wrap { flex-grow: 1; height: 8px; background: #2a2a30; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--rojo); width: 0%; transition: width 0.3s ease; }
 
         /* Resultados */
-        .score-display {
-            font-size: 4rem;
-            margin: 25px 0;
-            color: var(--negro);
-            background: var(--amarillo);
-            display: inline-block;
-            padding: 15px 40px;
-            border: 4px solid var(--negro);
-            box-shadow: 6px 6px 0px #000;
-        }
+        .score-display { font-size: 4rem; margin: 25px 0; color: var(--negro); background: var(--amarillo); display: inline-block; padding: 15px 40px; border: 4px solid var(--negro); box-shadow: 6px 6px 0px #000; }
 
         /* Loading */
-        .loading-state {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .loading-state p {
-            font-family: sans-serif;
-            color: var(--gris-texto);
-            font-size: 1rem;
-            letter-spacing: 2px;
-            margin-top: 16px;
-        }
+        .loading-state { text-align: center; padding: 60px 20px; }
+        .loading-state p { font-family: sans-serif; color: var(--gris-texto); font-size: 1rem; letter-spacing: 2px; margin-top: 16px; }
 
         /* Spinner */
-        .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 3px solid #333;
-            border-top-color: var(--amarillo);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        .spinner { display: inline-block; width: 40px; height: 40px; border: 3px solid #333; border-top-color: var(--amarillo); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* Error */
-        .error-state {
-            text-align: center;
-            padding: 40px 20px;
-        }
+        .error-state { text-align: center; padding: 40px 20px; }
+        .error-state h2 { color: var(--rojo); font-size: 1.6rem; margin-bottom: 12px; }
+        .error-state p { font-family: sans-serif; color: var(--gris-texto); line-height: 1.6; font-size: 0.95rem; }
 
-        .error-state h2 {
-            color: var(--rojo);
-            font-size: 1.6rem;
-            margin-bottom: 12px;
-        }
-
-        .error-state p {
-            font-family: sans-serif;
-            color: var(--gris-texto);
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        @keyframes sacudir {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-6px);
-            }
-
-            75% {
-                transform: translateX(6px);
-            }
-        }
+        @keyframes sacudir { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
         /* Tabla de resultados */
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-family: sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .results-table th {
-            background: #1e1e24;
-            color: var(--amarillo);
-            padding: 10px 12px;
-            text-align: left;
-            border: 2px solid var(--gris-borde);
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-        }
-
-        .results-table td {
-            padding: 10px 12px;
-            border: 2px solid var(--gris-borde);
-            color: var(--gris-texto);
-        }
-
-        .results-table tr:nth-child(even) td {
-            background: #1a1a20;
-        }
-
-        .td-score {
-            color: var(--amarillo);
-            font-weight: bold;
-        }
+        .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-family: sans-serif; font-size: 0.9rem; }
+        .results-table th { background: #1e1e24; color: var(--amarillo); padding: 10px 12px; text-align: left; border: 2px solid var(--gris-borde); letter-spacing: 1px; font-size: 0.8rem; }
+        .results-table td { padding: 10px 12px; border: 2px solid var(--gris-borde); color: var(--gris-texto); }
+        .results-table tr:nth-child(even) td { background: #1a1a20; }
+        .td-score { color: var(--amarillo); font-weight: bold; }
     </style>
 </head>
 
@@ -331,12 +123,9 @@
 
         <!-- INICIO -->
         <div class="card" id="pantalla-inicio">
-            <h2 class="p-titulo">¿QUÉ TANTO CONOCES A <span id="creador-bienvenida"
-                    style="color:var(--amarillo)">...</span>?</h2>
-            <p style="margin-bottom: 25px; font-family:sans-serif; font-size: 0.95rem; color:var(--gris-texto);">Escribe
-                tu nombre o apodo para empezar el desafío.</p>
-            <input type="text" class="brutal-input" id="nombre-jugador" placeholder="Tu nombre aquí..." maxlength="20"
-                autocomplete="off">
+            <h2 class="p-titulo">¿QUÉ TANTO CONOCES A <span id="creador-bienvenida" style="color:var(--amarillo)">...</span>?</h2>
+            <p style="margin-bottom: 25px; font-family:sans-serif; font-size: 0.95rem; color:var(--gris-texto);">Escribe tu nombre o apodo para empezar el desafío.</p>
+            <input type="text" class="brutal-input" id="nombre-jugador" placeholder="Tu nombre aquí..." maxlength="20" autocomplete="off">
             <button class="btn-brutal" onclick="empezarJuego()">¡EMPEZAR JUEGO! →</button>
         </div>
 
@@ -348,25 +137,21 @@
                 <div class="progress-bar-wrap">
                     <div class="progress-bar-fill" id="progress-fill"></div>
                 </div>
-                <button class="btn-brutal" id="nav-btn" onclick="avanzarPregunta()"
-                    style="width: auto; padding: 12px 30px; font-size: 1.1rem;">SIGUIENTE →</button>
+                <button class="btn-brutal" id="nav-btn" onclick="avanzarPregunta()" style="width: auto; padding: 12px 30px; font-size: 1.1rem;">SIGUIENTE →</button>
             </div>
         </div>
 
         <!-- RESULTADOS -->
         <div class="card" id="pantalla-resultados" style="text-align: center;">
             <span style="font-size: 3.5rem;">🎉</span>
-            <h2 class="p-titulo" style="margin-top:15px;">¡JUEGO TERMINADO, <span id="jugador-final-display"
-                    style="color:var(--amarillo)">...</span>!</h2>
+            <h2 class="p-titulo" style="margin-top:15px;">¡JUEGO TERMINADO, <span id="jugador-final-display" style="color:var(--amarillo)">...</span>!</h2>
             <p style="font-family:sans-serif; color:var(--gris-texto);">Tu puntuación final es de:</p>
             <div class="score-display" id="puntaje-final">0 / 0</div>
             <p id="mensaje-feedback" style="margin-top:20px; font-size:1.2rem; letter-spacing: 0.5px;"></p>
 
             <!-- Ranking de respuestas anteriores -->
             <div id="ranking-wrap" style="margin-top:30px; display:none;">
-                <h3
-                    style="font-family:'Arial Black'; font-size:1rem; letter-spacing:2px; color:var(--amarillo); margin-bottom:12px; text-align:left;">
-                    🏆 RANKING DE ESTE FORMULARIO</h3>
+                <h3 style="font-family:'Arial Black'; font-size:1rem; letter-spacing:2px; color:var(--amarillo); margin-bottom:12px; text-align:left;">🏆 RANKING DE ESTE FORMULARIO</h3>
                 <table class="results-table" id="ranking-table">
                     <thead>
                         <tr>
@@ -382,12 +167,10 @@
 
     </div>
 
-    <!-- Firebase SDK (compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, increment, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-    <script>
-        // ── FIREBASE ─────────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
             authDomain: "gamecorofriends.firebaseapp.com",
@@ -398,11 +181,30 @@
             measurementId: "G-XL7L54CM75"
         };
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ── HELPERS: deserializar formato guardado ───────────────────────
+        // preguntas vienen como {texto, op0, op1, op2, op3} → reconstruir opciones[]
+        function deserializarPreguntas(preguntasRaw) {
+            return preguntasRaw.map(p => ({
+                texto: p.texto,
+                opciones: [p.op0, p.op1, p.op2, p.op3].filter(o => o !== undefined && o !== '')
+            }));
+        }
+
+        // respuestas vienen como ["0,1", "2", ""] → reconstruir arrays de números
+        function deserializarRespuestas(respuestasRaw) {
+            return respuestasRaw.map(s => {
+                if (!s || s === '') return [];
+                return s.split(',').map(Number).filter(n => !isNaN(n));
+            });
+        }
 
         // ── ESTADO ───────────────────────────────────────────────────────
         let gameData = null;
+        let preguntasDeserializadas = [];
+        let respuestasDeserializadas = [];
         let formId = '';
         let nombreJugador = '';
         let actual = 0;
@@ -413,22 +215,21 @@
             const params = new URLSearchParams(window.location.search);
             formId = params.get('id');
 
-            if (!formId) {
-                mostrarError();
-                return;
-            }
+            if (!formId) { mostrarError(); return; }
 
             try {
-                const doc = await db.collection('formularios').doc(formId).get();
-                if (!doc.exists) { mostrarError(); return; }
+                const docRef = doc(db, 'formularios', formId);
+                const snap = await getDoc(docRef);
 
-                gameData = doc.data();
+                if (!snap.exists()) { mostrarError(); return; }
 
-                // Actualizar UI inicial
+                gameData = snap.data();
+                preguntasDeserializadas = deserializarPreguntas(gameData.preguntas);
+                respuestasDeserializadas = deserializarRespuestas(gameData.respuestas);
+
                 document.getElementById('creador-display').textContent = gameData.nombre.toUpperCase();
                 document.getElementById('creador-bienvenida').textContent = gameData.nombre.toUpperCase();
 
-                // Mostrar pantalla de inicio
                 cambiarPantalla('pantalla-inicio');
 
             } catch (err) {
@@ -437,49 +238,41 @@
             }
         }
 
-        function mostrarError() {
-            cambiarPantalla('pantalla-error');
-        }
+        function mostrarError() { cambiarPantalla('pantalla-error'); }
 
         function cambiarPantalla(id) {
-            ['pantalla-carga', 'pantalla-error', 'pantalla-inicio', 'pantalla-juego', 'pantalla-resultados'].forEach(p => {
-                document.getElementById(p).classList.remove('active');
-            });
+            ['pantalla-carga','pantalla-error','pantalla-inicio','pantalla-juego','pantalla-resultados']
+                .forEach(p => document.getElementById(p).classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
         // ── FLUJO DEL JUEGO ───────────────────────────────────────────────
-        function empezarJuego() {
+        window.empezarJuego = function() {
             const input = document.getElementById('nombre-jugador');
             nombreJugador = input.value.trim();
-
             if (!nombreJugador) {
                 input.style.animation = 'none';
                 void input.offsetWidth;
                 input.style.animation = 'sacudir 0.3s ease';
                 return;
             }
-
             cambiarPantalla('pantalla-juego');
             document.getElementById('info-progreso-pantalla').style.display = 'block';
-
-            respuestasJugador = gameData.preguntas.map(() => []);
+            respuestasJugador = preguntasDeserializadas.map(() => []);
             renderPreguntaJuego();
-        }
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('nombre-jugador').addEventListener('keydown', e => {
-                if (e.key === 'Enter') empezarJuego();
-            });
+        document.getElementById('nombre-jugador').addEventListener('keydown', e => {
+            if (e.key === 'Enter') window.empezarJuego();
         });
 
         function renderPreguntaJuego() {
-            const totalPreguntas = gameData.preguntas.length;
-            document.getElementById('prog-total').textContent = totalPreguntas;
+            const total = preguntasDeserializadas.length;
+            document.getElementById('prog-total').textContent = total;
             document.getElementById('prog-actual').textContent = actual + 1;
-            document.getElementById('progress-fill').style.width = (actual / totalPreguntas * 100) + '%';
+            document.getElementById('progress-fill').style.width = (actual / total * 100) + '%';
 
-            const item = gameData.preguntas[actual];
+            const item = preguntasDeserializadas[actual];
             document.getElementById('pregunta-texto').textContent = item.texto;
 
             const grid = document.getElementById('opciones-grid');
@@ -495,7 +288,7 @@
             });
 
             const navBtn = document.getElementById('nav-btn');
-            if (actual === totalPreguntas - 1) {
+            if (actual === total - 1) {
                 navBtn.textContent = 'FINALIZAR 🏁';
                 navBtn.classList.add('verde');
             } else {
@@ -505,18 +298,18 @@
         }
 
         function toggleOpcionJugador(opIdx, btn) {
-            const seleccionadas = respuestasJugador[actual];
-            if (seleccionadas.includes(opIdx)) {
-                respuestasJugador[actual] = seleccionadas.filter(x => x !== opIdx);
+            const sel = respuestasJugador[actual];
+            if (sel.includes(opIdx)) {
+                respuestasJugador[actual] = sel.filter(x => x !== opIdx);
                 btn.classList.remove('selected');
             } else {
-                if (seleccionadas.length >= 2) return;
+                if (sel.length >= 2) return;
                 respuestasJugador[actual].push(opIdx);
                 btn.classList.add('selected');
             }
         }
 
-        function avanzarPregunta() {
+        window.avanzarPregunta = function() {
             if (respuestasJugador[actual].length === 0) {
                 const card = document.getElementById('pantalla-juego');
                 card.style.animation = 'none';
@@ -524,97 +317,71 @@
                 card.style.animation = 'sacudir 0.3s ease';
                 return;
             }
-
-            if (actual < gameData.preguntas.length - 1) {
-                actual++;
-                renderPreguntaJuego();
-            } else {
-                calcularYMostrarResultados();
-            }
-        }
+            if (actual < preguntasDeserializadas.length - 1) { actual++; renderPreguntaJuego(); }
+            else { calcularYMostrarResultados(); }
+        };
 
         // ── CALCULAR RESULTADOS ───────────────────────────────────────────
         async function calcularYMostrarResultados() {
             let aciertos = 0;
 
-            gameData.respuestas.forEach((respuestasCorrectas, i) => {
-                const respuestasAmigo = [...respuestasJugador[i]].sort();
-                const correctas = [...respuestasCorrectas].sort();
-
-                const esCorrecta = correctas.length === respuestasAmigo.length &&
-                    correctas.every((val, idx) => val === respuestasAmigo[idx]);
-
-                if (esCorrecta) aciertos++;
+            respuestasDeserializadas.forEach((correctas, i) => {
+                const jugador = [...respuestasJugador[i]].sort((a,b)=>a-b);
+                const correctasSorted = [...correctas].sort((a,b)=>a-b);
+                if (correctasSorted.length === jugador.length &&
+                    correctasSorted.every((v, idx) => v === jugador[idx])) {
+                    aciertos++;
+                }
             });
 
-            // ── GUARDAR RESULTADO EN FIRESTORE ────────────────────────────
             try {
-                // Guardar en subcolección
-                await db.collection('formularios').doc(formId)
-                    .collection('resultados').add({
-                        jugador: nombreJugador,
-                        aciertos: aciertos,
-                        total: gameData.preguntas.length,
-                        porcentaje: Math.round((aciertos / gameData.preguntas.length) * 100),
-                        fecha: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-
-                // Incrementar contador en el doc principal
-                await db.collection('formularios').doc(formId).update({
-                    respuestasCount: firebase.firestore.FieldValue.increment(1)
+                const colRef = collection(db, 'formularios', formId, 'resultados');
+                await addDoc(colRef, {
+                    jugador: nombreJugador,
+                    aciertos,
+                    total: preguntasDeserializadas.length,
+                    porcentaje: Math.round((aciertos / preguntasDeserializadas.length) * 100),
+                    fecha: serverTimestamp()
                 });
+
+                const docRef = doc(db, 'formularios', formId);
+                await updateDoc(docRef, { respuestasCount: increment(1) });
             } catch (err) {
                 console.error("Error guardando resultado:", err);
             }
 
-            // ── MOSTRAR PANTALLA RESULTADOS ───────────────────────────────
             document.getElementById('info-progreso-pantalla').style.display = 'none';
             cambiarPantalla('pantalla-resultados');
 
             document.getElementById('jugador-final-display').textContent = nombreJugador.toUpperCase();
-            document.getElementById('puntaje-final').textContent = `${aciertos} / ${gameData.preguntas.length}`;
+            document.getElementById('puntaje-final').textContent = `${aciertos} / ${preguntasDeserializadas.length}`;
 
-            const porcentaje = (aciertos / gameData.preguntas.length) * 100;
-            const feedback = document.getElementById('mensaje-feedback');
-            if (porcentaje === 100) {
-                feedback.innerHTML = "¡Eres su clon! Lo conoces de una forma casi mística. 🔥";
-            } else if (porcentaje >= 60) {
-                feedback.innerHTML = "¡Muy buen puntaje! Son panas firmes. 👌";
-            } else {
-                feedback.innerHTML = "Uf... parece que les falta salir por salchipapas y charlar más. 💀";
-            }
+            const pct = (aciertos / preguntasDeserializadas.length) * 100;
+            const fb = document.getElementById('mensaje-feedback');
+            if (pct === 100) fb.innerHTML = "¡Eres su clon! Lo conoces de una forma casi mística. 🔥";
+            else if (pct >= 60) fb.innerHTML = "¡Muy buen puntaje! Son panas firmes. 👌";
+            else fb.innerHTML = "Uf... parece que les falta salir por salchipapas y charlar más. 💀";
 
-            // Cargar ranking
             cargarRanking();
         }
 
         // ── RANKING ───────────────────────────────────────────────────────
         async function cargarRanking() {
             try {
-                const snap = await db.collection('formularios').doc(formId)
-                    .collection('resultados')
-                    .orderBy('porcentaje', 'desc')
-                    .orderBy('fecha', 'asc')
-                    .limit(10)
-                    .get();
-
+                const colRef = collection(db, 'formularios', formId, 'resultados');
+                const q = query(colRef, orderBy('porcentaje', 'desc'), orderBy('fecha', 'asc'), limit(10));
+                const snap = await getDocs(q);
                 if (snap.empty) return;
 
                 const tbody = document.getElementById('ranking-body');
                 tbody.innerHTML = '';
-
-                snap.docs.forEach((doc, i) => {
-                    const d = doc.data();
+                snap.docs.forEach((d, i) => {
+                    const data = d.data();
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}`;
                     const tr = document.createElement('tr');
-                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
-                    tr.innerHTML = `
-                        <td>${medal}</td>
-                        <td>${d.jugador}</td>
-                        <td class="td-score">${d.aciertos}/${d.total} (${d.porcentaje}%)</td>
-                    `;
+                    tr.innerHTML = `<td>${medal}</td><td>${data.jugador}</td><td class="td-score">${data.aciertos}/${data.total} (${data.porcentaje}%)</td>`;
                     tbody.appendChild(tr);
                 });
-
                 document.getElementById('ranking-wrap').style.display = 'block';
             } catch (err) {
                 console.error("Error cargando ranking:", err);
@@ -625,5 +392,4 @@
         cargarFormulario();
     </script>
 </body>
-
 </html>
