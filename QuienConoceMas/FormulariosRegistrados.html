@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formularios Registrados — GameCoroFriends</title>
+    <style>
+        body { background-color: #121212; color: white; font-family: 'DM Sans', sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; border-bottom: 1px solid #333; text-align: left; }
+        .btn-link { background: #e50914; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Tus Formularios</h1>
+    <table>
+        <thead>
+            <tr><th>LINK</th><th>FECHA</th><th>ACCIÓN</th></tr>
+        </thead>
+        <tbody id="tablaBody"></tbody>
+    </table>
+    <br>
+    <a href="conoces.html">← VOLVER</a>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        // COPIA AQUÍ TU firebaseConfig EXACTA
+        const firebaseConfig = { /* ... */ }; 
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const q = query(collection(db, "formularios"), where("creadorUid", "==", user.uid));
+                const querySnapshot = await getDocs(q);
+                const tbody = document.getElementById("tablaBody");
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const fecha = data.creadoEn ? new Date(data.creadoEn.seconds * 1000).toLocaleDateString() : "N/A";
+                    tbody.innerHTML += `<tr>
+                        <td><a href="responder.html?id=${doc.id}">Abrir Formulario</a></td>
+                        <td>${fecha}</td>
+                        <td><a class="btn-link" href="responder.html?id=${doc.id}">VER RANKING</a></td>
+                    </tr>`;
+                });
+            } else {
+                window.location.href = "index.html"; // Redirigir si no está logueado
+            }
+        });
+    </script>
+</body>
+</html>
