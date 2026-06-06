@@ -580,7 +580,6 @@
             position: fixed;
             right: 20px;
             bottom: 110px;
-            /* arriba del botón SIGUIENTE */
             width: 56px;
             height: 56px;
             border-radius: 50%;
@@ -637,7 +636,6 @@
         </div>
     </div>
 
-    <!-- Modal éxito/link -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <span class="modal-emoji">🎉</span>
@@ -650,19 +648,12 @@
                 <button class="btn-amarillo" id="copy-btn" onclick="compartirLink()" disabled>
                     <span class="spinner" id="spinner"></span>GUARDANDO...
                 </button>
-
-                <button class="btn-gris" onclick="volverInicio()">
-                    🏠 VOLVER AL INICIO
-                </button>
-
-                <button class="btn-gris" onclick="cerrarModal()">
-                    CERRAR
-                </button>
+                <button class="btn-gris" onclick="volverInicio()">🏠 VOLVER AL INICIO</button>
+                <button class="btn-gris" onclick="cerrarModal()">CERRAR</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal confirmación -->
     <div class="modal-overlay" id="confirmOverlay">
         <div class="modal">
             <span class="modal-emoji" id="c-emoji">⚠️</span>
@@ -674,6 +665,8 @@
             </div>
         </div>
     </div>
+
+    <button id="add-float" onclick="añadirPregunta()">＋</button>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -691,7 +684,6 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // ── ESTADO ──────────────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
         const nombre = params.get('nombre') || 'TU';
         document.getElementById('nombre-display').textContent = nombre.toUpperCase();
@@ -703,6 +695,7 @@
             { texto: '¿Cuál es mi serie favorita?', opciones: ['Breaking Bad', 'Stranger Things', 'The Office', 'Game of Thrones'] },
             { texto: '¿Cuál es mi marca de ropa favorita?', opciones: ['Nike', 'Adidas', 'Zara', 'Gucci'] }
         ];
+
         let actual = 0, editando = false;
         let omitidas = new Set();
         let respuestas = preguntas.map(() => []);
@@ -711,27 +704,17 @@
         function genId(n = 8) { const c = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; let s = ''; for (let i = 0; i < n; i++)s += c[Math.floor(Math.random() * c.length)]; return s }
 
         window.añadirPregunta = function () {
-            const nueva = {
-                texto: 'Nueva pregunta',
-                opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']
-            };
-
+            const nueva = { texto: 'Nueva pregunta', opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4'] };
             preguntas.push(nueva);
             respuestas.push([]);
-
             actual = preguntas.length - 1;
-
             renderPregunta(actual);
         };
-        // ── GUARDAR EN FIRESTORE ─────────────────────────────────────
-        // KEY: convertir arrays anidados a strings porque Firestore no los acepta
+
         async function guardarEnFirestore() {
             const pregActivas = preguntas.filter((_, i) => !omitidas.has(i));
             const respActivas = respuestas.filter((_, i) => !omitidas.has(i));
-
-            // Serializar: [[0,1],[2]] -> ["0,1","2"]
             const respSer = respActivas.map(arr => arr.join(','));
-            // Serializar preguntas: {texto,opciones[]} -> {texto,op0,op1,op2,op3}
             const pregSer = pregActivas.map(p => ({
                 texto: p.texto,
                 op0: p.opciones[0] || '',
@@ -739,21 +722,15 @@
                 op2: p.opciones[2] || '',
                 op3: p.opciones[3] || ''
             }));
-
             const id = genId();
             await setDoc(doc(db, 'formularios', id), {
-                id,
-                nombre,
-                creadorUid: auth.currentUser.uid,
-                preguntas: pregSer,
-                respuestas: respSer,
-                creadoEn: serverTimestamp(),
-                respuestasCount: 0
+                id, nombre, creadorUid: auth.currentUser.uid,
+                preguntas: pregSer, respuestas: respSer,
+                creadoEn: serverTimestamp(), respuestasCount: 0
             });
             return id;
         }
 
-        // ── CONFIRM MODAL ────────────────────────────────────────────
         function confirmar(titulo, msg, emoji, ok, cancel) {
             document.getElementById('c-titulo').textContent = titulo;
             document.getElementById('c-msg').textContent = msg;
@@ -763,7 +740,6 @@
             document.getElementById('c-cancel').onclick = () => { document.getElementById('confirmOverlay').classList.remove('show'); cancel && cancel() };
         }
 
-        // ── UI ───────────────────────────────────────────────────────
         function updateUI() {
             document.getElementById('prog-total').textContent = preguntas.length;
             document.getElementById('prog-actual').textContent = actual + 1;
@@ -777,7 +753,7 @@
             const nb = document.getElementById('nav-btn');
             nb.textContent = esUlt ? 'GUARDAR ✓' : 'SIGUIENTE →';
             nb.className = esUlt ? 'nav-btn verde' : 'nav-btn';
-            document.getElementById('p-hint').textContent = omitidas.has(actual) ? 'Pregunta omitida — no se incluirá' : 'Elige 1 o 2 respuestas correctas';
+            document.getElementById('p-hint').textContent = omitidas.has(actual) ? 'Pregunta omitida' : 'Elige 1 o 2 respuestas correctas';
         }
 
         function renderPregunta(idx, dir = 'adelante') {
@@ -851,7 +827,7 @@
         window.avanzar = function () {
             if (editando) { guardarEdicion(); return; }
             if (!omitidas.has(actual) && respuestas[actual].length === 0) {
-                confirmar('¿OMITIR PREGUNTA?', 'No seleccionaste respuesta. ¿Omitir esta pregunta?', '⚠️',
+                confirmar('¿OMITIR PREGUNTA?', '¿Deseas omitir esta pregunta?', '⚠️',
                     () => { omitidas.add(actual); if (actual < preguntas.length - 1) { actual++; renderPregunta(actual); } else procesarGuardado(); },
                     () => { const c = document.getElementById('pregunta-card'); c.style.animation = 'none'; void c.offsetWidth; c.style.animation = 'sacudir .3s ease'; }
                 ); return;
@@ -870,73 +846,39 @@
             if (activas.length === 0) { confirmar('FORMULARIO VACÍO', 'Debe haber al menos una pregunta.', '🚫', null, null); return; }
             document.getElementById('progress-fill').style.width = '100%';
             document.getElementById('modalOverlay').classList.add('show');
-            document.getElementById('modal-msg').textContent = 'Guardando en la nube...';
-            document.getElementById('link-wrap').style.display = 'none';
+            document.getElementById('modal-msg').textContent = 'Guardando...';
             const cb = document.getElementById('copy-btn');
             cb.disabled = true; cb.innerHTML = '<span class="spinner"></span>GUARDANDO...';
 
             guardarEnFirestore().then(id => {
                 const base = 'https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html';
                 linkGenerado = `${base}?id=${id}`;
-                document.getElementById('modal-msg').textContent = '¡Listo! Comparte este link con tus amigos:';
+                document.getElementById('modal-msg').textContent = '¡Listo! Comparte este link:';
                 document.getElementById('link-display').textContent = linkGenerado;
                 document.getElementById('link-wrap').style.display = 'block';
-                cb.disabled = false;
-                cb.innerHTML = '📤 ENVIAR AMIGOS';
+                cb.disabled = false; cb.innerHTML = '📤 ENVIAR';
             }).catch(err => {
-                console.error('Error guardando:', err);
-                document.getElementById('modal-msg').textContent = '⚠️ Error al guardar: ' + err.message;
-                cb.innerHTML = '⚠️ REINTENTAR'; cb.disabled = false; cb.onclick = procesarGuardado;
+                document.getElementById('modal-msg').textContent = '⚠️ Error al guardar.';
+                cb.innerHTML = '⚠️ REINTENTAR'; cb.disabled = false;
             });
         }
 
         window.compartirLink = async function () {
             if (!linkGenerado) return;
-
             try {
                 await navigator.clipboard.writeText(linkGenerado);
-
-                if (navigator.share) {
-                    await navigator.share({
-                        title: '¿Cuánto me conoces?',
-                        text: '¡Intenta responder mi formulario!',
-                        url: linkGenerado
-                    });
-                } else {
-                    const whatsapp =
-                        `https://wa.me/?text=${encodeURIComponent(
-                            '¡Intenta responder mi formulario! ' + linkGenerado
-                        )}`;
-
-                    window.open(
-                        whatsapp,
-                        '_blank',
-                        'width=600,height=700'
-                    );
-                }
-
-                const btn = document.getElementById('copy-btn');
-                btn.textContent = '✓ ENVIADO';
-
-                setTimeout(() => {
-                    btn.textContent = '📤 ENVIAR AMIGOS';
-                }, 2500);
-
-            } catch (err) {
-                console.error(err);
-            }
+                if (navigator.share) await navigator.share({ title: '¿Cuánto me conoces?', text: '¡Responde!', url: linkGenerado });
+                else window.open(`https://wa.me/?text=${encodeURIComponent(linkGenerado)}`, '_blank');
+                document.getElementById('copy-btn').textContent = '✓ ENVIADO';
+                setTimeout(() => document.getElementById('copy-btn').textContent = '📤 ENVIAR', 2500);
+            } catch (err) { console.error(err); }
         };
+
         window.cerrarModal = function () { document.getElementById('modalOverlay').classList.remove('show') };
+        window.volverInicio = function () { window.location.href = '../index.html'; };
 
-        window.volverInicio = function () {
-            window.location.href = '../index.html';
-        };
-        <button id="add-float" onclick="añadirPregunta()">＋</button>
-
-
-        renderPregunta(0);
+        document.addEventListener('DOMContentLoaded', () => renderPregunta(0));
     </script>
-    <button id="add-float" onclick="añadirPregunta()">＋</button>
 </body>
 
 </html>
