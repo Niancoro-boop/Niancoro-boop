@@ -1,83 +1,477 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Mis Formularios — GameCoroFriends</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet"/>
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{--negro:#080808;--rojo:#e8192c;--rojo-dark:#8b0f1a;--amarillo:#ffd60a;--amarillo-dark:#b89b00;--blanco:#f0f0f0;--gris:#141414;--borde:#2a2a2a}
-        body{background:var(--negro);font-family:'DM Sans',sans-serif;min-height:100vh;position:relative}
-        body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#222 1px,transparent 1px);background-size:26px 26px;opacity:.4;z-index:0;pointer-events:none}
 
-        /* TOP BAR */
-        .top-bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--borde);background:rgba(8,8,8,.97);backdrop-filter:blur(8px)}
-        .back-btn{background:#1a1a1a;border:1.5px solid var(--borde);color:#666;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;text-decoration:none;transition:color .2s,border-color .2s}
-        .back-btn:hover{color:var(--amarillo);border-color:var(--amarillo)}
-        .top-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#444}
-        .top-title span{color:var(--amarillo)}
-        .user-badge{display:flex;align-items:center;gap:8px;background:#1a1a1a;border:1.5px solid var(--borde);border-radius:3px;padding:6px 12px 6px 6px}
-        .user-badge img{width:24px;height:24px;border-radius:50%;object-fit:cover}
-        .user-badge-name{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:var(--amarillo)}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mis Formularios — GameCoroFriends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --negro: #080808;
+            --rojo: #e8192c;
+            --rojo-dark: #8b0f1a;
+            --amarillo: #ffd60a;
+            --amarillo-dark: #b89b00;
+            --blanco: #f0f0f0;
+            --gris: #141414;
+            --borde: #2a2a2a
+        }
+
+        body {
+            background: var(--negro);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            position: relative
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, #222 1px, transparent 1px);
+            background-size: 26px 26px;
+            opacity: .4;
+            z-index: 0;
+            pointer-events: none
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--borde);
+            background: rgba(8, 8, 8, .97);
+            backdrop-filter: blur(8px)
+        }
+
+        .back-btn {
+            background: #1a1a1a;
+            border: 1.5px solid var(--borde);
+            color: #666;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color .2s, border-color .2s
+        }
+
+        .back-btn:hover {
+            color: var(--amarillo);
+            border-color: var(--amarillo)
+        }
+
+        .top-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #444
+        }
+
+        .top-title span {
+            color: var(--amarillo)
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            border: 1.5px solid var(--borde);
+            border-radius: 3px;
+            padding: 6px 12px 6px 6px
+        }
+
+        .user-badge img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover
+        }
+
+        .user-badge-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: var(--amarillo)
+        }
 
         /* MAIN */
-        .main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:40px 24px 60px}
+        .main {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 24px 60px
+        }
 
-        .page-header{margin-bottom:36px}
-        .page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,52px);color:var(--blanco);line-height:1;margin-bottom:6px}
-        .page-header h1 span{color:var(--amarillo)}
-        .page-header p{font-size:13px;color:#555}
+        .page-header {
+            margin-bottom: 36px
+        }
 
-        /* LOADING */
-        .loading{text-align:center;padding:60px 20px}
-        .spinner{display:inline-block;width:36px;height:36px;border:3px solid #222;border-top-color:var(--amarillo);border-radius:50%;animation:spin .8s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .loading p{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:#444;margin-top:16px}
+        .page-header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(36px, 5vw, 56px);
+            color: var(--blanco);
+            line-height: 1;
+            margin-bottom: 6px
+        }
 
-        /* EMPTY */
-        .empty-state{text-align:center;padding:60px 20px;background:var(--gris);border:1.5px solid var(--borde);border-radius:4px}
-        .empty-state .emoji{font-size:48px;display:block;margin-bottom:16px}
-        .empty-state h2{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--blanco);margin-bottom:8px}
-        .empty-state p{font-size:13px;color:#555;margin-bottom:24px}
+        .page-header h1 span {
+            color: var(--amarillo)
+        }
 
-        /* CARDS GRID */
-        .formularios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+        .page-header p {
+            font-size: 13px;
+            color: #555
+        }
 
-        .form-card{background:var(--gris);border:1.5px solid var(--borde);border-radius:4px;padding:24px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;box-shadow:4px 4px 0 var(--rojo-dark)}
-        .form-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rojo-dark)}
-        .form-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--rojo)}
+        /* LOADING / EMPTY */
+        .loading {
+            text-align: center;
+            padding: 60px 20px
+        }
 
-        .form-card-num{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;color:#444;margin-bottom:8px}
-        .form-card-nombre{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--blanco);line-height:1;margin-bottom:4px}
-        .form-card-fecha{font-size:11px;color:#555;margin-bottom:16px;letter-spacing:.5px}
+        .spinner {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border: 3px solid #222;
+            border-top-color: var(--amarillo);
+            border-radius: 50%;
+            animation: spin .8s linear infinite
+        }
 
-        .form-card-stats{display:flex;gap:12px;margin-bottom:18px}
-        .stat{background:#111;border:1px solid #222;border-radius:3px;padding:8px 12px;text-align:center;flex:1}
-        .stat-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--amarillo);display:block;line-height:1}
-        .stat-label{font-size:10px;color:#555;letter-spacing:1px}
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
 
-        .form-card-link{background:#111;border:1px solid #222;border-radius:3px;padding:8px 12px;font-size:10px;color:#555;word-break:break-all;margin-bottom:14px;cursor:pointer;transition:border-color .2s,color .2s;letter-spacing:.5px}
-        .form-card-link:hover{border-color:var(--amarillo);color:var(--amarillo)}
+        .loading p {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            letter-spacing: 3px;
+            color: #444;
+            margin-top: 16px
+        }
 
-        .form-card-btns{display:flex;gap:8px}
-        .btn-copiar{flex:1;background:var(--amarillo);color:var(--negro);border:none;border-radius:3px;padding:10px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;cursor:pointer;box-shadow:3px 3px 0 var(--amarillo-dark);transition:transform .1s,box-shadow .1s}
-        .btn-copiar:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--amarillo-dark)}
-        .btn-copiar:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--amarillo-dark)}
-        .btn-ranking{flex:1;background:var(--rojo);color:var(--blanco);border:none;border-radius:3px;padding:10px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;cursor:pointer;box-shadow:3px 3px 0 var(--rojo-dark);transition:transform .1s,box-shadow .1s;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center}
-        .btn-ranking:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--rojo-dark)}
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--gris);
+            border: 1.5px solid var(--borde);
+            border-radius: 4px
+        }
 
-        /* BTN CREAR */
-        .btn-crear{display:block;width:100%;background:var(--rojo);color:var(--blanco);border:none;border-radius:3px;padding:16px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;cursor:pointer;box-shadow:4px 4px 0 var(--rojo-dark);transition:transform .15s,box-shadow .15s;text-align:center;text-decoration:none;margin-top:28px}
-        .btn-crear:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rojo-dark)}
+        .empty-state .emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px
+        }
+
+        .empty-state h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: var(--blanco);
+            margin-bottom: 8px
+        }
+
+        .empty-state p {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 24px
+        }
+
+        /* CARD — ocupa todo el ancho */
+        .form-card {
+            background: var(--gris);
+            border: 1.5px solid var(--borde);
+            border-radius: 4px;
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 5px 5px 0 var(--rojo-dark);
+            margin-bottom: 20px
+        }
+
+        .form-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--rojo)
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-card-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #444;
+            margin-bottom: 4px
+        }
+
+        .form-card-nombre {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(28px, 4vw, 42px);
+            color: var(--blanco);
+            line-height: 1;
+            margin-bottom: 4px
+        }
+
+        .form-card-fecha {
+            font-size: 12px;
+            color: #555;
+            letter-spacing: .5px
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .stat {
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: 3px;
+            padding: 12px 20px;
+            text-align: center;
+            min-width: 80px
+        }
+
+        .stat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: var(--amarillo);
+            display: block;
+            line-height: 1
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #555;
+            letter-spacing: 1px
+        }
+
+        /* Link */
+        .form-card-link {
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: 3px;
+            padding: 12px 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: border-color .2s, color .2s;
+            letter-spacing: .3px
+        }
+
+        .form-card-link:hover {
+            border-color: var(--amarillo);
+            color: var(--amarillo)
+        }
+
+        /* Botones */
+        .form-card-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .btn-copiar {
+            background: var(--amarillo);
+            color: var(--negro);
+            border: none;
+            border-radius: 3px;
+            padding: 12px 24px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--amarillo-dark);
+            transition: transform .1s, box-shadow .1s;
+            flex: 1;
+            min-width: 130px
+        }
+
+        .btn-copiar:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--amarillo-dark)
+        }
+
+        .btn-copiar:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--amarillo-dark)
+        }
+
+        .btn-ranking {
+            background: var(--rojo);
+            color: var(--blanco);
+            border: none;
+            border-radius: 3px;
+            padding: 12px 24px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--rojo-dark);
+            transition: transform .1s, box-shadow .1s;
+            flex: 1;
+            min-width: 130px
+        }
+
+        .btn-ranking:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--rojo-dark)
+        }
+
+        .btn-ranking:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--rojo-dark)
+        }
+
+        /* Ranking inline */
+        .ranking-panel {
+            display: none;
+            margin-top: 20px;
+            border-top: 1px solid var(--borde);
+            padding-top: 20px
+        }
+
+        .ranking-panel.visible {
+            display: block
+        }
+
+        .ranking-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            letter-spacing: 3px;
+            color: var(--amarillo);
+            margin-bottom: 14px
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px
+        }
+
+        .ranking-table th {
+            background: #111;
+            color: #666;
+            padding: 10px 14px;
+            text-align: left;
+            border: 1px solid #1e1e1e;
+            letter-spacing: 1px;
+            font-size: 11px;
+            font-family: 'Bebas Neue', sans-serif
+        }
+
+        .ranking-table td {
+            padding: 10px 14px;
+            border: 1px solid #1e1e1e;
+            color: #888
+        }
+
+        .ranking-table tr:nth-child(even) td {
+            background: #111
+        }
+
+        .td-score {
+            color: var(--amarillo);
+            font-weight: 600
+        }
+
+        .ranking-empty {
+            font-size: 13px;
+            color: #444;
+            text-align: center;
+            padding: 24px;
+            font-family: 'DM Sans', sans-serif;
+            background: #111;
+            border: 1px solid #1e1e1e
+        }
+
+        .ranking-loading {
+            text-align: center;
+            padding: 20px;
+            color: #555;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px
+        }
+
+        /* Crear nuevo */
+        .btn-crear {
+            display: block;
+            width: 100%;
+            background: var(--rojo);
+            color: var(--blanco);
+            border: none;
+            border-radius: 3px;
+            padding: 16px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--rojo-dark);
+            transition: transform .15s, box-shadow .15s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 8px
+        }
+
+        .btn-crear:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--rojo-dark)
+        }
     </style>
 </head>
+
 <body>
     <div class="top-bar">
         <a class="back-btn" href="conoces.html">← VOLVER</a>
         <div class="top-title">MIS <span>FORMULARIOS</span></div>
         <div class="user-badge" id="user-badge" style="display:none">
-            <img id="user-avatar" src="" alt=""/>
+            <img id="user-avatar" src="" alt="" />
             <span class="user-badge-name" id="user-badge-name"></span>
         </div>
     </div>
@@ -88,13 +482,11 @@
             <p>Todos los formularios que has creado. Copia el link y compártelo.</p>
         </div>
 
-        <!-- Estado: cargando -->
         <div class="loading" id="estado-carga">
             <div class="spinner"></div>
             <p>CARGANDO...</p>
         </div>
 
-        <!-- Estado: vacío -->
         <div class="empty-state" id="estado-vacio" style="display:none">
             <span class="emoji">📭</span>
             <h2>SIN FORMULARIOS AÚN</h2>
@@ -102,102 +494,145 @@
             <a class="btn-crear" href="conoces.html">CREAR MI PRIMER FORMULARIO</a>
         </div>
 
-        <!-- Grid de formularios -->
-        <div class="formularios-grid" id="formularios-grid"></div>
+        <div id="formularios-lista"></div>
 
-        <!-- Botón crear nuevo (cuando ya hay formularios) -->
         <a class="btn-crear" id="btn-crear-nuevo" href="conoces.html" style="display:none">➕ CREAR NUEVO FORMULARIO</a>
     </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-        import { getFirestore, collection, query, where, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
         import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
         const app = initializeApp({
-            apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
-            authDomain:"gamecorofriends.firebaseapp.com",
-            projectId:"gamecorofriends",
-            storageBucket:"gamecorofriends.firebasestorage.app",
-            messagingSenderId:"373275888982",
-            appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+            apiKey: "AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+            authDomain: "gamecorofriends.firebaseapp.com",
+            projectId: "gamecorofriends",
+            storageBucket: "gamecorofriends.firebasestorage.app",
+            messagingSenderId: "373275888982",
+            appId: "1:373275888982:web:94ddf75182aa8a461ddaf7"
         });
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const BASE = 'https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html';
 
         onAuthStateChanged(auth, async user => {
             if (!user) { window.location.href = '../index.html'; return; }
 
-            // Badge usuario
             document.getElementById('user-badge').style.display = 'flex';
             document.getElementById('user-badge-name').textContent = (user.displayName || user.email?.split('@')[0] || '').toUpperCase();
             if (user.photoURL) document.getElementById('user-avatar').src = user.photoURL;
 
             try {
-                // Sin orderBy para no requerir índice compuesto
-                const q = query(collection(db,'formularios'), where('creadorUid','==',user.uid));
+                const q = query(collection(db, 'formularios'), where('creadorUid', '==', user.uid));
                 const snap = await getDocs(q);
-
                 document.getElementById('estado-carga').style.display = 'none';
 
-                if (snap.empty) {
-                    document.getElementById('estado-vacio').style.display = 'block';
-                    return;
-                }
+                if (snap.empty) { document.getElementById('estado-vacio').style.display = 'block'; return; }
 
-                // Ordenar manualmente por fecha desc
                 const docs = snap.docs.map(d => d.data());
-                docs.sort((a,b) => (b.creadoEn?.seconds||0) - (a.creadoEn?.seconds||0));
+                docs.sort((a, b) => (b.creadoEn?.seconds || 0) - (a.creadoEn?.seconds || 0));
 
-                const grid = document.getElementById('formularios-grid');
-                const BASE = 'https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html';
+                const lista = document.getElementById('formularios-lista');
 
                 docs.forEach((data, i) => {
                     const link = `${BASE}?id=${data.id}`;
                     const fecha = data.creadoEn
-                        ? new Date(data.creadoEn.seconds * 1000).toLocaleDateString('es-CO', {day:'2-digit',month:'short',year:'numeric'})
+                        ? new Date(data.creadoEn.seconds * 1000).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })
                         : 'Sin fecha';
                     const numPreg = data.preguntas?.length || 0;
                     const numResp = data.respuestasCount || 0;
 
                     const card = document.createElement('div');
                     card.className = 'form-card';
+                    card.id = `card-${data.id}`;
                     card.innerHTML = `
-                        <div class="form-card-num">FORMULARIO #${docs.length - i}</div>
-                        <div class="form-card-nombre">${(data.nombre||'Sin nombre').toUpperCase()}</div>
-                        <div class="form-card-fecha">📅 ${fecha}</div>
-                        <div class="form-card-stats">
-                            <div class="stat"><span class="stat-num">${numPreg}</span><span class="stat-label">PREGUNTAS</span></div>
-                            <div class="stat"><span class="stat-num">${numResp}</span><span class="stat-label">RESPUESTAS</span></div>
+                        <div class="card-top">
+                            <div class="card-info">
+                                <div class="form-card-num">FORMULARIO #${docs.length - i}</div>
+                                <div class="form-card-nombre">${(data.nombre || 'Sin nombre').toUpperCase()}</div>
+                                <div class="form-card-fecha">📅 ${fecha}</div>
+                            </div>
+                            <div class="card-stats">
+                                <div class="stat"><span class="stat-num">${numPreg}</span><span class="stat-label">PREGUNTAS</span></div>
+                                <div class="stat"><span class="stat-num">${numResp}</span><span class="stat-label">RESPUESTAS</span></div>
+                            </div>
                         </div>
                         <div class="form-card-link" id="link-${data.id}" onclick="copiar('${link}','${data.id}')" title="Clic para copiar">${link}</div>
                         <div class="form-card-btns">
-                            <button class="btn-copiar" id="btn-c-${data.id}" onclick="copiar('${link}','${data.id}')">📋 COPIAR</button>
-                            <a class="btn-ranking" href="${BASE.replace('responder','responder')}?id=${data.id}" target="_blank">🏆 RANKING</a>
+                            <button class="btn-copiar" id="btn-c-${data.id}" onclick="copiar('${link}','${data.id}')">📋 COPIAR LINK</button>
+                            <button class="btn-ranking" onclick="toggleRanking('${data.id}')">🏆 VER RANKING</button>
+                        </div>
+                        <div class="ranking-panel" id="ranking-${data.id}">
+                            <div class="ranking-loading" id="ranking-load-${data.id}">CARGANDO RANKING...</div>
                         </div>
                     `;
-                    grid.appendChild(card);
+                    lista.appendChild(card);
                 });
 
                 document.getElementById('btn-crear-nuevo').style.display = 'block';
 
-            } catch(e) {
+            } catch (e) {
                 document.getElementById('estado-carga').style.display = 'none';
-                document.getElementById('formularios-grid').innerHTML = `
-                    <div style="color:#555;font-family:sans-serif;font-size:13px;padding:20px;background:#141414;border:1px solid #222;border-radius:4px">
-                        Error al cargar: ${e.message}
-                    </div>`;
+                document.getElementById('formularios-lista').innerHTML = `<div style="color:#555;font-family:sans-serif;font-size:13px;padding:20px;background:#141414;border:1px solid #222;border-radius:4px">Error: ${e.message}</div>`;
             }
         });
 
-        window.copiar = function(link, id) {
+        // Cache de rankings ya cargados
+        const rankingCache = {};
+
+        window.toggleRanking = async function (formId) {
+            const panel = document.getElementById('ranking-' + formId);
+            const btn = event.target;
+
+            if (panel.classList.contains('visible')) {
+                panel.classList.remove('visible');
+                btn.textContent = '🏆 VER RANKING';
+                return;
+            }
+
+            panel.classList.add('visible');
+            btn.textContent = '🔼 OCULTAR RANKING';
+
+            if (rankingCache[formId]) return; // ya cargado
+            rankingCache[formId] = true;
+
+            try {
+                const { getFirestore, collection, query, orderBy, limit, getDocs } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+                const db2 = getFirestore();
+                const q = query(collection(db2, 'formularios', formId, 'resultados'), orderBy('porcentaje', 'desc'), limit(20));
+                const snap = await getDocs(q);
+
+                const loadDiv = document.getElementById('ranking-load-' + formId);
+
+                if (snap.empty) {
+                    loadDiv.outerHTML = '<div class="ranking-empty">Nadie ha respondido este formulario aún 😔</div>';
+                    return;
+                }
+
+                let html = '<div class="ranking-title">🏆 RANKING — QUIÉN TE CONOCE MÁS</div><table class="ranking-table"><thead><tr><th>#</th><th>JUGADOR</th><th>PUNTAJE</th><th>%</th></tr></thead><tbody>';
+                snap.docs.forEach((d, i) => {
+                    const r = d.data();
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
+                    html += `<tr><td>${medal}</td><td>${r.jugador}</td><td class="td-score">${r.aciertos}/${r.total}</td><td class="td-score">${r.porcentaje}%</td></tr>`;
+                });
+                html += '</tbody></table>';
+                loadDiv.outerHTML = html;
+
+            } catch (e) {
+                document.getElementById('ranking-load-' + formId).textContent = 'Error: ' + e.message;
+            }
+        };
+
+        window.copiar = function (link, id) {
             navigator.clipboard.writeText(link).then(() => {
-                const btn = document.getElementById('btn-c-'+id);
-                const box = document.getElementById('link-'+id);
-                if(btn) { btn.textContent = '✓ COPIADO!'; setTimeout(()=>btn.textContent='📋 COPIAR', 2000); }
-                if(box) { const orig = box.textContent; box.textContent = '✓ ¡COPIADO!'; setTimeout(()=>box.textContent=orig, 2000); }
+                const btn = document.getElementById('btn-c-' + id);
+                const box = document.getElementById('link-' + id);
+                if (btn) { btn.textContent = '✓ ¡COPIADO!'; setTimeout(() => btn.textContent = '📋 COPIAR LINK', 2000) }
+                if (box) { const orig = box.textContent; box.textContent = '✓ ¡COPIADO!'; setTimeout(() => box.textContent = orig, 2000) }
             });
         };
     </script>
 </body>
+
 </html>
