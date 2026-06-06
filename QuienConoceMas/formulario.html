@@ -575,6 +575,37 @@
                 transform: rotate(360deg)
             }
         }
+
+        #add-float {
+            position: fixed;
+            right: 20px;
+            bottom: 110px;
+            /* arriba del botón SIGUIENTE */
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--amarillo);
+            color: var(--negro);
+            font-size: 28px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--amarillo-dark);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .15s, box-shadow .15s;
+        }
+
+        #add-float:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--amarillo-dark);
+        }
+
+        #add-float:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0px var(--amarillo-dark);
+        }
     </style>
 </head>
 
@@ -679,6 +710,19 @@
 
         function genId(n = 8) { const c = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; let s = ''; for (let i = 0; i < n; i++)s += c[Math.floor(Math.random() * c.length)]; return s }
 
+        window.añadirPregunta = function () {
+            const nueva = {
+                texto: 'Nueva pregunta',
+                opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']
+            };
+
+            preguntas.push(nueva);
+            respuestas.push([]);
+
+            actual = preguntas.length - 1;
+
+            renderPregunta(actual);
+        };
         // ── GUARDAR EN FIRESTORE ─────────────────────────────────────
         // KEY: convertir arrays anidados a strings porque Firestore no los acepta
         async function guardarEnFirestore() {
@@ -887,9 +931,12 @@
         window.volverInicio = function () {
             window.location.href = '../index.html';
         };
+        <button id="add-float" onclick="añadirPregunta()">＋</button>
+
 
         renderPregunta(0);
     </script>
+    <button id="add-float" onclick="añadirPregunta()">＋</button>
 </body>
 
 </html>
