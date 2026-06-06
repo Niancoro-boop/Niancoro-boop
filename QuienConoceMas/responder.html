@@ -27,7 +27,6 @@
         .btn-brutal{width:100%;background:var(--rojo);color:var(--blanco);border:none;padding:16px;font-size:1.2rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:4px 4px 0px var(--negro)}
         .btn-brutal:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--negro)}
         .btn-brutal.verde{background:var(--verde)}
-        .btn-brutal.amarillo{background:var(--amarillo);color:var(--negro);box-shadow:4px 4px 0px var(--amarillo-dark)}
         .bottom-bar{display:flex;align-items:center;gap:14px;margin-top:16px}
         .progress-bar-wrap{flex-grow:1;height:8px;background:#2a2a30;border-radius:4px;overflow:hidden}
         .progress-bar-fill{height:100%;background:var(--rojo);width:0%;transition:width .3s ease}
@@ -39,26 +38,32 @@
         .error-state h2{color:var(--rojo);font-size:1.4rem;margin-bottom:10px}
         @keyframes sacudir{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-        /* Resultados */
-        .results-section{margin-top:28px;text-align:left}
-        .results-title{font-family:'Arial Black',sans-serif;font-size:.9rem;letter-spacing:2px;color:var(--amarillo);margin-bottom:12px;text-transform:uppercase}
-        .results-table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:.85rem}
-        .results-table th{background:#1e1e24;color:var(--amarillo);padding:9px 11px;text-align:left;border:2px solid var(--gris-borde);letter-spacing:1px;font-size:.75rem}
-        .results-table td{padding:9px 11px;border:2px solid var(--gris-borde);color:var(--gris-texto)}
+        /* Post-juego */
+        .post-btns{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+        .btn-amarillo{width:100%;background:var(--amarillo);color:var(--negro);border:none;padding:16px;font-size:1.1rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:4px 4px 0px var(--amarillo-dark);transition:transform .1s,box-shadow .1s}
+        .btn-amarillo:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--amarillo-dark)}
+        .btn-rojo{width:100%;background:var(--rojo);color:var(--blanco);border:none;padding:16px;font-size:1.1rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:4px 4px 0px var(--rojo-dark);transition:transform .1s,box-shadow .1s}
+        .btn-rojo:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--rojo-dark)}
+
+        /* Página ranking */
+        #pagina-ranking{display:none;min-height:100vh;background:var(--fondo)}
+        .ranking-header{background:var(--tarjeta);border-bottom:4px solid var(--negro);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+        .ranking-header h1{font-family:'Arial Black',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--blanco);line-height:1.1}
+        .ranking-header h1 span{color:var(--amarillo)}
+        .ranking-body-wrap{max-width:700px;margin:0 auto;padding:36px 20px 60px}
+        .results-table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:.9rem;margin-bottom:28px}
+        .results-table th{background:#1e1e24;color:var(--amarillo);padding:10px 14px;text-align:left;border:2px solid var(--gris-borde);letter-spacing:1px;font-size:.75rem}
+        .results-table td{padding:10px 14px;border:2px solid var(--gris-borde);color:var(--gris-texto)}
         .results-table tr:nth-child(even) td{background:#1a1a20}
         .td-score{color:var(--amarillo);font-weight:bold}
-
-        /* Botones post-juego */
-        .post-btns{display:flex;flex-direction:column;gap:10px;margin-top:24px}
-        .btn-ver-ranking{width:100%;background:var(--amarillo);color:var(--negro);border:none;padding:14px;font-size:1rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:4px 4px 0px var(--amarillo-dark)}
-        .btn-ver-ranking:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--amarillo-dark)}
-        .btn-crear-propio{width:100%;background:var(--rojo);color:var(--blanco);border:none;padding:14px;font-size:1rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:4px 4px 0px var(--rojo-dark)}
-        .btn-crear-propio:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--rojo-dark)}
-
-        .ranking-empty{font-family:sans-serif;color:#555;font-size:.85rem;text-align:center;padding:20px}
+        .ranking-empty{font-family:sans-serif;color:#555;font-size:.9rem;text-align:center;padding:30px;border:2px solid var(--gris-borde);margin-bottom:24px}
+        .spinner-wrap{text-align:center;padding:40px}
     </style>
 </head>
 <body>
+
+<!-- ══ JUEGO ══════════════════════════════════════════════════════ -->
+<div id="pagina-juego">
     <div class="top-bar">
         <div class="top-title">FORMULARIO DE: <span id="creador-display">...</span></div>
         <div class="progress-info" id="info-progreso-pantalla" style="display:none">
@@ -70,21 +75,18 @@
         <div class="card active" id="pantalla-carga">
             <div class="loading-state"><div class="spinner"></div><p>CARGANDO FORMULARIO...</p></div>
         </div>
-
         <div class="card" id="pantalla-error">
             <div class="error-state">
                 <h2>⚠️ LINK INVÁLIDO</h2>
                 <p>Este enlace no existe o expiró. Pídele a tu amigo que genere el link de nuevo.</p>
             </div>
         </div>
-
         <div class="card" id="pantalla-inicio">
             <h2 class="p-titulo">¿QUÉ TANTO CONOCES A <span id="creador-bienvenida" style="color:var(--amarillo)">...</span>?</h2>
-            <p style="margin-bottom:22px;font-family:sans-serif;font-size:.9rem;color:var(--gris-texto)">Escribe tu nombre o apodo para empezar el desafío.</p>
+            <p style="margin-bottom:22px;font-family:sans-serif;font-size:.9rem;color:var(--gris-texto)">Escribe tu nombre o apodo para empezar.</p>
             <input type="text" class="brutal-input" id="nombre-jugador" placeholder="Tu nombre aquí..." maxlength="20" autocomplete="off">
             <button class="btn-brutal" onclick="empezarJuego()">¡EMPEZAR JUEGO! →</button>
         </div>
-
         <div class="card" id="pantalla-juego">
             <div class="p-titulo" id="pregunta-texto">Cargando...</div>
             <div class="opciones-grid" id="opciones-grid"></div>
@@ -93,165 +95,183 @@
                 <button class="btn-brutal" id="nav-btn" onclick="avanzarPregunta()" style="width:auto;padding:12px 26px;font-size:1rem">SIGUIENTE →</button>
             </div>
         </div>
-
         <div class="card" id="pantalla-resultados" style="text-align:center">
             <span style="font-size:3rem">🎉</span>
             <h2 class="p-titulo" style="margin-top:14px">¡JUEGO TERMINADO,<br><span id="jugador-final-display" style="color:var(--amarillo)">...</span>!</h2>
             <p style="font-family:sans-serif;color:var(--gris-texto);font-size:.9rem">Tu puntuación final es de:</p>
             <div class="score-display" id="puntaje-final">0 / 0</div>
-            <p id="mensaje-feedback" style="margin-top:18px;font-size:1.1rem;letter-spacing:.5px;font-family:sans-serif"></p>
-
-            <!-- Botones post-juego -->
+            <p id="mensaje-feedback" style="margin-top:18px;font-size:1.05rem;letter-spacing:.5px;font-family:sans-serif"></p>
             <div class="post-btns">
-                <button class="btn-ver-ranking" id="btn-ver-ranking" onclick="toggleRanking()">🏆 VER RANKING</button>
-                <button class="btn-crear-propio" onclick="crearPropio()">🧠 CREAR TU PROPIO FORMULARIO</button>
-            </div>
-
-            <!-- Ranking -->
-            <div class="results-section" id="ranking-section" style="display:none">
-                <div class="results-title">🏆 RANKING — QUIÉN CONOCE MÁS A <span id="creador-ranking-nombre" style="color:var(--amarillo)"></span></div>
-                <div id="ranking-body-wrap">
-                    <div class="ranking-empty">Cargando...</div>
-                </div>
+                <button class="btn-amarillo" onclick="irARanking()">🏆 VER RANKING COMPLETO</button>
+                <button class="btn-rojo" onclick="irACrear()">🧠 CREAR TU PROPIO FORMULARIO</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-        import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, increment, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+<!-- ══ RANKING ════════════════════════════════════════════════════ -->
+<div id="pagina-ranking">
+    <div class="ranking-header">
+        <div>
+            <div style="font-size:.7rem;letter-spacing:3px;color:#555;margin-bottom:4px">¿CUÁNTO ME CONOCES?</div>
+            <h1>RANKING DE <span id="creador-ranking-nombre">...</span></h1>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-amarillo" style="width:auto;padding:10px 18px;font-size:.85rem" onclick="irACrear()">🧠 CREAR EL MÍO</button>
+            <button class="btn-rojo" style="width:auto;padding:10px 18px;font-size:.85rem" onclick="volverAlJuego()">← VOLVER</button>
+        </div>
+    </div>
+    <div class="ranking-body-wrap">
+        <div id="ranking-contenido"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+        <button class="btn-rojo" onclick="irAInicio()">🏠 IR A GAMECOROFRIENDS</button>
+    </div>
+</div>
 
-        const app = initializeApp({
-            apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
-            authDomain:"gamecorofriends.firebaseapp.com",
-            projectId:"gamecorofriends",
-            storageBucket:"gamecorofriends.firebasestorage.app",
-            messagingSenderId:"373275888982",
-            appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, increment, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const app = initializeApp({
+        apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+        authDomain:"gamecorofriends.firebaseapp.com",
+        projectId:"gamecorofriends",
+        storageBucket:"gamecorofriends.firebasestorage.app",
+        messagingSenderId:"373275888982",
+        appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+    });
+    const db = getFirestore(app);
+
+    let gameData=null,preguntasD=[],respuestasD=[],formId='',nombreJugador='',actual=0,respuestasJugador=[];
+
+    const deserPre=p=>({texto:p.texto,opciones:[p.op0,p.op1,p.op2,p.op3].filter(o=>o!=='')});
+    const deserRes=s=>(!s||s==='')?[]:s.split(',').map(Number).filter(n=>!isNaN(n));
+
+    async function cargarFormulario(){
+        const params=new URLSearchParams(window.location.search);
+        formId=params.get('id');
+        if(!formId){cambiar('pantalla-error');return}
+        try{
+            const snap=await getDoc(doc(db,'formularios',formId));
+            if(!snap.exists()){cambiar('pantalla-error');return}
+            gameData=snap.data();
+            preguntasD=gameData.preguntas.map(deserPre);
+            respuestasD=gameData.respuestas.map(deserRes);
+            const nombre=gameData.nombre.toUpperCase();
+            document.getElementById('creador-display').textContent=nombre;
+            document.getElementById('creador-bienvenida').textContent=nombre;
+            document.getElementById('creador-ranking-nombre').textContent=nombre;
+            cambiar('pantalla-inicio');
+        }catch(e){console.error(e);cambiar('pantalla-error')}
+    }
+
+    function cambiar(id){
+        ['pantalla-carga','pantalla-error','pantalla-inicio','pantalla-juego','pantalla-resultados']
+            .forEach(p=>document.getElementById(p).classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    window.empezarJuego=function(){
+        const inp=document.getElementById('nombre-jugador');
+        nombreJugador=inp.value.trim();
+        if(!nombreJugador){inp.style.animation='none';void inp.offsetWidth;inp.style.animation='sacudir .3s ease';return}
+        cambiar('pantalla-juego');
+        document.getElementById('info-progreso-pantalla').style.display='block';
+        respuestasJugador=preguntasD.map(()=>[]);
+        renderJuego();
+    };
+
+    document.getElementById('nombre-jugador').addEventListener('keydown',e=>{if(e.key==='Enter')window.empezarJuego()});
+
+    function renderJuego(){
+        const total=preguntasD.length;
+        document.getElementById('prog-total').textContent=total;
+        document.getElementById('prog-actual').textContent=actual+1;
+        document.getElementById('progress-fill').style.width=(actual/total*100)+'%';
+        document.getElementById('pregunta-texto').textContent=preguntasD[actual].texto;
+        const grid=document.getElementById('opciones-grid');grid.innerHTML='';
+        preguntasD[actual].opciones.forEach((op,i)=>{
+            const btn=document.createElement('button');btn.className='opcion-btn';btn.textContent=op;
+            if(respuestasJugador[actual].includes(i))btn.classList.add('selected');
+            btn.onclick=()=>{
+                const sel=respuestasJugador[actual];
+                if(sel.includes(i)){respuestasJugador[actual]=sel.filter(x=>x!==i);btn.classList.remove('selected');}
+                else{if(sel.length>=2)return;respuestasJugador[actual].push(i);btn.classList.add('selected')}
+            };
+            grid.appendChild(btn);
         });
-        const db = getFirestore(app);
+        const nb=document.getElementById('nav-btn');
+        if(actual===total-1){nb.textContent='FINALIZAR 🏁';nb.classList.add('verde');}
+        else{nb.textContent='SIGUIENTE →';nb.classList.remove('verde')}
+    }
 
-        let gameData=null, preguntasD=[], respuestasD=[], formId='', nombreJugador='', actual=0, respuestasJugador=[], rankingCargado=false;
-
-        function deserPre(p){return{texto:p.texto,opciones:[p.op0,p.op1,p.op2,p.op3].filter(o=>o!=='')}}
-        function deserRes(s){if(!s||s==='')return[];return s.split(',').map(Number).filter(n=>!isNaN(n))}
-
-        async function cargarFormulario(){
-            const params=new URLSearchParams(window.location.search);
-            formId=params.get('id');
-            if(!formId){cambiar('pantalla-error');return}
-            try{
-                const snap=await getDoc(doc(db,'formularios',formId));
-                if(!snap.exists()){cambiar('pantalla-error');return}
-                gameData=snap.data();
-                preguntasD=gameData.preguntas.map(deserPre);
-                respuestasD=gameData.respuestas.map(deserRes);
-                document.getElementById('creador-display').textContent=gameData.nombre.toUpperCase();
-                document.getElementById('creador-bienvenida').textContent=gameData.nombre.toUpperCase();
-                document.getElementById('creador-ranking-nombre').textContent=gameData.nombre.toUpperCase();
-                cambiar('pantalla-inicio');
-            }catch(e){console.error(e);cambiar('pantalla-error')}
+    window.avanzarPregunta=function(){
+        if(respuestasJugador[actual].length===0){
+            const c=document.getElementById('pantalla-juego');c.style.animation='none';void c.offsetWidth;c.style.animation='sacudir .3s ease';return;
         }
+        if(actual<preguntasD.length-1){actual++;renderJuego();}
+        else calcularResultados();
+    };
 
-        function cambiar(id){
-            ['pantalla-carga','pantalla-error','pantalla-inicio','pantalla-juego','pantalla-resultados'].forEach(p=>document.getElementById(p).classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+    async function calcularResultados(){
+        let aciertos=0;
+        respuestasD.forEach((correctas,i)=>{
+            const jug=[...respuestasJugador[i]].sort((a,b)=>a-b);
+            const cor=[...correctas].sort((a,b)=>a-b);
+            if(cor.length===jug.length&&cor.every((v,idx)=>v===jug[idx]))aciertos++;
+        });
+        try{
+            await addDoc(collection(db,'formularios',formId,'resultados'),{jugador:nombreJugador,aciertos,total:preguntasD.length,porcentaje:Math.round(aciertos/preguntasD.length*100),fecha:serverTimestamp()});
+            await updateDoc(doc(db,'formularios',formId),{respuestasCount:increment(1)});
+        }catch(e){console.error(e)}
+        document.getElementById('info-progreso-pantalla').style.display='none';
+        cambiar('pantalla-resultados');
+        document.getElementById('jugador-final-display').textContent=nombreJugador.toUpperCase();
+        document.getElementById('puntaje-final').textContent=`${aciertos} / ${preguntasD.length}`;
+        const pct=aciertos/preguntasD.length*100;
+        const fb=document.getElementById('mensaje-feedback');
+        if(pct===100)fb.textContent='¡Eres su clon! Lo conoces de una forma casi mística. 🔥';
+        else if(pct>=60)fb.textContent='¡Muy buen puntaje! Son panas firmes. 👌';
+        else fb.textContent='Uf... parece que les falta salir por salchipapas y charlar más. 💀';
+    }
 
-        window.empezarJuego=function(){
-            const inp=document.getElementById('nombre-jugador');
-            nombreJugador=inp.value.trim();
-            if(!nombreJugador){inp.style.animation='none';void inp.offsetWidth;inp.style.animation='sacudir .3s ease';return}
-            cambiar('pantalla-juego');
-            document.getElementById('info-progreso-pantalla').style.display='block';
-            respuestasJugador=preguntasD.map(()=>[]);
-            renderJuego();
-        };
-
-        document.getElementById('nombre-jugador').addEventListener('keydown',e=>{if(e.key==='Enter')window.empezarJuego()});
-
-        function renderJuego(){
-            const total=preguntasD.length;
-            document.getElementById('prog-total').textContent=total;
-            document.getElementById('prog-actual').textContent=actual+1;
-            document.getElementById('progress-fill').style.width=(actual/total*100)+'%';
-            document.getElementById('pregunta-texto').textContent=preguntasD[actual].texto;
-            const grid=document.getElementById('opciones-grid');grid.innerHTML='';
-            preguntasD[actual].opciones.forEach((op,i)=>{
-                const btn=document.createElement('button');btn.className='opcion-btn';btn.textContent=op;
-                if(respuestasJugador[actual].includes(i))btn.classList.add('selected');
-                btn.onclick=()=>toggleOp(i,btn);
-                grid.appendChild(btn);
+    window.irARanking=async function(){
+        document.getElementById('pagina-juego').style.display='none';
+        document.getElementById('pagina-ranking').style.display='block';
+        window.scrollTo(0,0);
+        try{
+            // Sin orderBy compuesto — solo por porcentaje para evitar necesitar índice
+            const q=query(collection(db,'formularios',formId,'resultados'),orderBy('porcentaje','desc'),limit(30));
+            const snap=await getDocs(q);
+            const contenido=document.getElementById('ranking-contenido');
+            if(snap.empty){contenido.innerHTML='<div class="ranking-empty">Nadie ha respondido aún 😔<br><br>¡Comparte el link!</div>';return}
+            let html='<table class="results-table"><thead><tr><th>#</th><th>JUGADOR</th><th>PUNTAJE</th><th>%</th></tr></thead><tbody>';
+            snap.docs.forEach((d,i)=>{
+                const r=d.data();
+                const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+                html+=`<tr><td>${medal}</td><td>${r.jugador}</td><td class="td-score">${r.aciertos}/${r.total}</td><td class="td-score">${r.porcentaje}%</td></tr>`;
             });
-            const nb=document.getElementById('nav-btn');
-            if(actual===total-1){nb.textContent='FINALIZAR 🏁';nb.classList.add('verde');}
-            else{nb.textContent='SIGUIENTE →';nb.classList.remove('verde')}
+            html+='</tbody></table>';
+            contenido.innerHTML=html;
+        }catch(e){
+            document.getElementById('ranking-contenido').innerHTML=`<div class="ranking-empty">Error: ${e.message}</div>`;
         }
+    };
 
-        function toggleOp(i,btn){
-            const sel=respuestasJugador[actual];
-            if(sel.includes(i)){respuestasJugador[actual]=sel.filter(x=>x!==i);btn.classList.remove('selected');}
-            else{if(sel.length>=2)return;respuestasJugador[actual].push(i);btn.classList.add('selected')}
-        }
+    window.volverAlJuego=function(){
+        document.getElementById('pagina-ranking').style.display='none';
+        document.getElementById('pagina-juego').style.display='block';
+        window.scrollTo(0,0);
+    };
 
-        window.avanzarPregunta=function(){
-            if(respuestasJugador[actual].length===0){
-                const c=document.getElementById('pantalla-juego');c.style.animation='none';void c.offsetWidth;c.style.animation='sacudir .3s ease';return;
-            }
-            if(actual<preguntasD.length-1){actual++;renderJuego();}
-            else calcularResultados();
-        };
+    window.irACrear=function(){
+        window.location.href='https://niancoro-boop.github.io/Niancoro-boop/';
+    };
 
-        async function calcularResultados(){
-            let aciertos=0;
-            respuestasD.forEach((correctas,i)=>{
-                const jug=[...respuestasJugador[i]].sort((a,b)=>a-b);
-                const cor=[...correctas].sort((a,b)=>a-b);
-                if(cor.length===jug.length&&cor.every((v,idx)=>v===jug[idx]))aciertos++;
-            });
-            try{
-                await addDoc(collection(db,'formularios',formId,'resultados'),{jugador:nombreJugador,aciertos,total:preguntasD.length,porcentaje:Math.round(aciertos/preguntasD.length*100),fecha:serverTimestamp()});
-                await updateDoc(doc(db,'formularios',formId),{respuestasCount:increment(1)});
-            }catch(e){console.error(e)}
+    window.irAInicio=function(){
+        window.location.href='https://niancoro-boop.github.io/Niancoro-boop/';
+    };
 
-            document.getElementById('info-progreso-pantalla').style.display='none';
-            cambiar('pantalla-resultados');
-            document.getElementById('jugador-final-display').textContent=nombreJugador.toUpperCase();
-            document.getElementById('puntaje-final').textContent=`${aciertos} / ${preguntasD.length}`;
-            const pct=aciertos/preguntasD.length*100;
-            const fb=document.getElementById('mensaje-feedback');
-            if(pct===100)fb.textContent='¡Eres su clon! Lo conoces de una forma casi mística. 🔥';
-            else if(pct>=60)fb.textContent='¡Muy buen puntaje! Son panas firmes. 👌';
-            else fb.textContent='Uf... parece que les falta salir por salchipapas y charlar más. 💀';
-        }
-
-        window.toggleRanking=async function(){
-            const section=document.getElementById('ranking-section');
-            const btn=document.getElementById('btn-ver-ranking');
-            if(section.style.display==='block'){section.style.display='none';btn.textContent='🏆 VER RANKING';return}
-            section.style.display='block';btn.textContent='🔼 OCULTAR RANKING';
-            if(rankingCargado)return;
-            rankingCargado=true;
-            try{
-                const q=query(collection(db,'formularios',formId,'resultados'),orderBy('porcentaje','desc'),orderBy('fecha','asc'),limit(20));
-                const snap=await getDocs(q);
-                const wrap=document.getElementById('ranking-body-wrap');
-                if(snap.empty){wrap.innerHTML='<div class="ranking-empty">Nadie más ha respondido aún 😔</div>';return}
-                let html='<table class="results-table"><thead><tr><th>#</th><th>JUGADOR</th><th>PUNTAJE</th></tr></thead><tbody>';
-                snap.docs.forEach((d,i)=>{
-                    const r=d.data();const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-                    html+=`<tr><td>${medal}</td><td>${r.jugador}</td><td class="td-score">${r.aciertos}/${r.total} (${r.porcentaje}%)</td></tr>`;
-                });
-                html+='</tbody></table>';
-                wrap.innerHTML=html;
-            }catch(e){document.getElementById('ranking-body-wrap').innerHTML=`<div class="ranking-empty">Error: ${e.message}</div>`}
-        };
-
-        window.crearPropio=function(){
-            window.location.href='https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/conoces.html';
-        };
-
-        cargarFormulario();
-    </script>
+    cargarFormulario();
+</script>
 </body>
 </html>
