@@ -552,8 +552,8 @@
         <input type="text" id="nombre" placeholder="Ej: Juancho, La Nena, Coro..." autocomplete="off" />
         <p class="error-msg" id="error">⚠ Escribe tu nombre para continuar</p>
         <button class="main-btn" id="btn-crear" onclick="intentarCrear()">CREAR FORMULARIO</button>
-        <button id="btn-ver-registrados" onclick="window.location.href='FormulariosRegistrados.html'"
-            style="display:none; width:100%; background:#1a1a1a; color:#888; border:1.5px solid #2a2a2a; border-radius:3px; padding:12px; font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; cursor:pointer; margin-top:10px; transition:all .2s;">
+        <button id="btn-ver-registrados" disabled onclick="window.location.href='FormulariosRegistrados.html'"
+            style="width:100%; background:#1a1a1a; color:#666; border:1.5px solid #2a2a2a; border-radius:3px; padding:12px; font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; cursor:not-allowed; margin-top:10px; transition:all .2s;">
             VER FORMULARIOS REGISTRADOS
         </button>
         <p class="footer-note">by <span id="niancoro-link">Niancoro</span></p>
@@ -625,22 +625,27 @@
                     limit(1)
                 );
                 const snap = await getDocs(q);
-                
+
                 if (!snap.empty) {
                     formularioActivo = snap.docs[0].data();
                     linkActivo = `https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html?id=${formularioActivo.id}`;
                 }
 
-                // SIEMPRE buscamos si el botón existe y lo mostramos si hay algún documento,
-                // sin importar si es el formulario activo o no.
                 const countQ = query(collection(db, 'formularios'), where('creadorUid', '==', user.uid));
                 const allSnap = await getDocs(countQ);
+
                 if (!allSnap.empty) {
-                    document.getElementById('btn-ver-registrados').style.display = 'block';
+                    const btnRegistrados = document.getElementById('btn-ver-registrados');
+
+                    btnRegistrados.disabled = false;
+                    btnRegistrados.style.background = 'var(--rojo)';
+                    btnRegistrados.style.color = 'var(--blanco)';
+                    btnRegistrados.style.border = 'none';
+                    btnRegistrados.style.cursor = 'pointer';
                 }
 
-            } catch (e) { 
-                console.error('Error al cargar formularios (posiblemente falta crear el índice en Firebase):', e.message); 
+            } catch (e) {
+                console.error('Error al cargar formularios (posiblemente falta crear el índice en Firebase):', e.message);
             }
         });
 
