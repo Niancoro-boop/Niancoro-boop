@@ -559,14 +559,12 @@
         <p class="footer-note">by <span id="niancoro-link">Niancoro</span></p>
     </div>
 
-    <!-- Modal: formulario activo -->
     <div class="modal-overlay" id="modalActivo">
         <div class="modal">
             <span class="modal-emoji">📋</span>
             <h2>TIENES UN FORMULARIO<br>ACTIVO</h2>
             <p class="modal-sub">¿QUÉ DESEAS HACER?</p>
 
-            <!-- Link copiable -->
             <div class="active-link-box" id="active-link-box" onclick="copiarLinkActivo()" title="Clic para copiar">
                 Cargando link...
             </div>
@@ -577,7 +575,6 @@
                 <button class="btn-gris" onclick="cerrarModalActivo()">CANCELAR</button>
             </div>
 
-            <!-- Ranking inline -->
             <div class="ranking-wrap" id="ranking-wrap" style="display:none">
                 <div class="ranking-title">🏆 RANKING — QUIÉN TE CONOCE MÁS</div>
                 <div id="ranking-contenido"><span class="ranking-empty">Cargando...</span></div>
@@ -620,8 +617,6 @@
             document.getElementById('user-badge-name').textContent = (user.displayName || user.email?.split('@')[0] || '').toUpperCase();
             if (user.photoURL) document.getElementById('user-avatar').src = user.photoURL;
 
-            // Buscar formulario activo del usuario
-            // Buscar formulario activo del usuario
             try {
                 const q = query(
                     collection(db, 'formularios'),
@@ -630,15 +625,23 @@
                     limit(1)
                 );
                 const snap = await getDocs(q);
+                
                 if (!snap.empty) {
                     formularioActivo = snap.docs[0].data();
                     linkActivo = `https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html?id=${formularioActivo.id}`;
+                }
 
-                    // --- AQUÍ ESTÁ EL CAMBIO ---
-                    // Si hay al menos un formulario, mostramos el botón:
+                // SIEMPRE buscamos si el botón existe y lo mostramos si hay algún documento,
+                // sin importar si es el formulario activo o no.
+                const countQ = query(collection(db, 'formularios'), where('creadorUid', '==', user.uid));
+                const allSnap = await getDocs(countQ);
+                if (!allSnap.empty) {
                     document.getElementById('btn-ver-registrados').style.display = 'block';
                 }
-            } catch (e) { console.log('Sin formulario previo o índice pendiente:', e.message); }
+
+            } catch (e) { 
+                console.error('Error al cargar formularios (posiblemente falta crear el índice en Firebase):', e.message); 
+            }
         });
 
         window.intentarCrear = function () {
@@ -655,11 +658,9 @@
             error.style.display = 'none';
 
             if (formularioActivo) {
-                // Mostrar modal con formulario activo
                 document.getElementById('active-link-box').textContent = linkActivo;
                 document.getElementById('modalActivo').classList.add('show');
             } else {
-                // Ir directo a crear
                 window.location.href = `formulario.html?nombre=${encodeURIComponent(nombre)}`;
             }
         };
