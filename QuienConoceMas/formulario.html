@@ -288,17 +288,22 @@
             margin-bottom: 20px
         }
 
+        /* ESTILOS DE EDICIÓN TRANSPARENTE */
         .p-titulo-input {
             width: 100%;
-            background: #111;
-            border: 1.5px solid var(--amarillo);
-            border-radius: 3px;
-            padding: 11px 14px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--amarillo);
+            padding: 0;
             font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(18px, 3.5vw, 26px);
+            font-size: clamp(22px, 4.5vw, 34px);
             color: var(--blanco);
             outline: none;
             margin-bottom: 20px
+        }
+
+        .p-titulo-input::placeholder {
+            color: rgba(255, 255, 255, 0.2)
         }
 
         .opciones-grid {
@@ -356,18 +361,23 @@
             display: block
         }
 
+        /* CORRECCIÓN INPUT OPCIONES */
         .opcion-edit-input {
             width: 100%;
-            background: #111;
-            border: 2px solid var(--amarillo);
-            border-radius: 4px;
-            padding: 16px 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--amarillo);
+            padding: 5px;
             font-family: 'DM Sans', sans-serif;
             font-size: 14px;
             font-weight: 600;
             color: var(--blanco);
             outline: none;
             text-align: center
+        }
+
+        .opcion-edit-input::placeholder {
+            color: rgba(255, 255, 255, 0.2)
         }
 
         .bottom-bar {
@@ -768,14 +778,23 @@
 
         function renderTitulo(idx, modo) {
             const c = document.getElementById('titulo-container');
-            if (modo) { c.innerHTML = `<input class="p-titulo-input" id="titulo-input" type="text" value="${preguntas[idx].texto}" maxlength="80"/>`; document.getElementById('titulo-input').focus(); }
-            else c.innerHTML = `<div class="p-titulo">${preguntas[idx].texto}</div>`;
+            if (modo) {
+                c.innerHTML = `<input class="p-titulo-input" id="titulo-input" type="text" value="" placeholder="${preguntas[idx].texto}" maxlength="80"/>`;
+                document.getElementById('titulo-input').focus();
+            } else c.innerHTML = `<div class="p-titulo">${preguntas[idx].texto}</div>`;
         }
 
         function renderOpciones(idx, modo) {
             const grid = document.getElementById('opciones-grid'); grid.innerHTML = '';
             preguntas[idx].opciones.forEach((op, i) => {
-                if (modo) { const inp = document.createElement('input'); inp.className = 'opcion-edit-input'; inp.type = 'text'; inp.value = op; inp.maxLength = 30; grid.appendChild(inp); }
+                if (modo) {
+                    const inp = document.createElement('input');
+                    inp.className = 'opcion-edit-input';
+                    inp.type = 'text';
+                    inp.placeholder = op;
+                    inp.maxLength = 30;
+                    grid.appendChild(inp);
+                }
                 else {
                     const btn = document.createElement('button'); btn.className = 'opcion-btn';
                     if (omitidas.has(idx)) btn.classList.add('disabled');
@@ -797,8 +816,8 @@
         function guardarEdicion() {
             const eb = document.getElementById('edit-btn');
             const ti = document.getElementById('titulo-input');
-            if (ti && ti.value.trim()) preguntas[actual].texto = ti.value.trim();
-            document.querySelectorAll('.opcion-edit-input').forEach((inp, i) => { if (inp.value.trim()) preguntas[actual].opciones[i] = inp.value.trim() });
+            if (ti && ti.value.trim() !== "") preguntas[actual].texto = ti.value.trim();
+            document.querySelectorAll('.opcion-edit-input').forEach((inp, i) => { if (inp.value.trim() !== "") preguntas[actual].opciones[i] = inp.value.trim() });
             respuestas[actual] = []; editando = false; eb.textContent = '✏️'; eb.classList.remove('saving');
             renderTitulo(actual, false); renderOpciones(actual, false);
         }
