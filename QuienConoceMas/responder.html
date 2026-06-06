@@ -1,119 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Cuánto conoces a mi amigo? — GameCoroFriends</title>
     <style>
-        :root {
-            --fondo: #0a0a0c;
-            --tarjeta: #16161a;
-            --blanco: #ffffff;
-            --negro: #000000;
-            --amarillo: #ffde4d;
-            --rojo: #e62432;
-            --verde: #2ecc71;
-            --gris-borde: #2a2a30;
-            --gris-texto: #a0a0a5;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial Black', Impact, sans-serif; }
-
-        body {
-            background-color: var(--fondo);
-            background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
-            background-size: 24px 24px;
-            color: var(--blanco);
-            min-height: 100vh;
-            position: relative;
-            padding-bottom: 50px;
-        }
-
-        /* Barra Superior */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--tarjeta); padding: 15px 20px; border-bottom: 4px solid var(--negro); }
-        .top-title { font-size: 1rem; letter-spacing: 1px; color: var(--gris-texto); }
-        .top-title span { color: var(--amarillo); }
-        .progress-info { font-size: 0.9rem; letter-spacing: 1px; }
-
-        /* Contenedor Principal */
-        .main { max-width: 650px; margin: 60px auto; padding: 0 20px; }
-
-        /* Tarjetas Brutalistas */
-        .card { background: var(--tarjeta); border: 4px solid var(--negro); padding: 40px 30px; box-shadow: 10px 10px 0px var(--negro); display: none; position: relative; }
-        .card.active { display: block; }
-
-        .p-titulo { font-size: 1.8rem; text-transform: uppercase; margin-bottom: 30px; line-height: 1.2; letter-spacing: 0.5px; }
-
-        /* Inputs */
-        .brutal-input { width: 100%; padding: 18px; font-size: 1.2rem; background: var(--fondo); color: var(--blanco); border: 3px solid var(--negro); box-shadow: 4px 4px 0px var(--negro); outline: none; margin-bottom: 30px; }
-        .brutal-input:focus { border-color: var(--amarillo); }
-
-        /* Grid de Opciones */
-        .opciones-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 35px; }
-        @media (max-width: 480px) { .opciones-grid { grid-template-columns: 1fr; } }
-
-        .opcion-btn { background: #1e1e24; border: 3px solid var(--gris-borde); color: var(--gris-texto); padding: 20px 15px; text-align: center; font-size: 1.1rem; cursor: pointer; transition: transform 0.1s ease; }
-        .opcion-btn:hover { border-color: var(--gris-texto); color: var(--blanco); }
-        .opcion-btn.selected { border: 3px solid var(--amarillo); color: var(--amarillo); background: #25251a; }
-
-        /* Botón siguiente / iniciar */
-        .btn-brutal { width: 100%; background: var(--rojo); color: var(--blanco); border: none; padding: 18px; font-size: 1.3rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 4px 4px 0px var(--negro); }
-        .btn-brutal:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--negro); }
-        .btn-brutal.verde { background: var(--verde); }
-
-        /* Barra inferior */
-        .bottom-bar { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
-        .progress-bar-wrap { flex-grow: 1; height: 8px; background: #2a2a30; border-radius: 4px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: var(--rojo); width: 0%; transition: width 0.3s ease; }
+        :root{--fondo:#0a0a0c;--tarjeta:#16161a;--blanco:#ffffff;--negro:#000000;--amarillo:#ffde4d;--amarillo-dark:#b89b00;--rojo:#e62432;--rojo-dark:#8b0f1a;--verde:#2ecc71;--gris-borde:#2a2a30;--gris-texto:#a0a0a5}
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Arial Black',Impact,sans-serif}
+        html,body{height:100%}
+        body{background-color:var(--fondo);background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px);background-size:24px 24px;color:var(--blanco);min-height:100vh;overflow-x:hidden}
+        .top-bar{display:flex;justify-content:space-between;align-items:center;background:var(--tarjeta);padding:15px 20px;border-bottom:4px solid var(--negro)}
+        .top-title{font-size:.95rem;letter-spacing:1px;color:var(--gris-texto)}
+        .top-title span{color:var(--amarillo)}
+        .progress-info{font-size:.85rem;letter-spacing:1px}
+        .main{max-width:650px;margin:0 auto;padding:40px 20px 60px}
+        .card{background:var(--tarjeta);border:4px solid var(--negro);padding:36px 28px;box-shadow:8px 8px 0px var(--negro);display:none;position:relative}
+        .card.active{display:block}
+        .p-titulo{font-size:1.6rem;text-transform:uppercase;margin-bottom:28px;line-height:1.2;letter-spacing:.5px}
+        .brutal-input{width:100%;padding:16px;font-size:1.1rem;background:var(--fondo);color:var(--blanco);border:3px solid var(--negro);box-shadow:4px 4px 0px var(--negro);outline:none;margin-bottom:24px}
+        .brutal-input:focus{border-color:var(--amarillo)}
+        .opciones-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:30px}
+        @media(max-width:480px){.opciones-grid{grid-template-columns:1fr}}
+        .opcion-btn{background:#1e1e24;border:3px solid var(--gris-borde);color:var(--gris-texto);padding:18px 14px;text-align:center;font-size:1rem;cursor:pointer;transition:transform .1s ease}
+        .opcion-btn:hover{border-color:var(--gris-texto);color:var(--blanco)}
+        .opcion-btn.selected{border:3px solid var(--amarillo);color:var(--amarillo);background:#25251a}
+        .btn-brutal{width:100%;background:var(--rojo);color:var(--blanco);border:none;padding:16px;font-size:1.2rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:4px 4px 0px var(--negro)}
+        .btn-brutal:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--negro)}
+        .btn-brutal.verde{background:var(--verde)}
+        .btn-brutal.amarillo{background:var(--amarillo);color:var(--negro);box-shadow:4px 4px 0px var(--amarillo-dark)}
+        .bottom-bar{display:flex;align-items:center;gap:14px;margin-top:16px}
+        .progress-bar-wrap{flex-grow:1;height:8px;background:#2a2a30;border-radius:4px;overflow:hidden}
+        .progress-bar-fill{height:100%;background:var(--rojo);width:0%;transition:width .3s ease}
+        .score-display{font-size:3.5rem;margin:20px 0;color:var(--negro);background:var(--amarillo);display:inline-block;padding:14px 36px;border:4px solid var(--negro);box-shadow:6px 6px 0px #000}
+        .loading-state,.error-state{text-align:center;padding:50px 20px}
+        .spinner{display:inline-block;width:38px;height:38px;border:3px solid #333;border-top-color:var(--amarillo);border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-state p,.error-state p{font-family:sans-serif;color:var(--gris-texto);font-size:.9rem;letter-spacing:2px;margin-top:14px}
+        .error-state h2{color:var(--rojo);font-size:1.4rem;margin-bottom:10px}
+        @keyframes sacudir{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
         /* Resultados */
-        .score-display { font-size: 4rem; margin: 25px 0; color: var(--negro); background: var(--amarillo); display: inline-block; padding: 15px 40px; border: 4px solid var(--negro); box-shadow: 6px 6px 0px #000; }
+        .results-section{margin-top:28px;text-align:left}
+        .results-title{font-family:'Arial Black',sans-serif;font-size:.9rem;letter-spacing:2px;color:var(--amarillo);margin-bottom:12px;text-transform:uppercase}
+        .results-table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:.85rem}
+        .results-table th{background:#1e1e24;color:var(--amarillo);padding:9px 11px;text-align:left;border:2px solid var(--gris-borde);letter-spacing:1px;font-size:.75rem}
+        .results-table td{padding:9px 11px;border:2px solid var(--gris-borde);color:var(--gris-texto)}
+        .results-table tr:nth-child(even) td{background:#1a1a20}
+        .td-score{color:var(--amarillo);font-weight:bold}
 
-        /* Loading */
-        .loading-state { text-align: center; padding: 60px 20px; }
-        .loading-state p { font-family: sans-serif; color: var(--gris-texto); font-size: 1rem; letter-spacing: 2px; margin-top: 16px; }
+        /* Botones post-juego */
+        .post-btns{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+        .btn-ver-ranking{width:100%;background:var(--amarillo);color:var(--negro);border:none;padding:14px;font-size:1rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:4px 4px 0px var(--amarillo-dark)}
+        .btn-ver-ranking:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--amarillo-dark)}
+        .btn-crear-propio{width:100%;background:var(--rojo);color:var(--blanco);border:none;padding:14px;font-size:1rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:4px 4px 0px var(--rojo-dark)}
+        .btn-crear-propio:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--rojo-dark)}
 
-        /* Spinner */
-        .spinner { display: inline-block; width: 40px; height: 40px; border: 3px solid #333; border-top-color: var(--amarillo); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Error */
-        .error-state { text-align: center; padding: 40px 20px; }
-        .error-state h2 { color: var(--rojo); font-size: 1.6rem; margin-bottom: 12px; }
-        .error-state p { font-family: sans-serif; color: var(--gris-texto); line-height: 1.6; font-size: 0.95rem; }
-
-        @keyframes sacudir { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-
-        /* Tabla de resultados */
-        .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-family: sans-serif; font-size: 0.9rem; }
-        .results-table th { background: #1e1e24; color: var(--amarillo); padding: 10px 12px; text-align: left; border: 2px solid var(--gris-borde); letter-spacing: 1px; font-size: 0.8rem; }
-        .results-table td { padding: 10px 12px; border: 2px solid var(--gris-borde); color: var(--gris-texto); }
-        .results-table tr:nth-child(even) td { background: #1a1a20; }
-        .td-score { color: var(--amarillo); font-weight: bold; }
+        .ranking-empty{font-family:sans-serif;color:#555;font-size:.85rem;text-align:center;padding:20px}
     </style>
 </head>
-
 <body>
-
     <div class="top-bar">
         <div class="top-title">FORMULARIO DE: <span id="creador-display">...</span></div>
-        <div class="progress-info" id="info-progreso-pantalla" style="display:none;">
+        <div class="progress-info" id="info-progreso-pantalla" style="display:none">
             PREGUNTA <span id="prog-actual">1</span> DE <span id="prog-total">?</span>
         </div>
     </div>
 
     <div class="main">
-
-        <!-- CARGANDO -->
         <div class="card active" id="pantalla-carga">
-            <div class="loading-state">
-                <div class="spinner"></div>
-                <p>CARGANDO FORMULARIO...</p>
-            </div>
+            <div class="loading-state"><div class="spinner"></div><p>CARGANDO FORMULARIO...</p></div>
         </div>
 
-        <!-- ERROR -->
         <div class="card" id="pantalla-error">
             <div class="error-state">
                 <h2>⚠️ LINK INVÁLIDO</h2>
@@ -121,274 +78,179 @@
             </div>
         </div>
 
-        <!-- INICIO -->
         <div class="card" id="pantalla-inicio">
             <h2 class="p-titulo">¿QUÉ TANTO CONOCES A <span id="creador-bienvenida" style="color:var(--amarillo)">...</span>?</h2>
-            <p style="margin-bottom: 25px; font-family:sans-serif; font-size: 0.95rem; color:var(--gris-texto);">Escribe tu nombre o apodo para empezar el desafío.</p>
+            <p style="margin-bottom:22px;font-family:sans-serif;font-size:.9rem;color:var(--gris-texto)">Escribe tu nombre o apodo para empezar el desafío.</p>
             <input type="text" class="brutal-input" id="nombre-jugador" placeholder="Tu nombre aquí..." maxlength="20" autocomplete="off">
             <button class="btn-brutal" onclick="empezarJuego()">¡EMPEZAR JUEGO! →</button>
         </div>
 
-        <!-- JUEGO -->
         <div class="card" id="pantalla-juego">
-            <div class="p-titulo" id="pregunta-texto">¿Cargando pregunta?</div>
+            <div class="p-titulo" id="pregunta-texto">Cargando...</div>
             <div class="opciones-grid" id="opciones-grid"></div>
             <div class="bottom-bar">
-                <div class="progress-bar-wrap">
-                    <div class="progress-bar-fill" id="progress-fill"></div>
-                </div>
-                <button class="btn-brutal" id="nav-btn" onclick="avanzarPregunta()" style="width: auto; padding: 12px 30px; font-size: 1.1rem;">SIGUIENTE →</button>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                <button class="btn-brutal" id="nav-btn" onclick="avanzarPregunta()" style="width:auto;padding:12px 26px;font-size:1rem">SIGUIENTE →</button>
             </div>
         </div>
 
-        <!-- RESULTADOS -->
-        <div class="card" id="pantalla-resultados" style="text-align: center;">
-            <span style="font-size: 3.5rem;">🎉</span>
-            <h2 class="p-titulo" style="margin-top:15px;">¡JUEGO TERMINADO, <span id="jugador-final-display" style="color:var(--amarillo)">...</span>!</h2>
-            <p style="font-family:sans-serif; color:var(--gris-texto);">Tu puntuación final es de:</p>
+        <div class="card" id="pantalla-resultados" style="text-align:center">
+            <span style="font-size:3rem">🎉</span>
+            <h2 class="p-titulo" style="margin-top:14px">¡JUEGO TERMINADO,<br><span id="jugador-final-display" style="color:var(--amarillo)">...</span>!</h2>
+            <p style="font-family:sans-serif;color:var(--gris-texto);font-size:.9rem">Tu puntuación final es de:</p>
             <div class="score-display" id="puntaje-final">0 / 0</div>
-            <p id="mensaje-feedback" style="margin-top:20px; font-size:1.2rem; letter-spacing: 0.5px;"></p>
+            <p id="mensaje-feedback" style="margin-top:18px;font-size:1.1rem;letter-spacing:.5px;font-family:sans-serif"></p>
 
-            <!-- Ranking de respuestas anteriores -->
-            <div id="ranking-wrap" style="margin-top:30px; display:none;">
-                <h3 style="font-family:'Arial Black'; font-size:1rem; letter-spacing:2px; color:var(--amarillo); margin-bottom:12px; text-align:left;">🏆 RANKING DE ESTE FORMULARIO</h3>
-                <table class="results-table" id="ranking-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>JUGADOR</th>
-                            <th>PUNTAJE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking-body"></tbody>
-                </table>
+            <!-- Botones post-juego -->
+            <div class="post-btns">
+                <button class="btn-ver-ranking" id="btn-ver-ranking" onclick="toggleRanking()">🏆 VER RANKING</button>
+                <button class="btn-crear-propio" onclick="crearPropio()">🧠 CREAR TU PROPIO FORMULARIO</button>
+            </div>
+
+            <!-- Ranking -->
+            <div class="results-section" id="ranking-section" style="display:none">
+                <div class="results-title">🏆 RANKING — QUIÉN CONOCE MÁS A <span id="creador-ranking-nombre" style="color:var(--amarillo)"></span></div>
+                <div id="ranking-body-wrap">
+                    <div class="ranking-empty">Cargando...</div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
         import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, increment, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
-            authDomain: "gamecorofriends.firebaseapp.com",
-            projectId: "gamecorofriends",
-            storageBucket: "gamecorofriends.firebasestorage.app",
-            messagingSenderId: "373275888982",
-            appId: "1:373275888982:web:94ddf75182aa8a461ddaf7",
-            measurementId: "G-XL7L54CM75"
-        };
-
-        const app = initializeApp(firebaseConfig);
+        const app = initializeApp({
+            apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+            authDomain:"gamecorofriends.firebaseapp.com",
+            projectId:"gamecorofriends",
+            storageBucket:"gamecorofriends.firebasestorage.app",
+            messagingSenderId:"373275888982",
+            appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+        });
         const db = getFirestore(app);
 
-        // ── HELPERS: deserializar formato guardado ───────────────────────
-        // preguntas vienen como {texto, op0, op1, op2, op3} → reconstruir opciones[]
-        function deserializarPreguntas(preguntasRaw) {
-            return preguntasRaw.map(p => ({
-                texto: p.texto,
-                opciones: [p.op0, p.op1, p.op2, p.op3].filter(o => o !== undefined && o !== '')
-            }));
+        let gameData=null, preguntasD=[], respuestasD=[], formId='', nombreJugador='', actual=0, respuestasJugador=[], rankingCargado=false;
+
+        function deserPre(p){return{texto:p.texto,opciones:[p.op0,p.op1,p.op2,p.op3].filter(o=>o!=='')}}
+        function deserRes(s){if(!s||s==='')return[];return s.split(',').map(Number).filter(n=>!isNaN(n))}
+
+        async function cargarFormulario(){
+            const params=new URLSearchParams(window.location.search);
+            formId=params.get('id');
+            if(!formId){cambiar('pantalla-error');return}
+            try{
+                const snap=await getDoc(doc(db,'formularios',formId));
+                if(!snap.exists()){cambiar('pantalla-error');return}
+                gameData=snap.data();
+                preguntasD=gameData.preguntas.map(deserPre);
+                respuestasD=gameData.respuestas.map(deserRes);
+                document.getElementById('creador-display').textContent=gameData.nombre.toUpperCase();
+                document.getElementById('creador-bienvenida').textContent=gameData.nombre.toUpperCase();
+                document.getElementById('creador-ranking-nombre').textContent=gameData.nombre.toUpperCase();
+                cambiar('pantalla-inicio');
+            }catch(e){console.error(e);cambiar('pantalla-error')}
         }
 
-        // respuestas vienen como ["0,1", "2", ""] → reconstruir arrays de números
-        function deserializarRespuestas(respuestasRaw) {
-            return respuestasRaw.map(s => {
-                if (!s || s === '') return [];
-                return s.split(',').map(Number).filter(n => !isNaN(n));
-            });
-        }
-
-        // ── ESTADO ───────────────────────────────────────────────────────
-        let gameData = null;
-        let preguntasDeserializadas = [];
-        let respuestasDeserializadas = [];
-        let formId = '';
-        let nombreJugador = '';
-        let actual = 0;
-        let respuestasJugador = [];
-
-        // ── CARGAR DESDE FIRESTORE ────────────────────────────────────────
-        async function cargarFormulario() {
-            const params = new URLSearchParams(window.location.search);
-            formId = params.get('id');
-
-            if (!formId) { mostrarError(); return; }
-
-            try {
-                const docRef = doc(db, 'formularios', formId);
-                const snap = await getDoc(docRef);
-
-                if (!snap.exists()) { mostrarError(); return; }
-
-                gameData = snap.data();
-                preguntasDeserializadas = deserializarPreguntas(gameData.preguntas);
-                respuestasDeserializadas = deserializarRespuestas(gameData.respuestas);
-
-                document.getElementById('creador-display').textContent = gameData.nombre.toUpperCase();
-                document.getElementById('creador-bienvenida').textContent = gameData.nombre.toUpperCase();
-
-                cambiarPantalla('pantalla-inicio');
-
-            } catch (err) {
-                console.error("Error cargando formulario:", err);
-                mostrarError();
-            }
-        }
-
-        function mostrarError() { cambiarPantalla('pantalla-error'); }
-
-        function cambiarPantalla(id) {
-            ['pantalla-carga','pantalla-error','pantalla-inicio','pantalla-juego','pantalla-resultados']
-                .forEach(p => document.getElementById(p).classList.remove('active'));
+        function cambiar(id){
+            ['pantalla-carga','pantalla-error','pantalla-inicio','pantalla-juego','pantalla-resultados'].forEach(p=>document.getElementById(p).classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        // ── FLUJO DEL JUEGO ───────────────────────────────────────────────
-        window.empezarJuego = function() {
-            const input = document.getElementById('nombre-jugador');
-            nombreJugador = input.value.trim();
-            if (!nombreJugador) {
-                input.style.animation = 'none';
-                void input.offsetWidth;
-                input.style.animation = 'sacudir 0.3s ease';
-                return;
-            }
-            cambiarPantalla('pantalla-juego');
-            document.getElementById('info-progreso-pantalla').style.display = 'block';
-            respuestasJugador = preguntasDeserializadas.map(() => []);
-            renderPreguntaJuego();
+        window.empezarJuego=function(){
+            const inp=document.getElementById('nombre-jugador');
+            nombreJugador=inp.value.trim();
+            if(!nombreJugador){inp.style.animation='none';void inp.offsetWidth;inp.style.animation='sacudir .3s ease';return}
+            cambiar('pantalla-juego');
+            document.getElementById('info-progreso-pantalla').style.display='block';
+            respuestasJugador=preguntasD.map(()=>[]);
+            renderJuego();
         };
 
-        document.getElementById('nombre-jugador').addEventListener('keydown', e => {
-            if (e.key === 'Enter') window.empezarJuego();
-        });
+        document.getElementById('nombre-jugador').addEventListener('keydown',e=>{if(e.key==='Enter')window.empezarJuego()});
 
-        function renderPreguntaJuego() {
-            const total = preguntasDeserializadas.length;
-            document.getElementById('prog-total').textContent = total;
-            document.getElementById('prog-actual').textContent = actual + 1;
-            document.getElementById('progress-fill').style.width = (actual / total * 100) + '%';
-
-            const item = preguntasDeserializadas[actual];
-            document.getElementById('pregunta-texto').textContent = item.texto;
-
-            const grid = document.getElementById('opciones-grid');
-            grid.innerHTML = '';
-
-            item.opciones.forEach((opcion, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'opcion-btn';
-                btn.textContent = opcion;
-                if (respuestasJugador[actual].includes(i)) btn.classList.add('selected');
-                btn.onclick = () => toggleOpcionJugador(i, btn);
+        function renderJuego(){
+            const total=preguntasD.length;
+            document.getElementById('prog-total').textContent=total;
+            document.getElementById('prog-actual').textContent=actual+1;
+            document.getElementById('progress-fill').style.width=(actual/total*100)+'%';
+            document.getElementById('pregunta-texto').textContent=preguntasD[actual].texto;
+            const grid=document.getElementById('opciones-grid');grid.innerHTML='';
+            preguntasD[actual].opciones.forEach((op,i)=>{
+                const btn=document.createElement('button');btn.className='opcion-btn';btn.textContent=op;
+                if(respuestasJugador[actual].includes(i))btn.classList.add('selected');
+                btn.onclick=()=>toggleOp(i,btn);
                 grid.appendChild(btn);
             });
-
-            const navBtn = document.getElementById('nav-btn');
-            if (actual === total - 1) {
-                navBtn.textContent = 'FINALIZAR 🏁';
-                navBtn.classList.add('verde');
-            } else {
-                navBtn.textContent = 'SIGUIENTE →';
-                navBtn.classList.remove('verde');
-            }
+            const nb=document.getElementById('nav-btn');
+            if(actual===total-1){nb.textContent='FINALIZAR 🏁';nb.classList.add('verde');}
+            else{nb.textContent='SIGUIENTE →';nb.classList.remove('verde')}
         }
 
-        function toggleOpcionJugador(opIdx, btn) {
-            const sel = respuestasJugador[actual];
-            if (sel.includes(opIdx)) {
-                respuestasJugador[actual] = sel.filter(x => x !== opIdx);
-                btn.classList.remove('selected');
-            } else {
-                if (sel.length >= 2) return;
-                respuestasJugador[actual].push(opIdx);
-                btn.classList.add('selected');
-            }
+        function toggleOp(i,btn){
+            const sel=respuestasJugador[actual];
+            if(sel.includes(i)){respuestasJugador[actual]=sel.filter(x=>x!==i);btn.classList.remove('selected');}
+            else{if(sel.length>=2)return;respuestasJugador[actual].push(i);btn.classList.add('selected')}
         }
 
-        window.avanzarPregunta = function() {
-            if (respuestasJugador[actual].length === 0) {
-                const card = document.getElementById('pantalla-juego');
-                card.style.animation = 'none';
-                void card.offsetWidth;
-                card.style.animation = 'sacudir 0.3s ease';
-                return;
+        window.avanzarPregunta=function(){
+            if(respuestasJugador[actual].length===0){
+                const c=document.getElementById('pantalla-juego');c.style.animation='none';void c.offsetWidth;c.style.animation='sacudir .3s ease';return;
             }
-            if (actual < preguntasDeserializadas.length - 1) { actual++; renderPreguntaJuego(); }
-            else { calcularYMostrarResultados(); }
+            if(actual<preguntasD.length-1){actual++;renderJuego();}
+            else calcularResultados();
         };
 
-        // ── CALCULAR RESULTADOS ───────────────────────────────────────────
-        async function calcularYMostrarResultados() {
-            let aciertos = 0;
-
-            respuestasDeserializadas.forEach((correctas, i) => {
-                const jugador = [...respuestasJugador[i]].sort((a,b)=>a-b);
-                const correctasSorted = [...correctas].sort((a,b)=>a-b);
-                if (correctasSorted.length === jugador.length &&
-                    correctasSorted.every((v, idx) => v === jugador[idx])) {
-                    aciertos++;
-                }
+        async function calcularResultados(){
+            let aciertos=0;
+            respuestasD.forEach((correctas,i)=>{
+                const jug=[...respuestasJugador[i]].sort((a,b)=>a-b);
+                const cor=[...correctas].sort((a,b)=>a-b);
+                if(cor.length===jug.length&&cor.every((v,idx)=>v===jug[idx]))aciertos++;
             });
+            try{
+                await addDoc(collection(db,'formularios',formId,'resultados'),{jugador:nombreJugador,aciertos,total:preguntasD.length,porcentaje:Math.round(aciertos/preguntasD.length*100),fecha:serverTimestamp()});
+                await updateDoc(doc(db,'formularios',formId),{respuestasCount:increment(1)});
+            }catch(e){console.error(e)}
 
-            try {
-                const colRef = collection(db, 'formularios', formId, 'resultados');
-                await addDoc(colRef, {
-                    jugador: nombreJugador,
-                    aciertos,
-                    total: preguntasDeserializadas.length,
-                    porcentaje: Math.round((aciertos / preguntasDeserializadas.length) * 100),
-                    fecha: serverTimestamp()
-                });
-
-                const docRef = doc(db, 'formularios', formId);
-                await updateDoc(docRef, { respuestasCount: increment(1) });
-            } catch (err) {
-                console.error("Error guardando resultado:", err);
-            }
-
-            document.getElementById('info-progreso-pantalla').style.display = 'none';
-            cambiarPantalla('pantalla-resultados');
-
-            document.getElementById('jugador-final-display').textContent = nombreJugador.toUpperCase();
-            document.getElementById('puntaje-final').textContent = `${aciertos} / ${preguntasDeserializadas.length}`;
-
-            const pct = (aciertos / preguntasDeserializadas.length) * 100;
-            const fb = document.getElementById('mensaje-feedback');
-            if (pct === 100) fb.innerHTML = "¡Eres su clon! Lo conoces de una forma casi mística. 🔥";
-            else if (pct >= 60) fb.innerHTML = "¡Muy buen puntaje! Son panas firmes. 👌";
-            else fb.innerHTML = "Uf... parece que les falta salir por salchipapas y charlar más. 💀";
-
-            cargarRanking();
+            document.getElementById('info-progreso-pantalla').style.display='none';
+            cambiar('pantalla-resultados');
+            document.getElementById('jugador-final-display').textContent=nombreJugador.toUpperCase();
+            document.getElementById('puntaje-final').textContent=`${aciertos} / ${preguntasD.length}`;
+            const pct=aciertos/preguntasD.length*100;
+            const fb=document.getElementById('mensaje-feedback');
+            if(pct===100)fb.textContent='¡Eres su clon! Lo conoces de una forma casi mística. 🔥';
+            else if(pct>=60)fb.textContent='¡Muy buen puntaje! Son panas firmes. 👌';
+            else fb.textContent='Uf... parece que les falta salir por salchipapas y charlar más. 💀';
         }
 
-        // ── RANKING ───────────────────────────────────────────────────────
-        async function cargarRanking() {
-            try {
-                const colRef = collection(db, 'formularios', formId, 'resultados');
-                const q = query(colRef, orderBy('porcentaje', 'desc'), orderBy('fecha', 'asc'), limit(10));
-                const snap = await getDocs(q);
-                if (snap.empty) return;
-
-                const tbody = document.getElementById('ranking-body');
-                tbody.innerHTML = '';
-                snap.docs.forEach((d, i) => {
-                    const data = d.data();
-                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}`;
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${medal}</td><td>${data.jugador}</td><td class="td-score">${data.aciertos}/${data.total} (${data.porcentaje}%)</td>`;
-                    tbody.appendChild(tr);
+        window.toggleRanking=async function(){
+            const section=document.getElementById('ranking-section');
+            const btn=document.getElementById('btn-ver-ranking');
+            if(section.style.display==='block'){section.style.display='none';btn.textContent='🏆 VER RANKING';return}
+            section.style.display='block';btn.textContent='🔼 OCULTAR RANKING';
+            if(rankingCargado)return;
+            rankingCargado=true;
+            try{
+                const q=query(collection(db,'formularios',formId,'resultados'),orderBy('porcentaje','desc'),orderBy('fecha','asc'),limit(20));
+                const snap=await getDocs(q);
+                const wrap=document.getElementById('ranking-body-wrap');
+                if(snap.empty){wrap.innerHTML='<div class="ranking-empty">Nadie más ha respondido aún 😔</div>';return}
+                let html='<table class="results-table"><thead><tr><th>#</th><th>JUGADOR</th><th>PUNTAJE</th></tr></thead><tbody>';
+                snap.docs.forEach((d,i)=>{
+                    const r=d.data();const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+                    html+=`<tr><td>${medal}</td><td>${r.jugador}</td><td class="td-score">${r.aciertos}/${r.total} (${r.porcentaje}%)</td></tr>`;
                 });
-                document.getElementById('ranking-wrap').style.display = 'block';
-            } catch (err) {
-                console.error("Error cargando ranking:", err);
-            }
-        }
+                html+='</tbody></table>';
+                wrap.innerHTML=html;
+            }catch(e){document.getElementById('ranking-body-wrap').innerHTML=`<div class="ranking-empty">Error: ${e.message}</div>`}
+        };
 
-        // ── INIT ──────────────────────────────────────────────────────────
+        window.crearPropio=function(){
+            window.location.href='https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/conoces.html';
+        };
+
         cargarFormulario();
     </script>
 </body>
