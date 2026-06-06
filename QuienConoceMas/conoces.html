@@ -1,426 +1,267 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>¿Cuánto me conoces? — GameCoroFriends</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet"/>
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--negro:#080808;--rojo:#e8192c;--rojo-dark:#8b0f1a;--amarillo:#ffd60a;--amarillo-dark:#b89b00;--blanco:#f0f0f0;--gris:#141414}
+        body{background:var(--negro);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+        body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#222 1px,transparent 1px);background-size:26px 26px;opacity:.5;z-index:0}
+        .blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.12;z-index:0;pointer-events:none}
+        .blob-1{width:450px;height:450px;background:var(--rojo);top:-130px;left:-130px;animation:flotar 10s ease-in-out infinite}
+        .blob-2{width:300px;height:300px;background:var(--amarillo);bottom:-80px;right:-80px;animation:flotar 12s ease-in-out infinite reverse}
+        @keyframes flotar{0%,100%{transform:translate(0,0)}50%{transform:translate(25px,20px)}}
+        .back-btn{position:fixed;top:24px;left:24px;z-index:10;background:#1a1a1a;border:1.5px solid #2a2a2a;color:#666;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;text-decoration:none;transition:color .2s,border-color .2s}
+        .back-btn:hover{color:var(--amarillo);border-color:var(--amarillo)}
+        .user-badge{position:fixed;top:24px;right:24px;z-index:10;display:flex;align-items:center;gap:8px;background:#1a1a1a;border:1.5px solid #2a2a2a;border-radius:3px;padding:6px 12px 6px 6px}
+        .user-badge img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+        .user-badge-name{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--amarillo)}
+        .card{position:relative;z-index:1;background:var(--gris);border:2px solid #242424;border-radius:4px;padding:56px 48px 48px;width:100%;max-width:440px;box-shadow:8px 8px 0px var(--rojo);animation:entrar .5s cubic-bezier(.22,1,.36,1) both}
+        @keyframes entrar{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+        .tag{position:absolute;top:-14px;left:32px;background:var(--amarillo);color:var(--negro);font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;padding:3px 14px;border-radius:2px}
+        h1{font-family:'Bebas Neue',sans-serif;font-size:50px;line-height:1;color:var(--blanco);margin-bottom:6px}
+        h1 span{color:var(--amarillo)}
+        .subtitle{font-size:13px;color:#555;margin-bottom:36px;line-height:1.5}
+        label{display:block;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#777;margin-bottom:10px}
+        input[type="text"]{width:100%;background:#0e0e0e;border:1.5px solid #2a2a2a;border-radius:3px;padding:16px 18px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--blanco);outline:none;margin-bottom:8px;transition:border-color .2s,box-shadow .2s}
+        input[type="text"]::placeholder{color:#383838}
+        input[type="text"]:focus{border-color:var(--amarillo);box-shadow:0 0 0 3px rgba(255,214,10,.08)}
+        .error-msg{font-size:12px;color:var(--rojo);margin-bottom:20px;display:none}
+        @keyframes sacudir{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+        button.main-btn{width:100%;background:var(--rojo);color:var(--blanco);border:none;border-radius:3px;padding:17px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer;box-shadow:4px 4px 0px var(--rojo-dark);transition:transform .15s,box-shadow .15s;margin-top:8px}
+        button.main-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0px var(--rojo-dark)}
+        button.main-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0px var(--rojo-dark)}
+        .footer-note{margin-top:28px;text-align:center;font-size:11px;color:#3a3a3a;letter-spacing:1px}
+        #niancoro-link{color:var(--rojo);cursor:pointer;transition:color .2s}
+        #niancoro-link:hover{color:var(--amarillo)}
+        .auth-check{position:fixed;inset:0;background:var(--negro);display:flex;align-items:center;justify-content:center;z-index:100}
+        .auth-check-text{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:4px;color:#333}
 
-        :root {
-            --negro: #080808;
-            --rojo: #e8192c;
-            --rojo-dark: #8b0f1a;
-            --amarillo: #ffd60a;
-            --blanco: #f0f0f0;
-            --gris: #141414;
-        }
+        /* MODAL */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;justify-content:center;align-items:center;z-index:999;backdrop-filter:blur(6px)}
+        .modal-overlay.show{display:flex}
+        .modal{background:var(--gris);border:2px solid #333;border-radius:4px;padding:44px 32px 32px;width:90%;max-width:420px;text-align:center;box-shadow:8px 8px 0px var(--amarillo);animation:entrar .35s cubic-bezier(.22,1,.36,1) both}
+        .modal-emoji{font-size:44px;display:block;margin-bottom:12px}
+        .modal h2{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--blanco);margin-bottom:6px;line-height:1.1}
+        .modal-sub{font-size:12px;color:#555;margin-bottom:24px;letter-spacing:1px}
+        .modal-btns{display:flex;flex-direction:column;gap:10px}
 
-        body {
-            background: var(--negro);
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
+        /* Link del formulario activo */
+        .active-link-box{background:#0e0e0e;border:1.5px solid #333;border-radius:3px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--amarillo);word-break:break-all;text-align:left;margin-bottom:16px;letter-spacing:.5px;cursor:pointer;transition:border-color .2s}
+        .active-link-box:hover{border-color:var(--amarillo)}
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: radial-gradient(circle, #222 1px, transparent 1px);
-            background-size: 26px 26px;
-            opacity: 0.5;
-            z-index: 0;
-        }
+        .btn-amarillo{background:var(--amarillo);color:var(--negro);border:none;border-radius:3px;padding:14px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;cursor:pointer;box-shadow:3px 3px 0px var(--amarillo-dark);transition:transform .15s,box-shadow .15s}
+        .btn-amarillo:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0px var(--amarillo-dark)}
+        .btn-rojo{background:var(--rojo);color:var(--blanco);border:none;border-radius:3px;padding:14px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;cursor:pointer;box-shadow:3px 3px 0px var(--rojo-dark);transition:transform .15s,box-shadow .15s}
+        .btn-rojo:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0px var(--rojo-dark)}
+        .btn-gris{background:#1e1e1e;color:#666;border:1.5px solid #2a2a2a;border-radius:3px;padding:12px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;cursor:pointer;transition:color .2s}
+        .btn-gris:hover{color:var(--blanco)}
 
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.12;
-            z-index: 0;
-            pointer-events: none;
-        }
+        /* TABLA RANKING */
+        .ranking-wrap{margin-top:20px;text-align:left;max-height:260px;overflow-y:auto}
+        .ranking-wrap::-webkit-scrollbar{width:4px}
+        .ranking-wrap::-webkit-scrollbar-track{background:#111}
+        .ranking-wrap::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+        .ranking-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--amarillo);margin-bottom:10px}
+        .ranking-table{width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif;font-size:12px}
+        .ranking-table th{background:#1a1a1a;color:#666;padding:8px 10px;text-align:left;border:1px solid #222;letter-spacing:1px;font-size:10px}
+        .ranking-table td{padding:8px 10px;border:1px solid #1e1e1e;color:#888}
+        .ranking-table tr:nth-child(even) td{background:#111}
+        .td-score{color:var(--amarillo);font-weight:600}
+        .ranking-empty{font-size:12px;color:#444;text-align:center;padding:20px;font-family:'DM Sans',sans-serif}
 
-        .blob-1 {
-            width: 450px;
-            height: 450px;
-            background: var(--rojo);
-            top: -130px;
-            left: -130px;
-            animation: flotar 10s ease-in-out infinite;
-        }
-
-        .blob-2 {
-            width: 300px;
-            height: 300px;
-            background: var(--amarillo);
-            bottom: -80px;
-            right: -80px;
-            animation: flotar 12s ease-in-out infinite reverse;
-        }
-
-        @keyframes flotar {
-
-            0%,
-            100% {
-                transform: translate(0, 0)
-            }
-
-            50% {
-                transform: translate(25px, 20px)
-            }
-        }
-
-        .back-btn {
-            position: fixed;
-            top: 24px;
-            left: 24px;
-            z-index: 10;
-            background: #1a1a1a;
-            border: 1.5px solid #2a2a2a;
-            color: #666;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            padding: 8px 16px;
-            border-radius: 3px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: color 0.2s, border-color 0.2s;
-        }
-
-        .back-btn:hover {
-            color: var(--amarillo);
-            border-color: var(--amarillo);
-        }
-
-        /* Auth badge arriba derecha */
-        .user-badge {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #1a1a1a;
-            border: 1.5px solid #2a2a2a;
-            border-radius: 3px;
-            padding: 6px 12px 6px 6px;
-        }
-
-        .user-badge img {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-badge-name {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 13px;
-            letter-spacing: 2px;
-            color: var(--amarillo);
-        }
-
-        .card {
-            position: relative;
-            z-index: 1;
-            background: var(--gris);
-            border: 2px solid #242424;
-            border-radius: 4px;
-            padding: 56px 48px 48px;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 8px 8px 0px var(--rojo);
-            animation: entrar 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        @keyframes entrar {
-            from {
-                opacity: 0;
-                transform: translateY(28px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-
-        .tag {
-            position: absolute;
-            top: -14px;
-            left: 32px;
-            background: var(--amarillo);
-            color: var(--negro);
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 11px;
-            letter-spacing: 3px;
-            padding: 3px 14px;
-            border-radius: 2px;
-        }
-
-        h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 50px;
-            line-height: 1;
-            color: var(--blanco);
-            margin-bottom: 6px;
-        }
-
-        h1 span {
-            color: var(--amarillo);
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 36px;
-            line-height: 1.5;
-        }
-
-        label {
-            display: block;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #777;
-            margin-bottom: 10px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            background: #0e0e0e;
-            border: 1.5px solid #2a2a2a;
-            border-radius: 3px;
-            padding: 16px 18px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 16px;
-            color: var(--blanco);
-            outline: none;
-            margin-bottom: 8px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="text"]::placeholder {
-            color: #383838;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--amarillo);
-            box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.08);
-        }
-
-        .error-msg {
-            font-size: 12px;
-            color: var(--rojo);
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        @keyframes sacudir {
-
-            0%,
-            100% {
-                transform: translateX(0)
-            }
-
-            25% {
-                transform: translateX(-6px)
-            }
-
-            75% {
-                transform: translateX(6px)
-            }
-        }
-
-        /* Hint de nombre pre-relleno */
-        .nombre-hint {
-            font-size: 11px;
-            color: #444;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        button.main-btn {
-            width: 100%;
-            background: var(--rojo);
-            color: var(--blanco);
-            border: none;
-            border-radius: 3px;
-            padding: 17px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 20px;
-            letter-spacing: 3px;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--rojo-dark);
-            transition: transform 0.15s, box-shadow 0.15s;
-            margin-top: 8px;
-        }
-
-        button.main-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--rojo-dark);
-        }
-
-        button.main-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--rojo-dark);
-        }
-
-        .footer-note {
-            margin-top: 28px;
-            text-align: center;
-            font-size: 11px;
-            color: #3a3a3a;
-            letter-spacing: 1px;
-        }
-
-        #niancoro-link {
-            color: var(--rojo);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        #niancoro-link:hover {
-            color: var(--amarillo);
-        }
-
-        /* Loading */
-        .auth-check {
-            position: fixed;
-            inset: 0;
-            background: var(--negro);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .auth-check-text {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            letter-spacing: 4px;
-            color: #333;
-        }
+        .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--negro);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+        @keyframes spin{to{transform:rotate(360deg)}}
     </style>
 </head>
-
 <body>
-
-    <!-- Loader mientras verifica auth -->
-    <div class="auth-check" id="auth-check">
-        <span class="auth-check-text">CARGANDO...</span>
-    </div>
+    <div class="auth-check" id="auth-check"><span class="auth-check-text">CARGANDO...</span></div>
 
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
     <a class="back-btn" href="../index.html">← VOLVER</a>
 
-    <!-- Badge de usuario -->
-    <div class="user-badge" id="user-badge" style="display:none;">
-        <img id="user-avatar" src="" alt="" />
+    <div class="user-badge" id="user-badge" style="display:none">
+        <img id="user-avatar" src="" alt=""/>
         <span class="user-badge-name" id="user-badge-name"></span>
     </div>
 
-    <div class="card" id="main-card" style="display:none;">
+    <div class="card" id="main-card" style="display:none">
         <div class="tag">¿CUÁNTO ME CONOCES?</div>
-
         <h1>CREA TU<br><span>FORMULARIO</span></h1>
         <p class="subtitle">Tu nombre o apodo ya viene de tu cuenta. Puedes cambiarlo si quieres.</p>
-
         <label for="nombre">Tu nombre / apodo</label>
-        <input type="text" id="nombre" placeholder="Ej: Juancho, La Nena, Coro..." autocomplete="off" />
+        <input type="text" id="nombre" placeholder="Ej: Juancho, La Nena, Coro..." autocomplete="off"/>
         <p class="error-msg" id="error">⚠ Escribe tu nombre para continuar</p>
-
-        <button class="main-btn" onclick="continuar()">CREAR FORMULARIO</button>
-
+        <button class="main-btn" id="btn-crear" onclick="intentarCrear()">CREAR FORMULARIO</button>
         <p class="footer-note">by <span id="niancoro-link">Niancoro</span></p>
     </div>
 
-    <!-- Firebase SDK (compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <!-- Modal: formulario activo -->
+    <div class="modal-overlay" id="modalActivo">
+        <div class="modal">
+            <span class="modal-emoji">📋</span>
+            <h2>TIENES UN FORMULARIO<br>ACTIVO</h2>
+            <p class="modal-sub">¿QUÉ DESEAS HACER?</p>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
-            authDomain: "gamecorofriends.firebaseapp.com",
-            projectId: "gamecorofriends",
-            storageBucket: "gamecorofriends.firebasestorage.app",
-            messagingSenderId: "373275888982",
-            appId: "1:373275888982:web:94ddf75182aa8a461ddaf7",
-            measurementId: "G-XL7L54CM75"
-        };
+            <!-- Link copiable -->
+            <div class="active-link-box" id="active-link-box" onclick="copiarLinkActivo()" title="Clic para copiar">
+                Cargando link...
+            </div>
 
-        // Evita inicializar dos veces si ya existe
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+            <div class="modal-btns">
+                <button class="btn-amarillo" onclick="verRanking()">🏆 VER RANKING</button>
+                <button class="btn-rojo" onclick="hacerNuevo()">➕ HACER NUEVO FORMULARIO</button>
+                <button class="btn-gris" onclick="cerrarModalActivo()">CANCELAR</button>
+            </div>
 
-        auth.onAuthStateChanged(user => {
+            <!-- Ranking inline -->
+            <div class="ranking-wrap" id="ranking-wrap" style="display:none">
+                <div class="ranking-title">🏆 RANKING — QUIÉN TE CONOCE MÁS</div>
+                <div id="ranking-contenido"><span class="ranking-empty">Cargando...</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFirestore, collection, query, where, orderBy, limit, getDocs, getDoc, doc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+        const app = initializeApp({
+            apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+            authDomain:"gamecorofriends.firebaseapp.com",
+            projectId:"gamecorofriends",
+            storageBucket:"gamecorofriends.firebasestorage.app",
+            messagingSenderId:"373275888982",
+            appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+        });
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let formularioActivo = null;
+        let linkActivo = '';
+
+        onAuthStateChanged(auth, async user => {
             document.getElementById('auth-check').style.display = 'none';
+            if (!user) { window.location.href = '../index.html'; return; }
 
-            if (!user) {
-                // No logueado → redirige al index
-                window.location.href = '../index.html';
-                return;
-            }
-
-            // Logueado → mostrar contenido
+            currentUser = user;
             document.getElementById('main-card').style.display = 'block';
 
-            // Pre-rellenar nombre desde Google
             const displayName = user.displayName?.split(' ')[0] || user.email?.split('@')[0] || '';
             document.getElementById('nombre').value = displayName;
 
-            // Badge usuario
             const badge = document.getElementById('user-badge');
             badge.style.display = 'flex';
-            document.getElementById('user-badge-name').textContent = user.displayName?.toUpperCase() || user.email?.split('@')[0].toUpperCase();
+            document.getElementById('user-badge-name').textContent = (user.displayName || user.email?.split('@')[0] || '').toUpperCase();
             if (user.photoURL) document.getElementById('user-avatar').src = user.photoURL;
+
+            // Buscar formulario activo del usuario
+            try {
+                const q = query(
+                    collection(db,'formularios'),
+                    where('creadorUid','==',user.uid),
+                    orderBy('creadoEn','desc'),
+                    limit(1)
+                );
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    formularioActivo = snap.docs[0].data();
+                    linkActivo = `https://niancoro-boop.github.io/Niancoro-boop/QuienConoceMas/responder.html?id=${formularioActivo.id}`;
+                }
+            } catch(e) { console.log('Sin formulario previo o índice pendiente:', e.message); }
         });
 
-        function continuar() {
+        window.intentarCrear = function() {
             const nombre = document.getElementById('nombre').value.trim();
             const error = document.getElementById('error');
             if (!nombre) {
                 error.style.display = 'block';
                 error.style.animation = 'none';
                 void error.offsetWidth;
-                error.style.animation = 'sacudir 0.3s ease';
+                error.style.animation = 'sacudir .3s ease';
                 document.getElementById('nombre').focus();
                 return;
             }
             error.style.display = 'none';
+
+            if (formularioActivo) {
+                // Mostrar modal con formulario activo
+                document.getElementById('active-link-box').textContent = linkActivo;
+                document.getElementById('modalActivo').classList.add('show');
+            } else {
+                // Ir directo a crear
+                window.location.href = `formulario.html?nombre=${encodeURIComponent(nombre)}`;
+            }
+        };
+
+        window.copiarLinkActivo = function() {
+            if (!linkActivo) return;
+            navigator.clipboard.writeText(linkActivo).then(() => {
+                const box = document.getElementById('active-link-box');
+                const original = box.textContent;
+                box.textContent = '✓ ¡COPIADO!';
+                setTimeout(() => box.textContent = original, 2000);
+            });
+        };
+
+        window.verRanking = async function() {
+            const wrap = document.getElementById('ranking-wrap');
+            const contenido = document.getElementById('ranking-contenido');
+            wrap.style.display = 'block';
+            contenido.innerHTML = '<span class="ranking-empty">Cargando...</span>';
+
+            try {
+                const q = query(
+                    collection(db,'formularios',formularioActivo.id,'resultados'),
+                    orderBy('porcentaje','desc'),
+                    orderBy('fecha','asc'),
+                    limit(20)
+                );
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    contenido.innerHTML = '<span class="ranking-empty">Nadie ha respondido aún 😔</span>';
+                    return;
+                }
+
+                let html = `<table class="ranking-table"><thead><tr><th>#</th><th>JUGADOR</th><th>PUNTAJE</th></tr></thead><tbody>`;
+                snap.docs.forEach((d, i) => {
+                    const r = d.data();
+                    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+                    html += `<tr><td>${medal}</td><td>${r.jugador}</td><td class="td-score">${r.aciertos}/${r.total} (${r.porcentaje}%)</td></tr>`;
+                });
+                html += '</tbody></table>';
+                contenido.innerHTML = html;
+            } catch(e) {
+                contenido.innerHTML = `<span class="ranking-empty">Error cargando: ${e.message}</span>`;
+            }
+        };
+
+        window.hacerNuevo = function() {
+            const nombre = document.getElementById('nombre').value.trim() || (currentUser?.displayName?.split(' ')[0] || 'TU');
+            document.getElementById('modalActivo').classList.remove('show');
             window.location.href = `formulario.html?nombre=${encodeURIComponent(nombre)}`;
-        }
+        };
+
+        window.cerrarModalActivo = function() {
+            document.getElementById('modalActivo').classList.remove('show');
+            document.getElementById('ranking-wrap').style.display = 'none';
+        };
 
         document.getElementById('nombre').addEventListener('keydown', e => {
-            if (e.key === 'Enter') continuar();
+            if (e.key === 'Enter') window.intentarCrear();
         });
 
-        const overlay = document.getElementById('modalOverlay');
         document.getElementById('niancoro-link').addEventListener('click', () => {
             window.open('mailto:Niancoroestudiantil@gmail.com?subject=Contacto%20desde%20GameCoroFriends');
         });
     </script>
 </body>
-
 </html>
