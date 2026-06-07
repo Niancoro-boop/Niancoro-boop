@@ -714,11 +714,48 @@
         function genId(n = 8) { const c = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; let s = ''; for (let i = 0; i < n; i++)s += c[Math.floor(Math.random() * c.length)]; return s }
 
         window.añadirPregunta = function () {
-            const nueva = { texto: 'Nueva pregunta', opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4'] };
-            preguntas.push(nueva);
-            respuestas.push([]);
-            actual = preguntas.length - 1;
-            renderPregunta(actual);
+            // Buscar preguntas sin respuesta y sin omitir ANTES de la nueva
+            const sinResponder = [];
+            for (let i = 0; i < preguntas.length; i++) {
+                if (!omitidas.has(i) && respuestas[i].length === 0) sinResponder.push(i);
+            }
+
+            function _agregar() {
+                const nueva = { texto: 'Nueva pregunta', opciones: ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4'] };
+                preguntas.push(nueva);
+                respuestas.push([]);
+                actual = preguntas.length - 1;
+                renderPregunta(actual);
+                // Auto-activar edición para que el usuario la personalice
+                setTimeout(toggleEdicion, 350);
+            }
+
+            if (sinResponder.length === 0) {
+                // Todo respondido, agregar directo
+                _agregar();
+                return;
+            }
+
+            // Hay preguntas sin responder — preguntar qué hacer
+            confirmar(
+                `${sinResponder.length} PREGUNTA${sinResponder.length > 1 ? 'S' : ''} SIN RESPONDER`,
+                `Tienes ${sinResponder.length} pregunta${sinResponder.length > 1 ? 's' : ''} sin respuesta. ¿Deseas omitirlas y agregar la nueva, o ir a responderlas primero?`,
+                '⚠️',
+                // OMITIR Y AGREGAR
+                function() {
+                    sinResponder.forEach(i => omitidas.add(i));
+                    _agregar();
+                },
+                // IR A LA PRIMERA SIN RESPONDER
+                function() {
+                    actual = sinResponder[0];
+                    renderPregunta(actual, 'adelante');
+                }
+            );
+
+            // Cambiar el texto de los botones del modal para que sea más claro
+            document.getElementById('c-ok').textContent = 'OMITIRLAS Y CONTINUAR';
+            document.getElementById('c-cancel').textContent = 'IR A RESPONDERLAS';
         };
 
         async function guardarEnFirestore() {
