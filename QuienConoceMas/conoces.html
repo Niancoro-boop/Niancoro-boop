@@ -528,12 +528,60 @@
                 transform: rotate(360deg)
             }
         }
-        .tut-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;text-align:left}
-        .tut-num{background:var(--rojo);color:var(--blanco);font-family:'Bebas Neue',sans-serif;font-size:18px;width:32px;height:32px;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .tut-text strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:var(--blanco);margin-bottom:2px}
-        .tut-text span{font-size:12px;color:#666;line-height:1.5;font-family:'DM Sans',sans-serif}
-        .btn-tut-link{color:#555;cursor:pointer;transition:color .2s;font-size:11px;letter-spacing:1px;background:none;border:none;font-family:'Bebas Neue',sans-serif;padding:0}
-        .btn-tut-link:hover{color:var(--amarillo)}
+
+        .tut-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+            text-align: left
+        }
+
+        .tut-num {
+            background: var(--rojo);
+            color: var(--blanco);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .tut-text strong {
+            display: block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 1px;
+            color: var(--blanco);
+            margin-bottom: 2px
+        }
+
+        .tut-text span {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .btn-tut-link {
+            color: #555;
+            cursor: pointer;
+            transition: color .2s;
+            font-size: 11px;
+            letter-spacing: 1px;
+            background: none;
+            border: none;
+            font-family: 'Bebas Neue', sans-serif;
+            padding: 0
+        }
+
+        .btn-tut-link:hover {
+            color: var(--amarillo)
+        }
     </style>
 </head>
 
@@ -562,7 +610,8 @@
             style="width:100%; background:#1a1a1a; color:#666; border:1.5px solid #2a2a2a; border-radius:3px; padding:12px; font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; cursor:not-allowed; margin-top:10px; transition:all .2s;">
             VER FORMULARIOS REGISTRADOS
         </button>
-        <button class="btn-tut-link" onclick="document.getElementById('modalTutorial').classList.add('show')">❓ ¿CÓMO FUNCIONA?</button>
+        <button class="btn-tut-link" onclick="document.getElementById('modalTutorial').classList.add('show')">❓ ¿CÓMO
+            FUNCIONA?</button>
         <p class="footer-note">by <span id="niancoro-link">Niancoro</span></p>
     </div>
 
@@ -744,28 +793,37 @@
         <div class="modal" style="max-width:460px;text-align:left">
             <span class="modal-emoji" style="text-align:center;display:block">📖</span>
             <h2 style="text-align:center;margin-bottom:6px">¿CÓMO FUNCIONA?</h2>
-            <p class="modal-sub" style="text-align:center;margin-bottom:20px;font-size:11px;color:#555;letter-spacing:1px">TUTORIAL RÁPIDO</p>
+            <p class="modal-sub"
+                style="text-align:center;margin-bottom:20px;font-size:11px;color:#555;letter-spacing:1px">TUTORIAL
+                RÁPIDO</p>
             <div class="tut-step">
                 <div class="tut-num">1</div>
-                <div class="tut-text"><strong>ESCRIBE TU NOMBRE</strong><span>Pon el nombre o apodo con el que tus amigos te conocen.</span></div>
+                <div class="tut-text"><strong>ESCRIBE TU NOMBRE</strong><span>Pon el nombre o apodo con el que tus
+                        amigos te conocen.</span></div>
             </div>
             <div class="tut-step">
                 <div class="tut-num">2</div>
-                <div class="tut-text"><strong>CREA TU FORMULARIO</strong><span>Responde las preguntas sobre ti mismo eligiendo las respuestas correctas. Puedes editar preguntas, omitirlas o agregar nuevas.</span></div>
+                <div class="tut-text"><strong>CREA TU FORMULARIO</strong><span>Responde las preguntas sobre ti mismo
+                        eligiendo las respuestas correctas. Puedes editar preguntas, omitirlas o agregar nuevas.</span>
+                </div>
             </div>
             <div class="tut-step">
                 <div class="tut-num">3</div>
-                <div class="tut-text"><strong>COPIA Y COMPARTE EL LINK</strong><span>Se genera un link único. Mándaselo a tus amigos por WhatsApp, Instagram o donde quieras.</span></div>
+                <div class="tut-text"><strong>COPIA Y COMPARTE EL LINK</strong><span>Se genera un link único. Mándaselo
+                        a tus amigos por WhatsApp, Instagram o donde quieras.</span></div>
             </div>
             <div class="tut-step">
                 <div class="tut-num">4</div>
-                <div class="tut-text"><strong>TUS AMIGOS RESPONDEN</strong><span>Ellos abren el link, ponen su nombre y responden las preguntas intentando adivinar tus respuestas.</span></div>
+                <div class="tut-text"><strong>TUS AMIGOS RESPONDEN</strong><span>Ellos abren el link, ponen su nombre y
+                        responden las preguntas intentando adivinar tus respuestas.</span></div>
             </div>
             <div class="tut-step">
                 <div class="tut-num">5</div>
-                <div class="tut-text"><strong>VE EL RANKING</strong><span>En "Ver formularios registrados" puedes ver quién te conoce más y el puntaje de cada uno.</span></div>
+                <div class="tut-text"><strong>VE EL RANKING</strong><span>En "Ver formularios registrados" puedes ver
+                        quién te conoce más y el puntaje de cada uno.</span></div>
             </div>
-            <button class="btn-rojo" style="width:100%;margin-top:8px" onclick="document.getElementById('modalTutorial').classList.remove('show')">ENTENDIDO ✓</button>
+            <button class="btn-rojo" style="width:100%;margin-top:8px"
+                onclick="document.getElementById('modalTutorial').classList.remove('show')">ENTENDIDO ✓</button>
         </div>
     </div>
 
