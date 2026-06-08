@@ -826,15 +826,17 @@
             if (!currentUser) {
                 document.getElementById('loginModal').classList.add('show');
             } else {
-                window.location.href = 'Impostor/index.html';
+                window.location.href = 'Impostor/ImpostorMenu.html';
             }
         }
-        if (!currentUser) {
-            document.getElementById('loginModal').classList.add('show');
-        } else {
-            window.location.href = 'QuienConoceMas/conoces.html';
+
+        function irAJugar() {
+            if (!currentUser) {
+                document.getElementById('loginModal').classList.add('show');
+            } else {
+                window.location.href = 'QuienConoceMas/conoces.html';
+            }
         }
-        
 
         // ── MODALES ──────────────────────────────────────────────────────
         const juegos = {
