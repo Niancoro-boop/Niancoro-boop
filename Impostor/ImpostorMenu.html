@@ -150,6 +150,30 @@
         .fin-impostor-nombre{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--rojo);margin-bottom:4px}
         .fin-palabra{font-size:14px;color:#666;margin-bottom:28px}
         .fin-palabra span{color:var(--amarillo);font-weight:600}
+        /* Modal palabras guardadas */
+        .palabras-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;justify-content:center;align-items:flex-start;z-index:998;backdrop-filter:blur(8px);overflow-y:auto;padding:20px}
+        .palabras-modal-overlay.show{display:flex}
+        .palabras-modal{background:var(--gris);border:2px solid var(--borde);border-radius:4px;width:100%;max-width:540px;margin:auto;box-shadow:8px 8px 0 var(--amarillo-dark);animation:fadeIn .3s ease both}
+        .palabras-modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--borde)}
+        .palabras-modal-header h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--blanco)}
+        .palabras-modal-header span{font-size:12px;color:#555;font-family:'DM Sans',sans-serif}
+        .palabras-modal-body{padding:20px 24px 24px}
+        .palabra-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1a1a1a}
+        .palabra-item:last-child{border-bottom:none}
+        .palabra-edit-input{flex:1;background:#0e0e0e;border:1.5px solid var(--borde);border-radius:3px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--blanco);outline:none}
+        .palabra-edit-input:focus{border-color:var(--amarillo)}
+        .btn-icono{width:32px;height:32px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;border:1.5px solid var(--borde);background:#1a1a1a;transition:color .2s,border-color .2s,background .2s;flex-shrink:0}
+        .btn-icono-guardar:hover{color:var(--amarillo);border-color:var(--amarillo)}
+        .btn-icono-borrar:hover{color:var(--rojo);border-color:var(--rojo);background:rgba(232,25,44,.08)}
+        .palabras-empty{text-align:center;padding:32px 20px;color:#444;font-family:'DM Sans',sans-serif;font-size:13px}
+        .palabras-count-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+        .count-pill{background:#1a1a1a;border:1px solid var(--borde);border-radius:2px;padding:4px 12px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:#555}
+        .count-pill.lleno{color:var(--rojo);border-color:var(--rojo)}
+        .palabras-spinner{text-align:center;padding:32px;color:#444;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:3px}
+        .palabras-spinner::before{content:'';display:block;width:28px;height:28px;border:2px solid #222;border-top-color:var(--amarillo);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .btn-usar-guardadas{width:100%;background:#1a1500;border:1.5px solid var(--amarillo-dark);color:var(--amarillo);border-radius:3px;padding:11px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;cursor:pointer;transition:background .2s;margin-top:8px}
+        .btn-usar-guardadas:hover{background:#2a2000}
     </style>
 </head>
 <body>
@@ -247,6 +271,9 @@
             <div class="custom-tags" id="custom-tags"></div>
             <p class="custom-count" id="custom-count">0 palabras agregadas — mínimo 1 para jugar</p>
 
+            <!-- BOTÓN VER PALABRAS GUARDADAS -->
+            <button class="btn-usar-guardadas" id="btn-ver-guardadas" onclick="abrirPalabrasGuardadas()">📚 VER PALABRAS GUARDADAS EN MI CUENTA</button>
+
             <button class="btn-main btn-amarillo" onclick="iniciarJuego('custom')">EMPEZAR JUEGO →</button>
             <button class="btn-main btn-secundario" onclick="irA('p-modos')">← VOLVER</button>
         </div>
@@ -325,6 +352,7 @@
     let jugadores = [];
     let roles = [];         // {nombre, esImpostor, palabra}
     let palabrasCustom = [];
+    window.palabrasCustom = palabrasCustom;
     let turnoIndex = 0;
     let tarjetaVolteada = false;
     let palabraRonda = '';
@@ -410,6 +438,7 @@
     }
 
     function renderTagsCustom() {
+        window.renderTagsCustom = renderTagsCustom;
         const wrap = document.getElementById('custom-tags');
         wrap.innerHTML = '';
         palabrasCustom.forEach((p, i) => {
@@ -614,6 +643,133 @@
         if (hint) hint.textContent = 'MANTÉN PRESIONADO';
     }
     </script>
+
+    <!-- Firebase — Palabras Guardadas -->
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const app = initializeApp({
+        apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+        authDomain:"gamecorofriends.firebaseapp.com",
+        projectId:"gamecorofriends",
+        storageBucket:"gamecorofriends.firebasestorage.app",
+        messagingSenderId:"373275888982",
+        appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const MAX_PALABRAS = 100;
+    let currentUser = null;
+    let palabrasGuardadas = [];
+
+    onAuthStateChanged(auth, user => {
+        currentUser = user;
+        const btn = document.getElementById('btn-ver-guardadas');
+        if (btn) btn.style.display = user ? 'block' : 'none';
+    });
+
+    window.abrirPalabrasGuardadas = async function() {
+        document.getElementById('palabras-modal-overlay').classList.add('show');
+        document.getElementById('palabras-lista-wrap').innerHTML = '<div class="palabras-spinner">CARGANDO</div>';
+        await cargarPalabrasDeFirestore();
+        renderPalabrasGuardadas();
+    };
+
+    window.cerrarPalabrasGuardadas = function() {
+        document.getElementById('palabras-modal-overlay').classList.remove('show');
+    };
+
+    async function cargarPalabrasDeFirestore() {
+        if (!currentUser) return;
+        try {
+            const snap = await getDoc(doc(db, 'impostor_palabras', currentUser.uid));
+            palabrasGuardadas = snap.exists() ? (snap.data().palabras || []) : [];
+        } catch(e) { palabrasGuardadas = []; }
+    }
+
+    async function guardarEnFirestore() {
+        if (!currentUser) return;
+        await setDoc(doc(db, 'impostor_palabras', currentUser.uid), {
+            palabras: palabrasGuardadas,
+            actualizadoEn: new Date().toISOString()
+        });
+    }
+
+    function renderPalabrasGuardadas() {
+        const wrap = document.getElementById('palabras-lista-wrap');
+        const pill = document.getElementById('palabras-count-pill');
+        const total = palabrasGuardadas.length;
+        pill.textContent = `${total} / ${MAX_PALABRAS}`;
+        pill.className = total >= MAX_PALABRAS ? 'count-pill lleno' : 'count-pill';
+
+        if (total === 0) {
+            wrap.innerHTML = '<div class="palabras-empty">No tienes palabras guardadas aún.<br>¡Agrega tu primera arriba! 👆</div>';
+            return;
+        }
+        wrap.innerHTML = '';
+        palabrasGuardadas.forEach((p, i) => {
+            const row = document.createElement('div');
+            row.className = 'palabra-item';
+            row.innerHTML = `
+                <input class="palabra-edit-input" id="pw-inp-${i}" value="${p}" maxlength="30"/>
+                <button class="btn-icono btn-icono-guardar" onclick="editarPalabraGuardada(${i})" title="Guardar">💾</button>
+                <button class="btn-icono btn-icono-borrar" onclick="borrarPalabraGuardada(${i})" title="Borrar">🗑️</button>
+            `;
+            wrap.appendChild(row);
+        });
+    }
+
+    window.guardarNuevaPalabra = async function() {
+        if (!currentUser) return;
+        const input = document.getElementById('nueva-palabra-guardada');
+        const texto = input.value.trim();
+        if (!texto) { input.focus(); return; }
+        if (palabrasGuardadas.length >= MAX_PALABRAS) {
+            alert('¡Límite de 100 palabras alcanzado! Borra algunas para agregar nuevas.');
+            return;
+        }
+        if (palabrasGuardadas.map(p=>p.toLowerCase()).includes(texto.toLowerCase())) {
+            input.style.borderColor = 'var(--rojo)';
+            setTimeout(() => input.style.borderColor = '', 1500);
+            return;
+        }
+        palabrasGuardadas.push(texto);
+        input.value = '';
+        input.focus();
+        await guardarEnFirestore();
+        renderPalabrasGuardadas();
+    };
+
+    window.editarPalabraGuardada = async function(idx) {
+        const input = document.getElementById(`pw-inp-${idx}`);
+        const nuevo = input.value.trim();
+        if (!nuevo) return;
+        palabrasGuardadas[idx] = nuevo;
+        await guardarEnFirestore();
+        const btn = input.nextElementSibling;
+        const orig = btn.textContent;
+        btn.textContent = '✓';
+        setTimeout(() => btn.textContent = orig, 1500);
+    };
+
+    window.borrarPalabraGuardada = async function(idx) {
+        palabrasGuardadas.splice(idx, 1);
+        await guardarEnFirestore();
+        renderPalabrasGuardadas();
+    };
+
+    window.usarTodasGuardadas = function() {
+        if (palabrasGuardadas.length === 0) return;
+        palabrasGuardadas.forEach(p => {
+            if (!window.palabrasCustom.includes(p)) window.palabrasCustom.push(p);
+        });
+        if (window.renderTagsCustom) window.renderTagsCustom();
+        window.cerrarPalabrasGuardadas();
+    };
+    </script>
     <!-- ══════════════════════════════════════
          MODAL: HOLD TO REVEAL IMPOSTOR
     ═══════════════════════════════════════ -->
@@ -642,6 +798,42 @@
                 onmouseout="this.style.color='#555';this.style.borderColor='#2a2a2a'">
                 CANCELAR
             </button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         MODAL: PALABRAS GUARDADAS
+    ═══════════════════════════════════════ -->
+    <div class="palabras-modal-overlay" id="palabras-modal-overlay">
+        <div class="palabras-modal">
+            <div class="palabras-modal-header">
+                <div>
+                    <h2>📚 MIS PALABRAS</h2>
+                    <span id="palabras-modal-sub">Guardadas en tu cuenta</span>
+                </div>
+                <button onclick="cerrarPalabrasGuardadas()" style="background:transparent;border:none;color:#555;font-size:22px;cursor:pointer;padding:4px;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#555'">✕</button>
+            </div>
+            <div class="palabras-modal-body">
+                <!-- Agregar nueva palabra -->
+                <div class="custom-word-wrap" style="margin-bottom:8px">
+                    <input class="custom-input" id="nueva-palabra-guardada" placeholder="Agregar nueva palabra..." maxlength="30"
+                        onkeydown="if(event.key==='Enter')guardarNuevaPalabra()"/>
+                    <button class="btn-main btn-amarillo" style="width:auto;padding:10px 16px;font-size:13px;box-shadow:3px 3px 0 var(--amarillo-dark)" onclick="guardarNuevaPalabra()">+</button>
+                </div>
+
+                <div class="palabras-count-bar">
+                    <span style="font-size:11px;color:#555;font-family:'DM Sans',sans-serif">Máximo 100 palabras por cuenta</span>
+                    <span class="count-pill" id="palabras-count-pill">0 / 100</span>
+                </div>
+
+                <!-- Lista de palabras -->
+                <div id="palabras-lista-wrap">
+                    <div class="palabras-spinner">CARGANDO</div>
+                </div>
+
+                <!-- Botón usar todas en esta ronda -->
+                <button class="btn-usar-guardadas" onclick="usarTodasGuardadas()" style="margin-top:16px">✅ USAR TODAS EN ESTA RONDA</button>
+            </div>
         </div>
     </div>
 
