@@ -290,12 +290,15 @@
 
         <!-- Tarjeta flip normal -->
         <div id="flip-wrap">
-            <div class="flip-container" id="flip-card" onclick="voltearTarjeta()">
+            <div class="flip-container" id="flip-card"
+                onmousedown="mostrarRol()" onmouseup="ocultarRol()" onmouseleave="ocultarRol()"
+                ontouchstart="mostrarRol(event)" ontouchend="ocultarRol()" ontouchcancel="ocultarRol()"
+                style="cursor:pointer;user-select:none;touch-action:none">
                 <div class="flip-inner">
                     <div class="flip-front">
                         <span class="flip-front-emoji">👀</span>
                         <div class="flip-front-nombre" id="card-nombre">JUGADOR</div>
-                        <div class="flip-front-hint">TOCA PARA VER TU ROL</div>
+                        <div class="flip-front-hint">MANTÉN PRESIONADO PARA VER</div>
                     </div>
                     <div class="flip-back" id="flip-back-content"></div>
                 </div>
@@ -543,12 +546,18 @@
         document.getElementById('btn-fin-turnos').style.display = 'none';
     }
 
-    function voltearTarjeta() {
-        if (tarjetaVolteada) return;
-        tarjetaVolteada = true;
+    function mostrarRol(e) {
+        if (e) e.preventDefault();
         document.getElementById('flip-card').classList.add('flipped');
-        // Siempre mostrar "SIGUIENTE →" — en el último turno llevará a reveal-wrap
-        document.getElementById('btn-siguiente-turno').style.display = 'block';
+    }
+
+    function ocultarRol() {
+        document.getElementById('flip-card').classList.remove('flipped');
+        // Marcar que ya vio su rol (para habilitar el botón siguiente)
+        if (!tarjetaVolteada) {
+            tarjetaVolteada = true;
+            document.getElementById('btn-siguiente-turno').style.display = 'block';
+        }
     }
 
     function siguienteTurno() {
