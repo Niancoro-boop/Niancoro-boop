@@ -435,6 +435,8 @@
         input.value = '';
         input.focus();
         renderTagsCustom();
+        // Auto-guardar en cuenta si está logueado
+        if (window._guardarPalabraEnCuenta) window._guardarPalabraEnCuenta(palabra);
     }
 
     function renderTagsCustom() {
@@ -768,6 +770,16 @@
         });
         if (window.renderTagsCustom) window.renderTagsCustom();
         window.cerrarPalabrasGuardadas();
+    };
+
+    // Función expuesta para auto-guardar desde el script principal
+    window._guardarPalabraEnCuenta = async function(palabra) {
+        if (!currentUser) return;
+        await cargarPalabrasDeFirestore(); // asegurar datos frescos
+        if (palabrasGuardadas.length >= MAX_PALABRAS) return;
+        if (palabrasGuardadas.map(p=>p.toLowerCase()).includes(palabra.toLowerCase())) return;
+        palabrasGuardadas.push(palabra);
+        await guardarEnFirestore();
     };
     </script>
     <!-- ══════════════════════════════════════
