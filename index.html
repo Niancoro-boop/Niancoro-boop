@@ -840,11 +840,10 @@
 
         function irAVerdadOReto() {
             if (!currentUser) {
-                // Si no está logueado, mostramos el modal de login que ya tienes
                 document.getElementById('loginModal').classList.add('show');
             } else {
-                // Redirige al archivo de tu juego
-                window.location.href = 'VerdadOReto.html';
+
+                window.location.href = 'VerdadOReto/VerdadOReto.html';
             }
         }
 
