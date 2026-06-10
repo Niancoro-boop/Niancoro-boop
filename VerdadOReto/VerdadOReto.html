@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Verdad o Reto — GameCoroFriends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --negro:#080808;--rojo:#e8192c;--rojo-dark:#8b0f1a;
+            --amarillo:#ffd60a;--amarillo-dark:#b89b00;
+            --blanco:#f0f0f0;--gris:#141414;--gris2:#1e1e1e;--borde:#2a2a2a;
+            --verde:#1a7a1a;--verde-dark:#0d4a0d;
+            --azul:#1a5fa8;--azul-dark:#0d3d6e;
+            --rosa:#c0397a;--rosa-dark:#7a1f4a;
+            --morado:#6c3483;--morado-dark:#4a1f5a;
+        }
+        body{background:var(--negro);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;position:relative}
+        body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#222 1px,transparent 1px);background-size:26px 26px;opacity:.45;z-index:0;pointer-events:none}
+        .blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.1;z-index:0;pointer-events:none}
+        .blob-1{width:500px;height:500px;background:var(--azul);top:-150px;left:-150px;animation:flotar 10s ease-in-out infinite}
+        .blob-2{width:350px;height:350px;background:var(--rosa);bottom:-100px;right:-100px;animation:flotar 13s ease-in-out infinite reverse}
+        @keyframes flotar{0%,100%{transform:translate(0,0)}50%{transform:translate(22px,18px)}}
+
+        /* TOP BAR */
+        .top-bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--borde);background:rgba(8,8,8,.97);backdrop-filter:blur(8px)}
+        .back-btn{background:#1a1a1a;border:1.5px solid var(--borde);color:#666;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;text-decoration:none;transition:color .2s,border-color .2s}
+        .back-btn:hover{color:var(--amarillo);border-color:var(--amarillo)}
+        .top-tag{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:#333}
+        .top-tag span{color:var(--azul)}
+
+        /* PANTALLAS */
+        .pantalla{display:none;position:relative;z-index:1;min-height:calc(100vh - 57px);padding:40px 20px 60px;animation:fadeIn .35s ease both}
+        .pantalla.activa{display:flex;flex-direction:column;align-items:center;justify-content:center}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+        /* TÍTULOS */
+        .titulo-seccion{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,64px);color:var(--blanco);line-height:1;margin-bottom:8px;text-align:center}
+        .titulo-seccion em{font-style:normal;color:var(--azul)}
+        .titulo-seccion span{color:var(--amarillo)}
+        .subtitulo{font-size:13px;color:#555;text-align:center;margin-bottom:40px;letter-spacing:.5px}
+
+        /* GRIDS DE MODOS */
+        .modos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;width:100%;max-width:820px}
+        .submodos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;width:100%;max-width:860px}
+
+        .modo-card{background:var(--gris);border:2px solid var(--borde);border-radius:4px;padding:32px 24px;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:flex-start}
+        .modo-card:hover:not(.disabled){transform:translate(-3px,-3px)}
+        .modo-card.disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.8)}
+
+        .modo-card.c-azul{box-shadow:6px 6px 0 var(--azul-dark)}.modo-card.c-azul:hover:not(.disabled){box-shadow:9px 9px 0 var(--azul-dark)}
+        .modo-card.c-amarillo{box-shadow:6px 6px 0 var(--amarillo-dark)}.modo-card.c-amarillo:hover:not(.disabled){box-shadow:9px 9px 0 var(--amarillo-dark)}
+        .modo-card.c-gris{box-shadow:4px 4px 0 #1a1a1a}
+        .modo-card.c-verde{box-shadow:6px 6px 0 var(--verde-dark)}.modo-card.c-verde:hover{box-shadow:9px 9px 0 var(--verde-dark)}
+        .modo-card.c-rosa{box-shadow:6px 6px 0 var(--rosa-dark)}.modo-card.c-rosa:hover{box-shadow:9px 9px 0 var(--rosa-dark)}
+        .modo-card.c-morado{box-shadow:6px 6px 0 var(--morado-dark)}.modo-card.c-morado:hover{box-shadow:9px 9px 0 var(--morado-dark)}
+
+        .modo-badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:3px;padding:3px 10px;border-radius:2px;margin-bottom:14px;display:inline-block}
+        .badge-azul{background:var(--azul);color:var(--blanco)}
+        .badge-amarillo{background:var(--amarillo);color:var(--negro)}
+        .badge-verde{background:var(--verde);color:var(--blanco)}
+        .badge-rosa{background:var(--rosa);color:var(--blanco)}
+        .badge-morado{background:var(--morado);color:var(--blanco)}
+        .badge-pronto{background:#1e1e1e;color:#555;border:1px solid #333}
+
+        .modo-emoji{font-size:38px;margin-bottom:14px;display:block}
+        .modo-titulo{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--blanco);margin-bottom:8px;line-height:1}
+        .modo-desc{font-size:13px;color:#666;line-height:1.6;flex-grow:1;margin-bottom:20px}
+        .modo-btn{width:100%;border:none;border-radius:3px;padding:12px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;cursor:pointer}
+        .modo-btn-azul{background:var(--azul);color:var(--blanco);box-shadow:3px 3px 0 var(--azul-dark)}
+        .modo-btn-amarillo{background:var(--amarillo);color:var(--negro);box-shadow:3px 3px 0 var(--amarillo-dark)}
+        .modo-btn-verde{background:var(--verde);color:var(--blanco);box-shadow:3px 3px 0 var(--verde-dark)}
+        .modo-btn-rosa{background:var(--rosa);color:var(--blanco);box-shadow:3px 3px 0 var(--rosa-dark)}
+        .modo-btn-morado{background:var(--morado);color:var(--blanco);box-shadow:3px 3px 0 var(--morado-dark)}
+        .modo-btn-gris{background:#1e1e1e;color:#444;border:1.5px solid #333;cursor:not-allowed}
+        .modo-card-line{position:absolute;bottom:0;left:0;right:0;height:3px}
+
+        /* BOTONES GENERALES */
+        .btn-main{width:100%;border:none;border-radius:3px;padding:15px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+        .btn-azul{background:var(--azul);color:var(--blanco);box-shadow:4px 4px 0 var(--azul-dark)}
+        .btn-azul:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--azul-dark)}
+        .btn-rojo{background:var(--rojo);color:var(--blanco);box-shadow:4px 4px 0 var(--rojo-dark)}
+        .btn-rojo:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rojo-dark)}
+        .btn-amarillo{background:var(--amarillo);color:var(--negro);box-shadow:4px 4px 0 var(--amarillo-dark)}
+        .btn-amarillo:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--amarillo-dark)}
+        .btn-verde{background:var(--verde);color:var(--blanco);box-shadow:4px 4px 0 var(--verde-dark)}
+        .btn-verde:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--verde-dark)}
+        .btn-rosa{background:var(--rosa);color:var(--blanco);box-shadow:4px 4px 0 var(--rosa-dark)}
+        .btn-rosa:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rosa-dark)}
+        .btn-secundario{background:#1a1a1a;color:#666;border:1.5px solid #2a2a2a;margin-top:10px}
+        .btn-secundario:hover{color:var(--blanco);border-color:#555}
+
+        /* CONFIG CARD */
+        .config-card{background:var(--gris);border:2px solid var(--borde);border-radius:4px;padding:40px 36px;width:100%;max-width:520px;position:relative}
+        .config-tag{position:absolute;top:-14px;left:28px;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;padding:3px 14px;border-radius:2px}
+
+        .jugadores-lista{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;max-height:260px;overflow-y:auto}
+        .jugadores-lista::-webkit-scrollbar{width:4px}.jugadores-lista::-webkit-scrollbar-track{background:#111}.jugadores-lista::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+        .jugador-row{display:flex;align-items:center;gap:8px;animation:slideIn .25s ease}
+        @keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+        .jugador-num{font-family:'Bebas Neue',sans-serif;font-size:13px;color:#444;width:22px;flex-shrink:0;text-align:right}
+        .jugador-input{flex:1;background:#0e0e0e;border:1.5px solid var(--borde);border-radius:3px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--blanco);outline:none;transition:border-color .2s}
+        .jugador-input:focus{border-color:var(--amarillo)}
+        .jugador-input::placeholder{color:#333}
+        .jugador-del{width:32px;height:32px;background:transparent;border:1.5px solid #2a2a2a;border-radius:3px;color:#444;cursor:pointer;font-size:14px;transition:color .2s,border-color .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+        .jugador-del:hover{color:var(--rojo);border-color:var(--rojo)}
+        .min-aviso{font-size:11px;color:#444;margin-bottom:16px;letter-spacing:.5px}
+        .min-aviso.error{color:var(--rojo);animation:sacudir .3s ease}
+        @keyframes sacudir{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+        label.cfg-label{display:block;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#666;margin-bottom:10px}
+        .btn-add{background:transparent;border:1.5px dashed #333;color:#555;border-radius:3px;padding:11px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;cursor:pointer;width:100%;transition:color .2s,border-color .2s;margin-bottom:16px}
+        .btn-add:hover{color:var(--amarillo);border-color:var(--amarillo)}
+
+        /* PANTALLA JUEGO */
+        .juego-header{text-align:center;margin-bottom:24px}
+        .turno-jugador{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,52px);color:var(--blanco);line-height:1;margin-bottom:4px}
+        .turno-sub{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;color:#444}
+        .turno-sub span{color:var(--blanco)}
+
+        /* Botones Verdad / Reto */
+        .eleccion-btns{display:flex;gap:16px;width:100%;max-width:480px;margin-bottom:28px}
+        .btn-verdad{flex:1;background:var(--azul);color:var(--blanco);border:none;border-radius:4px;padding:28px 16px;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;cursor:pointer;box-shadow:5px 5px 0 var(--azul-dark);transition:transform .15s,box-shadow .15s;text-align:center}
+        .btn-verdad:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--azul-dark)}
+        .btn-verdad:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--azul-dark)}
+        .btn-reto{flex:1;background:var(--rojo);color:var(--blanco);border:none;border-radius:4px;padding:28px 16px;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;cursor:pointer;box-shadow:5px 5px 0 var(--rojo-dark);transition:transform .15s,box-shadow .15s;text-align:center}
+        .btn-reto:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--rojo-dark)}
+        .btn-reto:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--rojo-dark)}
+
+        /* Tarjeta de pregunta */
+        .pregunta-card{width:100%;max-width:480px;border-radius:4px;padding:36px 28px;text-align:center;margin-bottom:24px;display:none;animation:aparecer .4s cubic-bezier(.22,1,.36,1) both}
+        .pregunta-card.visible{display:block}
+        @keyframes aparecer{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+        .pregunta-card.tipo-verdad{background:#0a0f1a;border:2px solid var(--azul);box-shadow:6px 6px 0 var(--azul-dark)}
+        .pregunta-card.tipo-reto{background:#1a0808;border:2px solid var(--rojo);box-shadow:6px 6px 0 var(--rojo-dark)}
+        .pregunta-tipo-label{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:4px;margin-bottom:16px;display:inline-block;padding:4px 16px;border-radius:2px}
+        .label-verdad{background:var(--azul);color:var(--blanco)}
+        .label-reto{background:var(--rojo);color:var(--blanco)}
+        .pregunta-texto{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,3.5vw,30px);color:var(--blanco);line-height:1.2;letter-spacing:.5px}
+
+        /* MODAL */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:998;backdrop-filter:blur(8px);overflow-y:auto;padding:20px}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:var(--gris);border:2px solid var(--borde);border-radius:4px;width:90%;max-width:500px;margin:auto;animation:fadeIn .3s ease both}
+        .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--borde)}
+        .modal-header h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--blanco)}
+        .modal-body{padding:20px 24px 24px}
+        .modal-close-btn{background:transparent;border:none;color:#555;font-size:22px;cursor:pointer;padding:4px;transition:color .2s}
+        .modal-close-btn:hover{color:var(--blanco)}
+
+        /* Input general */
+        .inp{width:100%;background:#0e0e0e;border:1.5px solid var(--borde);border-radius:3px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--blanco);outline:none;transition:border-color .2s;margin-bottom:12px}
+        .inp:focus{border-color:var(--amarillo)}
+        .inp::placeholder{color:#333}
+
+        /* Tags */
+        .tags-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:32px}
+        .tag-item{background:#1a1a1a;border:1px solid #333;border-radius:2px;padding:4px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#888;display:flex;align-items:center;gap:6px}
+        .tag-del{background:none;border:none;color:#555;cursor:pointer;font-size:13px;padding:0;line-height:1;transition:color .2s}
+        .tag-del:hover{color:var(--rojo)}
+        .tag-count{font-size:11px;color:#444;letter-spacing:.5px;margin-bottom:12px}
+
+        /* Modos guardados lista */
+        .modos-guardados-lista{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto;margin-bottom:16px}
+        .modos-guardados-lista::-webkit-scrollbar{width:4px}.modos-guardados-lista::-webkit-scrollbar-track{background:#111}.modos-guardados-lista::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+        .modo-guardado-item{background:#111;border:1.5px solid var(--borde);border-radius:3px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;transition:border-color .2s}
+        .modo-guardado-item:hover{border-color:var(--amarillo)}
+        .modo-guardado-item.seleccionado{border-color:var(--amarillo);background:#1a1500}
+        .modo-guardado-nombre{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--blanco);letter-spacing:1px}
+        .modo-guardado-stats{font-size:11px;color:#555;font-family:'DM Sans',sans-serif}
+        .modo-guardado-acciones{display:flex;gap:6px;flex-shrink:0}
+        .btn-icono{width:30px;height:30px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;border:1.5px solid var(--borde);background:#1a1a1a;transition:color .2s,border-color .2s,background .2s;flex-shrink:0}
+        .btn-icono:hover.edit{color:var(--amarillo);border-color:var(--amarillo)}
+        .btn-icono:hover.del{color:var(--rojo);border-color:var(--rojo);background:rgba(232,25,44,.08)}
+
+        /* Spinner */
+        .spinner-wrap{text-align:center;padding:32px;color:#444;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:3px}
+        .spinner-wrap::before{content:'';display:block;width:28px;height:28px;border:2px solid #222;border-top-color:var(--amarillo);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .empty-msg{text-align:center;padding:28px;color:#444;font-family:'DM Sans',sans-serif;font-size:13px}
+
+        /* Separador secciones */
+        .seccion-label{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:3px;color:#555;margin:16px 0 10px;border-bottom:1px solid #1e1e1e;padding-bottom:6px}
+
+        /* Fin */
+        .fin-card{background:var(--gris);border:2px solid var(--borde);border-radius:4px;padding:44px 36px;width:100%;max-width:420px;text-align:center;box-shadow:8px 8px 0 var(--azul-dark)}
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="top-bar">
+        <a class="back-btn" href="../index.html">← VOLVER</a>
+        <div class="top-tag">GAMECORO — <span>VERDAD O RETO</span></div>
+        <div style="width:80px"></div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P1: MENÚ PRINCIPAL
+    ═══════════════════════════════════════ -->
+    <div class="pantalla activa" id="p-menu">
+        <h1 class="titulo-seccion">VERDAD O <em>RETO</em></h1>
+        <p class="subtitulo">El clásico de toda reunión — elige tu modo</p>
+        <div class="modos-grid">
+            <div class="modo-card c-azul" onclick="irA('p-submodos-estandar')">
+                <span class="modo-badge badge-azul">DISPONIBLE</span>
+                <span class="modo-emoji">🎲</span>
+                <h2 class="modo-titulo">MODO ESTÁNDAR</h2>
+                <p class="modo-desc">Preguntas y retos prediseñados. Normal, Fiesta o Romántico. ¡Listos para jugar al instante!</p>
+                <button class="modo-btn modo-btn-azul">JUGAR →</button>
+                <div class="modo-card-line" style="background:var(--azul)"></div>
+            </div>
+            <div class="modo-card c-amarillo" onclick="irAPersonalizado()">
+                <span class="modo-badge badge-amarillo">DISPONIBLE</span>
+                <span class="modo-emoji">✍️</span>
+                <h2 class="modo-titulo">MODO PERSONALIZADO</h2>
+                <p class="modo-desc">Crea tus propios modos con verdades y retos totalmente a tu gusto. Se guardan en tu cuenta.</p>
+                <button class="modo-btn modo-btn-amarillo">PERSONALIZAR →</button>
+                <div class="modo-card-line" style="background:var(--amarillo)"></div>
+            </div>
+            <div class="modo-card c-gris disabled">
+                <span class="modo-badge badge-pronto">PRÓXIMAMENTE</span>
+                <span class="modo-emoji">🔥</span>
+                <h2 class="modo-titulo">MODOS EXTRAS</h2>
+                <p class="modo-desc">Modos especiales en camino: Extremo, Sin límites, Temático y más.</p>
+                <button class="modo-btn modo-btn-gris" disabled>PRÓXIMAMENTE</button>
+                <div class="modo-card-line" style="background:#2a2a2a"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P2: SUBMODOS ESTÁNDAR
+    ═══════════════════════════════════════ -->
+    <div class="pantalla" id="p-submodos-estandar">
+        <h1 class="titulo-seccion">MODOS <em>ESTÁNDAR</em></h1>
+        <p class="subtitulo">Elige el tipo de juego para esta ronda</p>
+        <div class="submodos-grid">
+            <div class="modo-card c-verde" onclick="irAConfigEstandar('normal')">
+                <span class="modo-badge badge-verde">PARA TODOS</span>
+                <span class="modo-emoji">😄</span>
+                <h2 class="modo-titulo">NORMAL</h2>
+                <p class="modo-desc">Verdades y retos divertidos y tranquilos. Para jugar con cualquiera, sin importar la edad.</p>
+                <button class="modo-btn modo-btn-verde">JUGAR →</button>
+                <div class="modo-card-line" style="background:var(--verde)"></div>
+            </div>
+            <div class="modo-card c-amarillo" onclick="irAConfigEstandar('fiesta')">
+                <span class="modo-badge badge-amarillo">PICANTE</span>
+                <span class="modo-emoji">🎉</span>
+                <h2 class="modo-titulo">FIESTA</h2>
+                <p class="modo-desc">Nivel subido. Preguntas comprometedoras y retos que van a incomodar a más de uno.</p>
+                <button class="modo-btn modo-btn-amarillo">JUGAR →</button>
+                <div class="modo-card-line" style="background:var(--amarillo)"></div>
+            </div>
+            <div class="modo-card c-rosa" onclick="irAConfigEstandar('romantico')">
+                <span class="modo-badge badge-rosa">EN PAREJA</span>
+                <span class="modo-emoji">💑</span>
+                <h2 class="modo-titulo">ROMÁNTICO</h2>
+                <p class="modo-desc">Diseñado para parejas. Verdades íntimas y retos para conectar y conocerse más.</p>
+                <button class="modo-btn modo-btn-rosa">JUGAR →</button>
+                <div class="modo-card-line" style="background:var(--rosa)"></div>
+            </div>
+            <div class="modo-card c-gris disabled">
+                <span class="modo-badge badge-pronto">PRÓXIMAMENTE</span>
+                <span class="modo-emoji">🔞</span>
+                <h2 class="modo-titulo">+18</h2>
+                <p class="modo-desc">Solo para adultos. Contenido explícito sin filtros.</p>
+                <button class="modo-btn modo-btn-gris" disabled>PRÓXIMAMENTE</button>
+                <div class="modo-card-line" style="background:#2a2a2a"></div>
+            </div>
+        </div>
+        <button class="btn-main btn-secundario" style="max-width:300px;margin-top:24px" onclick="irA('p-menu')">← VOLVER</button>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P3: CONFIG JUGADORES (ESTÁNDAR)
+    ═══════════════════════════════════════ -->
+    <div class="pantalla" id="p-config-estandar">
+        <div class="config-card">
+            <div class="config-tag" id="config-estandar-tag" style="background:var(--verde);color:#fff">MODO NORMAL</div>
+            <h1 class="titulo-seccion" style="font-size:38px;text-align:left;margin-bottom:4px">JUGADORES</h1>
+            <p class="subtitulo" style="text-align:left;margin-bottom:24px">¿Quiénes van a jugar esta ronda?</p>
+            <label class="cfg-label">Nombres</label>
+            <div class="jugadores-lista" id="jugadores-estandar"></div>
+            <p class="min-aviso" id="aviso-estandar">Mínimo 2 jugadores para jugar</p>
+            <button class="btn-add" onclick="agregarJugador('estandar')">+ AGREGAR JUGADOR</button>
+            <button class="btn-main btn-verde" id="btn-start-estandar" onclick="iniciarJuego()">EMPEZAR →</button>
+            <button class="btn-main btn-secundario" onclick="irA('p-submodos-estandar')">← VOLVER</button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P4: PERSONALIZADO — lista de modos
+    ═══════════════════════════════════════ -->
+    <div class="pantalla" id="p-personalizado">
+        <h1 class="titulo-seccion" style="font-size:clamp(30px,5vw,52px)">MIS <span>MODOS</span></h1>
+        <p class="subtitulo">Selecciona un modo para jugar o crea uno nuevo</p>
+
+        <div style="width:100%;max-width:560px">
+            <div id="modos-custom-lista">
+                <div class="spinner-wrap">CARGANDO</div>
+            </div>
+            <button class="btn-main btn-amarillo" onclick="abrirModalCrear()" style="margin-bottom:12px">➕ CREAR NUEVO MODO</button>
+            <button class="btn-main btn-secundario" onclick="irA('p-menu')">← VOLVER</button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P5: CONFIG JUGADORES (PERSONALIZADO)
+    ═══════════════════════════════════════ -->
+    <div class="pantalla" id="p-config-custom">
+        <div class="config-card">
+            <div class="config-tag" style="background:var(--amarillo);color:var(--negro)" id="config-custom-tag">MI MODO</div>
+            <h1 class="titulo-seccion" style="font-size:38px;text-align:left;margin-bottom:4px">JUGADORES</h1>
+            <p class="subtitulo" style="text-align:left;margin-bottom:24px">¿Quiénes van a jugar esta ronda?</p>
+            <label class="cfg-label">Nombres</label>
+            <div class="jugadores-lista" id="jugadores-custom"></div>
+            <p class="min-aviso" id="aviso-custom">Mínimo 2 jugadores para jugar</p>
+            <button class="btn-add" onclick="agregarJugador('custom')">+ AGREGAR JUGADOR</button>
+            <button class="btn-main btn-amarillo" onclick="iniciarJuego()">EMPEZAR →</button>
+            <button class="btn-main btn-secundario" onclick="irA('p-personalizado')">← VOLVER</button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P6: JUEGO
+    ═══════════════════════════════════════ -->
+    <div class="pantalla" id="p-juego">
+        <div class="juego-header">
+            <div class="turno-jugador" id="juego-jugador-nombre">JUGADOR</div>
+            <div class="turno-sub">TURNO <span id="juego-turno-num">1</span> — ELIGE:</div>
+        </div>
+
+        <!-- Botones elección -->
+        <div class="eleccion-btns" id="eleccion-btns">
+            <button class="btn-verdad" onclick="elegir('verdad')">💬<br>VERDAD</button>
+            <button class="btn-reto" onclick="elegir('reto')">⚡<br>RETO</button>
+        </div>
+
+        <!-- Tarjeta resultado -->
+        <div class="pregunta-card" id="pregunta-card">
+            <span class="pregunta-tipo-label" id="pregunta-label">VERDAD</span>
+            <div class="pregunta-texto" id="pregunta-texto">...</div>
+        </div>
+
+        <!-- Botón siguiente -->
+        <button class="btn-main btn-verde" id="btn-siguiente" onclick="siguienteTurno()" style="display:none;max-width:340px">SIGUIENTE TURNO →</button>
+        <button class="btn-main btn-secundario" id="btn-skip" onclick="saltarPregunta()" style="display:none;max-width:340px;margin-top:8px">↩ SALTAR PREGUNTA</button>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         P7: FIN
+    ═══════════════════════════════════════ -->
+    <div class="pantalla" id="p-fin">
+        <div class="fin-card">
+            <span style="font-size:52px;display:block;margin-bottom:14px">🎉</span>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--blanco);margin-bottom:6px">¡RONDA TERMINADA!</div>
+            <p style="font-size:13px;color:#666;margin-bottom:28px">Espero que hayan quedado todos comprometidos 😏</p>
+            <button class="btn-main btn-azul" onclick="reiniciarJuego()" style="margin-bottom:10px">JUGAR DE NUEVO 🔁</button>
+            <button class="btn-main btn-secundario" onclick="irA('p-menu')">CAMBIAR MODO</button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         MODAL: CREAR / EDITAR MODO CUSTOM
+    ═══════════════════════════════════════ -->
+    <div class="modal-overlay" id="modal-crear">
+        <div class="modal-box" style="box-shadow:8px 8px 0 var(--amarillo-dark)">
+            <div class="modal-header">
+                <h2 id="modal-crear-titulo">✍️ CREAR MODO</h2>
+                <button class="modal-close-btn" onclick="cerrarModalCrear()">✕</button>
+            </div>
+            <div class="modal-body">
+                <label class="cfg-label">Nombre del modo</label>
+                <input class="inp" id="modo-nombre-inp" placeholder="Ej: Noche de amigos, Cumpleaños..." maxlength="30"
+                    onkeydown="if(event.key==='Enter')document.getElementById('verdad-inp').focus()"/>
+
+                <div class="seccion-label">💬 VERDADES</div>
+                <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <input class="inp" id="verdad-inp" placeholder="Escribe una verdad..." maxlength="120" style="margin-bottom:0"
+                        onkeydown="if(event.key==='Enter')agregarItem('verdad')"/>
+                    <button class="btn-main btn-azul" style="width:auto;padding:10px 16px;font-size:14px;box-shadow:3px 3px 0 var(--azul-dark)" onclick="agregarItem('verdad')">+</button>
+                </div>
+                <div class="tags-wrap" id="verdades-tags"></div>
+                <div class="tag-count" id="verdades-count">0 verdades</div>
+
+                <div class="seccion-label">⚡ RETOS</div>
+                <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <input class="inp" id="reto-inp" placeholder="Escribe un reto..." maxlength="120" style="margin-bottom:0"
+                        onkeydown="if(event.key==='Enter')agregarItem('reto')"/>
+                    <button class="btn-main btn-rojo" style="width:auto;padding:10px 16px;font-size:14px;box-shadow:3px 3px 0 var(--rojo-dark)" onclick="agregarItem('reto')">+</button>
+                </div>
+                <div class="tags-wrap" id="retos-tags"></div>
+                <div class="tag-count" id="retos-count">0 retos</div>
+
+                <button class="btn-main btn-amarillo" onclick="guardarModoCustom()" style="margin-top:16px">💾 GUARDAR MODO</button>
+                <button class="btn-main btn-secundario" onclick="cerrarModalCrear()">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ══════════════════════════════════════
+    // BANCOS DE PREGUNTAS ESTÁNDAR
+    // ══════════════════════════════════════
+    const BANCO = {
+        normal: {
+            verdades: [
+                '¿Cuál es tu mayor vergüenza?','¿A quién de aquí le tienes más confianza?',
+                '¿Cuál fue tu peor calificación?','¿Alguna vez has mentido para no salir?',
+                '¿Cuál es tu manía más rara?','¿A quién le pedirías dinero prestado primero?',
+                '¿Cuál es tu talento oculto?','¿Cuál es tu miedo más ridículo?',
+                '¿Cuál ha sido tu peor chiste?','¿Qué canción escuchas cuando nadie te ve?',
+                '¿Cuál fue tu crush más vergonzoso?','¿Alguna vez has llorado con una película de animación?',
+                '¿Cuál es tu mayor defecto?','¿Qué haces cuando estás solo en casa?',
+                '¿Alguna vez has comido algo caído al suelo?'
+            ],
+            retos: [
+                'Imita al personaje favorito del grupo durante 30 segundos',
+                'Llama a alguien y canta "Feliz Cumpleaños" sin explicar por qué',
+                'Habla como robot por 2 turnos seguidos',
+                'Di un trabalenguas 3 veces sin equivocarte',
+                'Haz una pose de superhéroe y mantenerla 20 segundos',
+                'Escribe un tweet de amor a la persona de tu derecha',
+                'Baila 30 segundos con la canción que elija el grupo',
+                'Describe tu vida en 3 palabras',
+                'Cuenta un chiste — si nadie se ríe, cuenta otro',
+                'Haz 10 flexiones o canta el abecedario al revés',
+                'Muestra la última foto de tu galería',
+                'Lee el último mensaje que le enviaste a alguien',
+                'Imita a alguien del grupo — los demás adivinan quién',
+                'Di algo bueno de cada persona del grupo',
+                'Cambia tu foto de perfil de WhatsApp por 10 minutos a la que elija el grupo'
+            ]
+        },
+        fiesta: {
+            verdades: [
+                '¿Cuál es el secreto más grande que le has guardado a alguien del grupo?',
+                '¿A quién aquí le quitarías la pareja si pudieras?',
+                '¿Cuál fue tu peor experiencia en una fiesta?',
+                '¿Has tenido crush con el amigo de un amigo aquí presente?',
+                '¿Cuál es la mentira más grande que has dicho para salir de algo?',
+                '¿Qué es lo más atrevido que has hecho bajo presión del grupo?',
+                '¿A quién del grupo le pedirías un beso y por qué?',
+                '¿Cuál ha sido tu peor cita?','¿Has espiado el celular de alguien? ¿De quién?',
+                '¿Qué canción te pone en modo fiesta y a quién no le contarías eso?',
+                '¿Cuál es lo más loco que has hecho en una noche de rumba?',
+                '¿Alguna vez has llegado ebrio a casa de tus papás?',
+                '¿Cuánto tiempo llevas sin salir y por qué?',
+                '¿A quién del grupo llamarías en una emergencia real?',
+                '¿Qué harías con $1.000.000 si no te lo pudieran descubrir?'
+            ],
+            retos: [
+                'Escríbele un mensaje de texto a tu ex diciendo "hola"',
+                'Tómate una selfie con la cara más fea posible y ponla de foto de perfil por 5 minutos',
+                'Habla con acento extranjero durante 3 turnos',
+                'Haz un chiste tan malo que todos hagan facepalm',
+                'Llama a alguien y dile que tienes algo importante que contarle... luego di "mentira"',
+                'Haz una declaración de amor dramática a un objeto de la mesa',
+                'Muéstrale al grupo tu historial de búsqueda del día de hoy',
+                'Deja que alguien del grupo te ponga un estado en WhatsApp por 15 minutos',
+                'Imita al youtuber o tiktoker que más vergüenza te daría que te vieran siguiendo',
+                'Canta el coro de la canción más vergonzosa de tu playlist',
+                'Muestra la foto más fea de tu galería del año pasado',
+                'Deja que el grupo elija tu foto de perfil por los próximos 30 minutos',
+                'Haz una reverencia dramática ante cada persona del grupo',
+                'Di en voz alta el nombre completo de tu crush actual',
+                'Haz la coreografía de un reggaetón conocido'
+            ]
+        },
+        romantico: {
+            verdades: [
+                '¿Cuál fue el momento en que te diste cuenta de que te gustaba tu pareja?',
+                '¿Qué es lo que más admiras de tu pareja?',
+                '¿Cuál es tu recuerdo favorito juntos?',
+                '¿Qué es lo que más te cuesta decirle a tu pareja?',
+                '¿Hay algo que nunca le hayas confesado?',
+                '¿Cuál es la cualidad de tu pareja que más te enamora?',
+                '¿Qué harías diferente si empezaran de nuevo?',
+                '¿Cuál fue la primera vez que pensaste "esta persona es especial"?',
+                '¿Qué canción te recuerda a tu pareja y por qué?',
+                '¿Cuál es tu forma favorita de decirle que la/lo quieres sin palabras?',
+                '¿Cuál es el defecto de tu pareja que en realidad te parece tierno?',
+                '¿Cuál ha sido el mejor plan que han hecho juntos?',
+                '¿Qué es lo primero que piensas cuando la/lo ves después de mucho tiempo?',
+                '¿Le dirías "te amo" primero o esperarías a que lo diga ella/él?',
+                '¿Cuál es el gesto pequeño de tu pareja que más valoras?'
+            ],
+            retos: [
+                'Dale un abrazo de al menos 30 segundos a tu pareja',
+                'Dile tres cosas que amas de ella/él mirándola/lo a los ojos',
+                'Bailen juntos durante una canción completa',
+                'Escríbele una nota romántica a mano con lo que sientes',
+                'Cuéntale al grupo una historia divertida que solo ustedes saben',
+                'Dale un masaje de hombros durante 2 minutos',
+                'Dedíquale una canción y explica por qué esa',
+                'Hagan una foto juntos como si fuera para Instagram',
+                'Dile algo que normalmente no le dices porque te da pena',
+                'Planeen en 60 segundos una cita perfecta para la próxima semana',
+                'Intercambien sus celulares por 2 minutos',
+                'Imiten una escena romántica de película',
+                'Cuéntale algo que siempre quisiste hacer con ella/él',
+                'Descríbela/o con 5 palabras frente al grupo',
+                'Prometle algo que vas a cumplir esta semana'
+            ]
+        }
+    };
+
+    // ══════════════════════════════════════
+    // ESTADO
+    // ══════════════════════════════════════
+    let modoJuego = 'normal';       // normal | fiesta | romantico | custom
+    let modoCustomActual = null;    // objeto {nombre, verdades[], retos[]}
+    let jugadores = [];
+    let turnoIndex = 0;
+    let preguntaActual = null;
+    let usadasVerdades = new Set();
+    let usadasRetos = new Set();
+    let editandoModoId = null;      // id del modo en edición
+
+    // Buffers del modal crear/editar
+    let bufVerdades = [];
+    let bufRetos = [];
+
+    // ══════════════════════════════════════
+    // NAVEGACIÓN
+    // ══════════════════════════════════════
+    function irA(id) {
+        document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+        document.getElementById(id).classList.add('activa');
+        window.scrollTo(0,0);
+    }
+
+    function irAPersonalizado() {
+        irA('p-personalizado');
+        cargarModosCustom();
+    }
+
+    // ══════════════════════════════════════
+    // CONFIG ESTÁNDAR
+    // ══════════════════════════════════════
+    const COLORES_MODO = {
+        normal:    {bg:'var(--verde)',    label:'MODO NORMAL',    btnClass:'btn-verde'},
+        fiesta:    {bg:'var(--amarillo)', label:'MODO FIESTA',    btnClass:'btn-amarillo', color:'var(--negro)'},
+        romantico: {bg:'var(--rosa)',     label:'MODO ROMÁNTICO', btnClass:'btn-rosa'}
+    };
+
+    function irAConfigEstandar(modo) {
+        modoJuego = modo;
+        const cfg = COLORES_MODO[modo];
+        const tag = document.getElementById('config-estandar-tag');
+        tag.textContent = cfg.label;
+        tag.style.background = cfg.bg;
+        tag.style.color = cfg.color || '#fff';
+        const btn = document.getElementById('btn-start-estandar');
+        btn.className = `btn-main ${cfg.btnClass}`;
+
+        if (document.getElementById('jugadores-estandar').children.length === 0) {
+            for (let i = 0; i < 2; i++) agregarJugador('estandar');
+        }
+        irA('p-config-estandar');
+    }
+
+    // ══════════════════════════════════════
+    // JUGADORES
+    // ══════════════════════════════════════
+    function agregarJugador(tipo) {
+        const listaId = tipo === 'estandar' ? 'jugadores-estandar' : 'jugadores-custom';
+        const lista = document.getElementById(listaId);
+        const idx = lista.children.length + 1;
+        const row = document.createElement('div');
+        row.className = 'jugador-row';
+        row.innerHTML = `
+            <span class="jugador-num">${idx}</span>
+            <input class="jugador-input" type="text" placeholder="Jugador ${idx}" maxlength="16" autocomplete="off"/>
+            <button class="jugador-del" onclick="eliminarJugador(this,'${tipo}')">✕</button>
+        `;
+        lista.appendChild(row);
+        row.querySelector('input').focus();
+        actualizarNums(tipo);
+    }
+
+    function eliminarJugador(btn, tipo) {
+        const listaId = tipo === 'estandar' ? 'jugadores-estandar' : 'jugadores-custom';
+        const lista = document.getElementById(listaId);
+        if (lista.children.length <= 1) return;
+        btn.closest('.jugador-row').remove();
+        actualizarNums(tipo);
+    }
+
+    function actualizarNums(tipo) {
+        const listaId = tipo === 'estandar' ? 'jugadores-estandar' : 'jugadores-custom';
+        document.querySelectorAll(`#${listaId} .jugador-row`).forEach((row, i) => {
+            row.querySelector('.jugador-num').textContent = i + 1;
+            row.querySelector('input').placeholder = `Jugador ${i + 1}`;
+        });
+    }
+
+    function obtenerJugadores(tipo) {
+        const listaId = tipo === 'estandar' ? 'jugadores-estandar' : 'jugadores-custom';
+        return Array.from(document.querySelectorAll(`#${listaId} .jugador-input`))
+            .map(i => i.value.trim()).filter(n => n.length > 0);
+    }
+
+    // ══════════════════════════════════════
+    // INICIAR JUEGO
+    // ══════════════════════════════════════
+    function iniciarJuego() {
+        const tipo = (modoJuego === 'custom') ? 'custom' : 'estandar';
+        const avisoId = tipo === 'estandar' ? 'aviso-estandar' : 'aviso-custom';
+        jugadores = obtenerJugadores(tipo);
+
+        const aviso = document.getElementById(avisoId);
+        if (jugadores.length < 2) {
+            aviso.classList.add('error');
+            aviso.textContent = `⚠ Necesitas al menos 2 jugadores (tienes ${jugadores.length})`;
+            setTimeout(() => { aviso.classList.remove('error'); aviso.textContent = 'Mínimo 2 jugadores para jugar'; }, 1500);
+            return;
+        }
+
+        jugadores = jugadores.sort(() => Math.random() - 0.5);
+        turnoIndex = 0;
+        usadasVerdades = new Set();
+        usadasRetos = new Set();
+
+        irA('p-juego');
+        mostrarTurno();
+    }
+
+    // ══════════════════════════════════════
+    // LÓGICA DEL JUEGO
+    // ══════════════════════════════════════
+    function mostrarTurno() {
+        const jugador = jugadores[turnoIndex % jugadores.length];
+        document.getElementById('juego-jugador-nombre').textContent = jugador.toUpperCase();
+        document.getElementById('juego-turno-num').textContent = turnoIndex + 1;
+
+        // Mostrar botones, ocultar tarjeta y siguiente
+        document.getElementById('eleccion-btns').style.display = 'flex';
+        const card = document.getElementById('pregunta-card');
+        card.className = 'pregunta-card';
+        document.getElementById('btn-siguiente').style.display = 'none';
+        document.getElementById('btn-skip').style.display = 'none';
+    }
+
+    function elegir(tipo) {
+        const banco = modoJuego === 'custom' ? modoCustomActual : BANCO[modoJuego];
+        const arr = tipo === 'verdad' ? banco.verdades : banco.retos;
+        const usadas = tipo === 'verdad' ? usadasVerdades : usadasRetos;
+
+        // Filtrar no usadas
+        let disponibles = arr.map((t,i)=>i).filter(i => !usadas.has(i));
+        if (disponibles.length === 0) {
+            // Resetear si se acabaron
+            if (tipo === 'verdad') usadasVerdades = new Set();
+            else usadasRetos = new Set();
+            disponibles = arr.map((_,i)=>i);
+        }
+
+        const idx = disponibles[Math.floor(Math.random() * disponibles.length)];
+        usadas.add(idx);
+        preguntaActual = { tipo, texto: arr[idx] };
+
+        // Mostrar tarjeta
+        document.getElementById('eleccion-btns').style.display = 'none';
+        const card = document.getElementById('pregunta-card');
+        card.className = `pregunta-card visible tipo-${tipo}`;
+        document.getElementById('pregunta-label').textContent = tipo === 'verdad' ? '💬 VERDAD' : '⚡ RETO';
+        document.getElementById('pregunta-label').className = `pregunta-tipo-label label-${tipo}`;
+        document.getElementById('pregunta-texto').textContent = preguntaActual.texto;
+        document.getElementById('btn-siguiente').style.display = 'block';
+        document.getElementById('btn-skip').style.display = 'block';
+    }
+
+    function siguienteTurno() {
+        turnoIndex++;
+        if (turnoIndex >= jugadores.length * 3) {
+            irA('p-fin');
+            return;
+        }
+        mostrarTurno();
+    }
+
+    function saltarPregunta() {
+        // Volver a mostrar los botones sin avanzar turno
+        document.getElementById('eleccion-btns').style.display = 'flex';
+        document.getElementById('pregunta-card').className = 'pregunta-card';
+        document.getElementById('btn-siguiente').style.display = 'none';
+        document.getElementById('btn-skip').style.display = 'none';
+    }
+
+    function reiniciarJuego() {
+        turnoIndex = 0;
+        usadasVerdades = new Set();
+        usadasRetos = new Set();
+        jugadores = jugadores.sort(() => Math.random() - 0.5);
+        irA('p-juego');
+        mostrarTurno();
+    }
+
+    // ══════════════════════════════════════
+    // MODAL CREAR / EDITAR MODO CUSTOM
+    // ══════════════════════════════════════
+    function abrirModalCrear(modo = null) {
+        editandoModoId = modo ? modo.id : null;
+        bufVerdades = modo ? [...modo.verdades] : [];
+        bufRetos = modo ? [...modo.retos] : [];
+
+        document.getElementById('modal-crear-titulo').textContent = modo ? '✏️ EDITAR MODO' : '✍️ CREAR MODO';
+        document.getElementById('modo-nombre-inp').value = modo ? modo.nombre : '';
+        renderBufTags();
+        document.getElementById('modal-crear').classList.add('show');
+        setTimeout(() => document.getElementById('modo-nombre-inp').focus(), 100);
+    }
+
+    function cerrarModalCrear() {
+        document.getElementById('modal-crear').classList.remove('show');
+        editandoModoId = null;
+        bufVerdades = [];
+        bufRetos = [];
+    }
+
+    function agregarItem(tipo) {
+        const inpId = tipo === 'verdad' ? 'verdad-inp' : 'reto-inp';
+        const inp = document.getElementById(inpId);
+        const texto = inp.value.trim();
+        if (!texto) { inp.focus(); return; }
+        if (tipo === 'verdad') bufVerdades.push(texto);
+        else bufRetos.push(texto);
+        inp.value = '';
+        inp.focus();
+        renderBufTags();
+    }
+
+    function quitarItem(tipo, idx) {
+        if (tipo === 'verdad') bufVerdades.splice(idx, 1);
+        else bufRetos.splice(idx, 1);
+        renderBufTags();
+    }
+
+    function renderBufTags() {
+        ['verdad','reto'].forEach(tipo => {
+            const arr = tipo === 'verdad' ? bufVerdades : bufRetos;
+            const wrap = document.getElementById(`${tipo}es-tags`);
+            const count = document.getElementById(`${tipo}es-count`);
+            wrap.innerHTML = '';
+            arr.forEach((t, i) => {
+                const tag = document.createElement('div');
+                tag.className = 'tag-item';
+                tag.innerHTML = `<span style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t}</span><button class="tag-del" onclick="quitarItem('${tipo}',${i})">✕</button>`;
+                wrap.appendChild(tag);
+            });
+            count.textContent = `${arr.length} ${tipo === 'verdad' ? 'verdades' : 'retos'}`;
+        });
+    }
+
+    async function guardarModoCustom() {
+        const nombre = document.getElementById('modo-nombre-inp').value.trim();
+        if (!nombre) {
+            document.getElementById('modo-nombre-inp').style.borderColor = 'var(--rojo)';
+            setTimeout(() => document.getElementById('modo-nombre-inp').style.borderColor = '', 1500);
+            return;
+        }
+        if (bufVerdades.length === 0 && bufRetos.length === 0) {
+            alert('Agrega al menos una verdad o un reto.');
+            return;
+        }
+        if (window._guardarModo) {
+            await window._guardarModo({ id: editandoModoId, nombre, verdades: bufVerdades, retos: bufRetos });
+        }
+        cerrarModalCrear();
+        cargarModosCustom();
+    }
+
+    // Renderizar lista de modos guardados
+    function renderModosCustom(modos) {
+        const wrap = document.getElementById('modos-custom-lista');
+        if (!modos || modos.length === 0) {
+            wrap.innerHTML = '<div class="empty-msg">No tienes modos creados aún.<br>¡Crea tu primer modo! 👆</div>';
+            return;
+        }
+        wrap.innerHTML = '<div class="modos-guardados-lista" id="lista-interna"></div>';
+        const lista = document.getElementById('lista-interna');
+        modos.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'modo-guardado-item';
+            item.onclick = (e) => {
+                if (e.target.closest('.modo-guardado-acciones')) return;
+                seleccionarModoCustom(m);
+            };
+            item.innerHTML = `
+                <div>
+                    <div class="modo-guardado-nombre">${m.nombre}</div>
+                    <div class="modo-guardado-stats">${m.verdades.length} verdades · ${m.retos.length} retos</div>
+                </div>
+                <div class="modo-guardado-acciones">
+                    <button class="btn-icono edit" onclick="abrirModalCrear(${JSON.stringify(m).replace(/"/g,'&quot;')})" title="Editar">✏️</button>
+                    <button class="btn-icono del" onclick="eliminarModo('${m.id}')" title="Borrar">🗑️</button>
+                </div>
+            `;
+            lista.appendChild(item);
+        });
+    }
+
+    function seleccionarModoCustom(modo) {
+        if (modo.verdades.length === 0 && modo.retos.length === 0) {
+            alert('Este modo no tiene verdades ni retos. Edítalo primero.');
+            return;
+        }
+        modoJuego = 'custom';
+        modoCustomActual = modo;
+        document.getElementById('config-custom-tag').textContent = modo.nombre.toUpperCase();
+        if (document.getElementById('jugadores-custom').children.length === 0) {
+            for (let i = 0; i < 2; i++) agregarJugador('custom');
+        }
+        irA('p-config-custom');
+    }
+
+    async function eliminarModo(id) {
+        if (!confirm('¿Borrar este modo para siempre?')) return;
+        if (window._eliminarModo) await window._eliminarModo(id);
+        cargarModosCustom();
+    }
+
+    function cargarModosCustom() {
+        if (window._cargarModos) window._cargarModos();
+        else document.getElementById('modos-custom-lista').innerHTML = '<div class="empty-msg">Inicia sesión para ver tus modos guardados.</div>';
+    }
+
+    // Enter en inputs de jugadores
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && e.target.classList.contains('jugador-input')) {
+            const lista = e.target.closest('.jugadores-lista');
+            const inputs = Array.from(lista.querySelectorAll('.jugador-input'));
+            const idx = inputs.indexOf(e.target);
+            const tipo = lista.id === 'jugadores-estandar' ? 'estandar' : 'custom';
+            if (idx < inputs.length - 1) inputs[idx+1].focus();
+            else agregarJugador(tipo);
+        }
+    });
+    </script>
+
+    <!-- Firebase — Modos Custom -->
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const app = initializeApp({
+        apiKey:"AIzaSyC73idYjVXZgVKcBQpxTImzXbpGC_-rc_U",
+        authDomain:"gamecorofriends.firebaseapp.com",
+        projectId:"gamecorofriends",
+        storageBucket:"gamecorofriends.firebasestorage.app",
+        messagingSenderId:"373275888982",
+        appId:"1:373275888982:web:94ddf75182aa8a461ddaf7"
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let modos = [];
+
+    onAuthStateChanged(auth, async user => {
+        currentUser = user;
+        if (user) await cargar();
+    });
+
+    async function cargar() {
+        if (!currentUser) { render([]); return; }
+        try {
+            const snap = await getDoc(doc(db, 'vordeto_modos', currentUser.uid));
+            modos = snap.exists() ? (snap.data().modos || []) : [];
+        } catch(e) { modos = []; }
+        render(modos);
+    }
+
+    async function guardar() {
+        if (!currentUser) return;
+        await setDoc(doc(db, 'vordeto_modos', currentUser.uid), {
+            modos,
+            actualizadoEn: new Date().toISOString()
+        });
+    }
+
+    function render(lista) {
+        if (window.renderModosCustom) window.renderModosCustom(lista);
+    }
+
+    function genId() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    }
+
+    window._cargarModos = async function() {
+        document.getElementById('modos-custom-lista').innerHTML = '<div class="spinner-wrap">CARGANDO</div>';
+        await cargar();
+    };
+
+    window._guardarModo = async function({ id, nombre, verdades, retos }) {
+        if (id) {
+            const idx = modos.findIndex(m => m.id === id);
+            if (idx >= 0) modos[idx] = { id, nombre, verdades, retos };
+        } else {
+            modos.push({ id: genId(), nombre, verdades, retos });
+        }
+        await guardar();
+    };
+
+    window._eliminarModo = async function(id) {
+        modos = modos.filter(m => m.id !== id);
+        await guardar();
+    };
+    </script>
+</body>
+</html>
