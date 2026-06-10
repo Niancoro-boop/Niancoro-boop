@@ -274,7 +274,7 @@
             <!-- BOTÓN VER PALABRAS GUARDADAS -->
             <button class="btn-usar-guardadas" id="btn-ver-guardadas" onclick="abrirPalabrasGuardadas()">📚 VER PALABRAS GUARDADAS EN MI CUENTA</button>
 
-            <button class="btn-main btn-amarillo" onclick="iniciarJuego('custom')">EMPEZAR JUEGO →</button>
+            <button class="btn-main btn-amarillo" onclick="abrirModalModoCustom()">EMPEZAR JUEGO →</button>
             <button class="btn-main btn-secundario" onclick="irA('p-modos')">← VOLVER</button>
         </div>
     </div>
@@ -462,6 +462,36 @@
     }
 
     // ═══════════════════════════════════════════
+    // MODAL SELECCIÓN MODO CUSTOM
+    // ═══════════════════════════════════════════
+    function abrirModalModoCustom() {
+        // Primero validar jugadores y palabras antes de abrir el modal
+        const jugadoresTemp = obtenerJugadores('custom');
+        const aviso = document.getElementById('aviso-custom');
+        if (jugadoresTemp.length < 3) {
+            aviso.classList.add('error');
+            aviso.textContent = `⚠ Necesitas al menos 3 jugadores (tienes ${jugadoresTemp.length})`;
+            setTimeout(() => aviso.classList.remove('error'), 800);
+            return;
+        }
+        if (palabrasCustom.length === 0) {
+            const count = document.getElementById('custom-count');
+            count.style.color = 'var(--rojo)';
+            count.textContent = '⚠ Agrega al menos 1 palabra para jugar';
+            setTimeout(() => { count.style.color = ''; renderTagsCustom(); }, 2000);
+            return;
+        }
+        document.getElementById('modal-modo-custom').classList.add('show');
+    }
+
+    function elegirModoCustom(opcion) {
+        document.getElementById('modal-modo-custom').classList.remove('show');
+        // Guardar opción globalmente para usarla en iniciarJuego
+        window._modoCustomPalabras = opcion; // 'ambas' o 'solo'
+        iniciarJuego('custom');
+    }
+
+    // ═══════════════════════════════════════════
     // INICIAR JUEGO
     // ═══════════════════════════════════════════
     function iniciarJuego(modo) {
@@ -483,8 +513,17 @@
             return;
         }
 
-        // Seleccionar palabra secreta
-        const banco = modo === 'custom' ? palabrasCustom : PALABRAS_BANCO;
+        // Seleccionar banco de palabras según la opción del modal
+        let banco;
+        if (modo === 'custom') {
+            if (window._modoCustomPalabras === 'ambas') {
+                banco = [...palabrasCustom, ...PALABRAS_BANCO];
+            } else {
+                banco = palabrasCustom;
+            }
+        } else {
+            banco = PALABRAS_BANCO;
+        }
         palabraRonda = banco[Math.floor(Math.random() * banco.length)];
 
         // Asignar impostor al azar
@@ -822,9 +861,34 @@
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         MODAL: PALABRAS GUARDADAS
-    ═══════════════════════════════════════ -->
+    <!-- Modal selección modo palabras -->
+    <div class="palabras-modal-overlay" id="modal-modo-custom">
+        <div class="palabras-modal" style="max-width:400px">
+            <div class="palabras-modal-header">
+                <div>
+                    <h2>🎯 ¿QUÉ PALABRAS USAR?</h2>
+                    <span>Elige cómo quieres jugar esta ronda</span>
+                </div>
+            </div>
+            <div class="palabras-modal-body" style="display:flex;flex-direction:column;gap:12px">
+
+                <button class="btn-main btn-amarillo" onclick="elegirModoCustom('ambas')" style="text-align:left;padding:18px 20px">
+                    <div style="font-size:16px;letter-spacing:2px">🔀 PALABRAS AÑADIDAS + POR DEFECTO</div>
+                    <div style="font-size:11px;font-family:'DM Sans',sans-serif;color:rgba(0,0,0,.6);letter-spacing:.5px;margin-top:4px;font-weight:400">Mezcla tus palabras con el banco de 50 palabras del juego</div>
+                </button>
+
+                <button class="btn-main" onclick="elegirModoCustom('solo')"
+                    style="background:#1a1500;border:2px solid var(--amarillo-dark);color:var(--amarillo);box-shadow:4px 4px 0 var(--amarillo-dark);text-align:left;padding:18px 20px">
+                    <div style="font-size:16px;letter-spacing:2px">✍️ SOLO PALABRAS AÑADIDAS</div>
+                    <div style="font-size:11px;font-family:'DM Sans',sans-serif;color:rgba(255,214,10,.5);letter-spacing:.5px;margin-top:4px;font-weight:400">Únicamente las palabras que tú agregaste</div>
+                </button>
+
+                <button class="btn-gris" onclick="document.getElementById('modal-modo-custom').classList.remove('show')" style="padding:12px">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
+</body>
     <div class="palabras-modal-overlay" id="palabras-modal-overlay">
         <div class="palabras-modal">
             <div class="palabras-modal-header">
