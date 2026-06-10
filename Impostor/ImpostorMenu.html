@@ -333,7 +333,7 @@
 
     <script>
     // ═══════════════════════════════════════════
-    // BANCO DE PALABRAS
+    // BANCO DE 50 PALABRAS
     // ═══════════════════════════════════════════
     const PALABRAS_BANCO = [
         'Pizza','Perro','Playa','Avión','Guitarra',
@@ -343,13 +343,9 @@
         'Dragón','Semáforo','Palomitas','Paracaídas','Castillo',
         'Laberinto','Pirata','Pantano','Micrófonos','Escalera',
         'Volcán','Canoa','Espejo','Naufragio','Telescopio',
-        'Canguro','Bruja','Acuario','Tren','Paracaidas',
+        'Canguro','Bruja','Acuario','Trenecito','Boomerang',
         'Pingüino','Momia','Circo','Globo','Espada',
-        'Mochila','Pulpo','Linterna','Catapulta','Misterio','Batman','Superman','loca','loba',
-        'Infidelidad','Amor','Desamor','Celular','Computadora','Netflix','Salchipapas','Fútbol','Café',
-        'Gato','Perro','Casa','Árbol','Libro','Película','Música','Auto','Ciudad','Mar','Río','Bosque','Cielo','Estrella','Luna','Sol',
-        'Youtube','Fantasma','Monstruo','Dinosaurio','Robot','Alienígena','Zombi','Vampiro','Hada','Duende',
-        'Coche','Bicicleta','Avión','Barco','wifi','Internet','Radio','Televisión','Cámara'
+        'Mochila','Pulpo','Linterna','Catapulta','Misterio'
     ];
 
     // ═══════════════════════════════════════════
@@ -469,7 +465,6 @@
     // MODAL SELECCIÓN MODO CUSTOM
     // ═══════════════════════════════════════════
     function abrirModalModoCustom() {
-        // Primero validar jugadores y palabras antes de abrir el modal
         const jugadoresTemp = obtenerJugadores('custom');
         const aviso = document.getElementById('aviso-custom');
         if (jugadoresTemp.length < 3) {
@@ -478,11 +473,14 @@
             setTimeout(() => aviso.classList.remove('error'), 800);
             return;
         }
-        if (palabrasCustom.length === 0) {
+        // Aceptar si hay palabras en la sesión O en el banquillo guardado
+        const tieneEnSesion = palabrasCustom.length > 0;
+        const tieneEnBanquillo = (window._palabrasGuardadasCount || 0) > 0;
+        if (!tieneEnSesion && !tieneEnBanquillo) {
             const count = document.getElementById('custom-count');
             count.style.color = 'var(--rojo)';
-            count.textContent = '⚠ Agrega al menos 1 palabra para jugar';
-            setTimeout(() => { count.style.color = ''; renderTagsCustom(); }, 2000);
+            count.textContent = '⚠ Agrega al menos 1 palabra o usa tu banquillo guardado';
+            setTimeout(() => { count.style.color = ''; renderTagsCustom(); }, 2500);
             return;
         }
         document.getElementById('modal-modo-custom').classList.add('show');
@@ -509,7 +507,7 @@
             return;
         }
 
-        if (modo === 'custom' && palabrasCustom.length === 0) {
+        if (modo === 'custom' && palabrasCustom.length === 0 && (window._palabrasGuardadasCount || 0) === 0) {
             const count = document.getElementById('custom-count');
             count.style.color = 'var(--rojo)';
             count.textContent = '⚠ Agrega al menos 1 palabra para jugar';
@@ -520,10 +518,12 @@
         // Seleccionar banco de palabras según la opción del modal
         let banco;
         if (modo === 'custom') {
+            // Si sesión vacía pero hay banquillo, usar banquillo como fuente
+            const fuenteCustom = palabrasCustom.length > 0 ? palabrasCustom : (window._palabrasGuardadasArr || []);
             if (window._modoCustomPalabras === 'ambas') {
-                banco = [...palabrasCustom, ...PALABRAS_BANCO];
+                banco = [...fuenteCustom, ...PALABRAS_BANCO];
             } else {
-                banco = palabrasCustom;
+                banco = fuenteCustom.length > 0 ? fuenteCustom : PALABRAS_BANCO;
             }
         } else {
             banco = PALABRAS_BANCO;
@@ -719,10 +719,17 @@
     let currentUser = null;
     let palabrasGuardadas = [];
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
         currentUser = user;
         const btn = document.getElementById('btn-ver-guardadas');
         if (btn) btn.style.display = user ? 'block' : 'none';
+        if (user) {
+            // Pre-cargar banquillo para que el contador esté disponible sin abrir el modal
+            await cargarPalabrasDeFirestore();
+        } else {
+            window._palabrasGuardadasCount = 0;
+            window._palabrasGuardadasArr = [];
+        }
     });
 
     window.abrirPalabrasGuardadas = async function() {
@@ -742,6 +749,9 @@
             const snap = await getDoc(doc(db, 'impostor_palabras', currentUser.uid));
             palabrasGuardadas = snap.exists() ? (snap.data().palabras || []) : [];
         } catch(e) { palabrasGuardadas = []; }
+        // Exponer al script principal para validación
+        window._palabrasGuardadasCount = palabrasGuardadas.length;
+        window._palabrasGuardadasArr = [...palabrasGuardadas];
     }
 
     async function guardarEnFirestore() {
