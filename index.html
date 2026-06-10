@@ -710,12 +710,12 @@
             <div class="card-line line-rojo"></div>
         </article>
 
-        <article class="game-card" onclick="mostrarModal('verdad')">
-            <div class="game-badge badge-pronto">PRÓXIMAMENTE</div>
+        <article class="game-card" onclick="irAVerdadOReto()" style="cursor:pointer">
+            <div class="game-badge badge-nuevo">NUEVO</div>
             <span class="game-emoji">🎲</span>
             <h2 class="game-title">VERDAD O <span>RETO</span></h2>
             <p class="game-desc">El clásico de toda reunión.</p>
-            <button class="game-btn btn-pronto" disabled>PRÓXIMAMENTE</button>
+            <button class="game-btn btn-jugar-rojo">JUGAR</button>
             <div class="card-line line-amarillo"></div>
         </article>
     </main>
@@ -835,6 +835,16 @@
                 document.getElementById('loginModal').classList.add('show');
             } else {
                 window.location.href = 'QuienConoceMas/conoces.html';
+            }
+        }
+
+        function irAVerdadOReto() {
+            if (!currentUser) {
+                // Si no está logueado, mostramos el modal de login que ya tienes
+                document.getElementById('loginModal').classList.add('show');
+            } else {
+                // Redirige al archivo de tu juego
+                window.location.href = 'VerdadOReto.html';
             }
         }
 
